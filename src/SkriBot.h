@@ -18,9 +18,10 @@
   	SkriBot();
   	void AddRotor(int Pin,String Side, int neutral = 1520); 
   	void AddDistSensor(int EchoPin,int TrigPin,String Name);
-    void AddDistSensor(int EchoPin,int TrigPin,byte id);
+    void AddDistSensor(int EchoPin,int TrigPin,int id);
     void AddLED(int Pin,String name);
     void AddLineSensor(int Pin, String Name); 
+    void AddLineSensor(int Pin, int id);
     void AddScope(int EchoPin,int Trigg,int ServoPin,String Name);
     void AddDCRotor(int SpeedPin,int DirectionPin, String side);
                                                                   //functions for element adding
@@ -44,8 +45,8 @@
     void TurnOnLED(String name);
     void TurnOffLED(String name);                                 // LED functions
 
-    bool ReadLineSensor(String name);
-    bool ReadLineSensor(int id);
+    int ReadLineSensor(String name);
+    int ReadLineSensor(int id);
                                                                  // line sensor readout
     void SetScopeAngle(String id, int deg);  
     int  GetScopeDistance(String id);                               //Scope functions

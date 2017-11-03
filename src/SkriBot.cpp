@@ -26,13 +26,19 @@
     DistSensors.push_back(dsensor);
   }
 
-  void SkriBot::AddDistSensor(int EchoPin,int TrigPin,byte id){
+  void SkriBot::AddDistSensor(int EchoPin,int TrigPin,int id){
     DistSensor dsensor(EchoPin,TrigPin,id);
     DistSensors.push_back(dsensor);
   }
 
   void SkriBot::AddLineSensor(int pinL,String Name){
     LineSensor lsensor(pinL,Name);
+    delay(500);
+    LineSensors.push_back(lsensor);
+  }
+
+  void SkriBot::AddLineSensor(int pinL,int id){
+    LineSensor lsensor(pinL,id);
     delay(500);
     LineSensors.push_back(lsensor);
   }
@@ -84,17 +90,17 @@
       }
   }
 
-  bool SkriBot::ReadLineSensor(String name){ 
+  int SkriBot::ReadLineSensor(String name){ 
     for(int zz = 0; zz < LineSensors.size(); zz++){
                     if(LineSensors[zz].GetName() == name){
                       return(LineSensors[zz].ReadSensor());
                       break;
                     }
       }
-    return(false);
+    return(0);
   }
 
-  bool SkriBot::ReadLineSensor(int id){
+  int SkriBot::ReadLineSensor(int id){
      for(int zz = 0; zz < LineSensors.size(); zz++){
                     if(LineSensors[zz].GetID() == id){
                       return(LineSensors[zz].ReadSensor());

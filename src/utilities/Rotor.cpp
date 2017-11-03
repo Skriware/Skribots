@@ -20,8 +20,10 @@ void Rotor::Move(){
 
 void Rotor::Stop(){
 	if(_dir){
+	digitalWrite(_dir_pin,_dir);
 	analogWrite(_speed_pin,255);
 	}else{
+	digitalWrite(_dir_pin,_dir);
 	analogWrite(_speed_pin,0);
 	}
 }

@@ -8,7 +8,7 @@
     LineSensor(int InputPin,String name);
     LineSensor(int InputPin,int id);;
     int ReadSensorRaw();
-    bool ReadSensor();
+    int ReadSensor();
     void SetLogicBorder(int border);
     String GetName();
     int GetID();

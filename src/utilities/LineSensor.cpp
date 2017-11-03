@@ -15,20 +15,23 @@ LineSensor::LineSensor(int PinL, String Name){
 }
 
 LineSensor::LineSensor(int PinL, int _id){
- _id = id;
+ id = _id;
  sensorPin = PinL;
+ name = "";
   delay(500);
   int blackReadOut = 0;
     blackReadOut = blackReadOut/100;
     logicBorder = 500;
 }
 
-bool LineSensor::ReadSensor(){
+int LineSensor::ReadSensor(){
   int readout = analogRead(sensorPin);
+  Serial.print("READ:");
+  Serial.println(readout);
     if(readout > logicBorder){
-      return(true);
+      return(1);
     }else{
-      return(false);
+      return(0);
     }  
 }
 
