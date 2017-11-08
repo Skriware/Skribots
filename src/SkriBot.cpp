@@ -1,71 +1,82 @@
 #include "SkriBot.h"
  
   SkriBot::SkriBot(){
-    
-  }
-  void SkriBot::AddRotor(int Pin, String Side, int neutral){
-    ServoRotor rotor(Pin,Side,neutral);
-     if(Side == "Left"){
-      LeftRotors.push_back(rotor);
-     }else if(Side == "Right"){
-      RightRotors.push_back(rotor);
-     }
+    NDistSensors    = 0;
+    NLEDs           = 0;
+    NLineSensors    = 0;
+    NScopes         = 0;
+    NLeftDCRotors   = 0;
+    NRightDCRotors  = 0;
+    NClaws          = 0;
+
   }
 
   void SkriBot::AddDCRotor(int SpeedPin,int DirectionPin, String Side){
-    Rotor dcrotor(SpeedPin,DirectionPin);
+    Rotor *dcrotor = new Rotor(SpeedPin,DirectionPin);
      if(Side == "Left"){
-      LeftDCRotors.push_back(dcrotor);
+      LeftDCRotors[NLeftDCRotors] = dcrotor;
+      NLeftDCRotors++;
      }else if(Side == "Right"){
-      RightDCRotors.push_back(dcrotor);
+      RightDCRotors[NRightDCRotors] = dcrotor;
+      NRightDCRotors++;
      }
   }
 
+  void SkriBot::AddClaw(int Claw_Pin, int Arm_Pin, byte id){
+    Claw *claw = new Claw(Claw_Pin,Arm_Pin,id);
+    Claws[NClaws] = claw;
+    NClaws++;
+  }
+
   void SkriBot::AddDistSensor(int EchoPin,int TrigPin,String name){
-    DistSensor dsensor(EchoPin,TrigPin,name);
-    DistSensors.push_back(dsensor);
+    DistSensor *dsensor = new DistSensor(EchoPin,TrigPin,name);
+    DistSensors[NDistSensors] = dsensor;
+    NDistSensors++;
   }
 
   void SkriBot::AddDistSensor(int EchoPin,int TrigPin,int id){
-    DistSensor dsensor(EchoPin,TrigPin,id);
-    DistSensors.push_back(dsensor);
+    DistSensor *dsensor = new DistSensor(EchoPin,TrigPin,id);
+    DistSensors[NDistSensors] = dsensor;
+    NDistSensors++;
   }
 
   void SkriBot::AddLineSensor(int pinL,String Name){
-    LineSensor lsensor(pinL,Name);
-    delay(500);
-    LineSensors.push_back(lsensor);
+    LineSensor *lsensor = new LineSensor(pinL,Name);
+    LineSensors[NLineSensors] =  lsensor;
+    NLineSensors++;
   }
 
   void SkriBot::AddLineSensor(int pinL,int id){
-    LineSensor lsensor(pinL,id);
-    delay(500);
-    LineSensors.push_back(lsensor);
+    LineSensor *lsensor = new LineSensor(pinL,id);
+    LineSensors[NLineSensors] =  lsensor;
+    NLineSensors++;
   }
 
   void SkriBot::AddLED(int pin,String name){
-    RobotLED led(pin,name);
-    LEDs.push_back(led);
+    RobotLED *led = new RobotLED(pin,name);
+    LEDs[NLEDs] = led;
+    NLEDs++;
   }
 
   void SkriBot::AddScope(int EchoPin,int Trigg,int ServoPin,String Name){
-    Scope scope(EchoPin,Trigg,ServoPin,Name);
-    Scopes.push_back(scope);
+    Scope *scope = new Scope(EchoPin,Trigg,ServoPin,Name);
+    Scopes[NScopes] = scope;
+    NScopes++;
   }
 
   void SkriBot::SetScopeAngle(String name,int deg){
-    for(int zz = 0; zz < Scopes.size(); zz++){
-                    if(Scopes[zz].GetName() == name){
-                      Scopes[zz].SetAngle(deg);
+    for(int zz = 0; zz < NScopes ; zz++){
+                    if(Scopes[zz]->GetName() == name){
+                      Scopes[zz]->SetAngle(deg);
                       break;
                     }
       }
   }
 
   int SkriBot::GetScopeDistance(String name){
-    for(int zz = 0; zz < Scopes.size(); zz++){
-                    if(Scopes[zz].GetName() == name){
-                      return(Scopes[zz].GetDistance());
+    for(int zz = 0; zz < NScopes ; zz++){
+                    if(Scopes[zz]->GetName() == name){
+                      return(Scopes[zz]->GetDistance());
                       break;
                     }
       }
@@ -73,27 +84,27 @@
 
 
   void SkriBot::TurnOnLED(String name){
-    for(int zz = 0; zz < LEDs.size(); zz++){
-                    if(LEDs[zz].name() == name){
-                      LEDs[zz].turnON();
+    for(int zz = 0; zz < NLEDs ; zz++){
+                    if(LEDs[zz]->name() == name){
+                      LEDs[zz]->turnON();
                       break;
                     }
       }
   }
 
   void SkriBot::TurnOffLED(String name){
-    for(int zz = 0; zz < LEDs.size(); zz++){
-                    if(LEDs[zz].name() == name){
-                      LEDs[zz].turnOFF();
+    for(int zz = 0; zz < NLEDs ; zz++){
+                    if(LEDs[zz]->name() == name){
+                      LEDs[zz]->turnOFF();
                       break;
                     }
       }
   }
 
   int SkriBot::ReadLineSensor(String name){ 
-    for(int zz = 0; zz < LineSensors.size(); zz++){
-                    if(LineSensors[zz].GetName() == name){
-                      return(LineSensors[zz].ReadSensor());
+    for(int zz = 0; zz < NLineSensors ; zz++){
+                    if(LineSensors[zz]->GetName() == name){
+                      return(LineSensors[zz]->ReadSensor());
                       break;
                     }
       }
@@ -101,9 +112,9 @@
   }
 
   int SkriBot::ReadLineSensor(int id){
-     for(int zz = 0; zz < LineSensors.size(); zz++){
-                    if(LineSensors[zz].GetID() == id){
-                      return(LineSensors[zz].ReadSensor());
+     for(int zz = 0; zz < NLineSensors ; zz++){
+                    if(LineSensors[zz]->GetID() == id){
+                      return(LineSensors[zz]->ReadSensor());
                       break;
                     }
       }
@@ -112,11 +123,11 @@
 
 
   int SkriBot::ReadDistSensor(int id, int max){
-     for(int zz = 0; zz < DistSensors.size(); zz++){
-                    //Serial.print("Sensor:");
-                    //Serial.println(DistSensors[zz].GetID());
-                    if(DistSensors[zz].GetID() == id){
-                      return(DistSensors[zz].ReadSensor(max));
+     for(int zz = 0; zz < NDistSensors ; zz++){
+                    //Serial->print("Sensor:");
+                    //Serial->println(DistSensors[zz]->GetID());
+                    if(DistSensors[zz]->GetID() == id){
+                      return(DistSensors[zz]->ReadSensor(max));
                       break;
                     }
       }
@@ -124,11 +135,11 @@
   }
 
    int SkriBot::ReadDistSensor(String name, int max){
-     for(int zz = 0; zz < DistSensors.size(); zz++){
-                    //Serial.print("Sensor:");
-                    //Serial.println(DistSensors[zz].GetID());
-                    if(DistSensors[zz].GetName() == name){
-                      return(DistSensors[zz].ReadSensor(max));
+     for(int zz = 0; zz < NDistSensors ; zz++){
+                    //Serial->print("Sensor:");
+                    //Serial->println(DistSensors[zz]->GetID());
+                    if(DistSensors[zz]->GetName() == name){
+                      return(DistSensors[zz]->ReadSensor(max));
                       break;
                     }
       }
@@ -139,203 +150,101 @@
 
   
   void SkriBot::Move(char Dir,int ms){
-      if(LeftRotors.size() > 0 && RightRotors.size() >0){
-      switch(Dir){
-        case 'B':
-                  for(int kk = 0; kk < LeftRotors.size(); kk++){
-                    LeftRotors[kk].Move('F');
-                  }
-          
-                  for(int zz = 0; zz < RightRotors.size(); zz++){
-                    RightRotors[zz].Move('B');
-                  }
-        break;
-        
-        case 'F':
-                  for(int kk = 0; kk < LeftRotors.size(); kk++){
-                    LeftRotors[kk].Move('B');
-                  }
-          
-                  for(int zz = 0; zz < RightRotors.size(); zz++){
-                    RightRotors[zz].Move('F');
-                  }
-        break;
-
-        case 'L':
-                  for(int kk = 0; kk < LeftRotors.size(); kk++){
-                    LeftRotors[kk].Move('B');
-                  }
-          
-                  for(int zz = 0; zz < RightRotors.size(); zz++){
-                    RightRotors[zz].Move('B');
-                  }
-         break;
-
-         case 'R':
-                  for(int kk = 0; kk < LeftRotors.size(); kk++){
-                    LeftRotors[kk].Move('F');
-                  }
-          
-                  for(int zz = 0; zz < RightRotors.size(); zz++){
-                    RightRotors[zz].Move('F');
-                  }
-         break;
-
-        case 'S' :
-                  for(int kk = 0; kk < LeftRotors.size(); kk++){
-                    LeftRotors[kk].Stop(0);
-                  }
-          
-                  for(int zz = 0; zz < RightRotors.size(); zz++){
-                    RightRotors[zz].Stop(0);
-                  }
-         break; 
-//*******************************************************************************
-         case 'K' :
-                  for(int kk = 0; kk < LeftRotors.size(); kk++){
-                    LeftRotors[kk].Move('F');
-                  }
-         break;
-
-         case 'Z' :
-                  for(int kk = 0; kk < LeftRotors.size(); kk++){
-                    LeftRotors[kk].Move('B');
-                  }
-         break;
-
-         case 'M' :
-                  for(int kk = 0; kk < RightRotors.size(); kk++){
-                    RightRotors[kk].Move('F');
-                  }
-         break;
-
-         case 'N' :
-                  for(int kk = 0; kk < RightRotors.size(); kk++){
-                    RightRotors[kk].Move('B');
-                  }
-         break;
-
-         case 'Y' :
-                  for(int kk = 0; kk < LeftRotors.size(); kk++){
-                    LeftRotors[kk].Stop(0);
-                  }
-         break;
-
-         case 'X' :
-                  for(int kk = 0; kk < LeftRotors.size(); kk++){
-                    RightRotors[kk].Stop(0);
-                  }
-         break;
-
-      }
-        
-        if(ms > 0 ){
-          delay(ms);
-      for(int kk = 0; kk < LeftRotors.size(); kk++){
-                    LeftRotors[kk].Stop(0);
-                  }
-          
-      for(int zz = 0; zz < RightRotors.size(); zz++){
-                    RightRotors[zz].Stop(0);
-                  }
-        }
-      }
-
-      if (LeftDCRotors.size() > 0 && RightDCRotors.size() >0){
+      if (NLeftDCRotors  > 0 && NRightDCRotors  >0){
          switch(Dir){
         case 'B':
-                  for(int kk = 0; kk < LeftDCRotors.size(); kk++){
-                    LeftDCRotors[kk].SetDirection(1);
-                    LeftDCRotors[kk].Move();
+                  for(int kk = 0; kk < NLeftDCRotors ; kk++){
+                    LeftDCRotors[kk]->SetDirection(1);
+                    LeftDCRotors[kk]->Move();
                   }
           
-                  for(int zz = 0; zz < RightDCRotors.size(); zz++){
-                    RightDCRotors[zz].SetDirection(0);
-                    RightDCRotors[zz].Move();
+                  for(int zz = 0; zz < NRightDCRotors ; zz++){
+                    RightDCRotors[zz]->SetDirection(0);
+                    RightDCRotors[zz]->Move();
                   }
         break;
         
         case 'F':
-                  for(int kk = 0; kk < LeftDCRotors.size(); kk++){
-                    LeftDCRotors[kk].SetDirection(0);
-                    LeftDCRotors[kk].Move();
+                  for(int kk = 0; kk < NLeftDCRotors ; kk++){
+                    LeftDCRotors[kk]->SetDirection(0);
+                    LeftDCRotors[kk]->Move();
                   }
           
-                  for(int kk = 0; kk < RightDCRotors.size(); kk++){
-                    RightDCRotors[kk].SetDirection(1);
-                    RightDCRotors[kk].Move();
+                  for(int kk = 0; kk < NRightDCRotors ; kk++){
+                    RightDCRotors[kk]->SetDirection(1);
+                    RightDCRotors[kk]->Move();
                   }
         break;
 
         case 'L':
-                  for(int kk = 0; kk < LeftDCRotors.size(); kk++){
-                    LeftDCRotors[kk].SetDirection(1);
-                    LeftDCRotors[kk].Move();
+                  for(int kk = 0; kk < NLeftDCRotors ; kk++){
+                    LeftDCRotors[kk]->SetDirection(1);
+                    LeftDCRotors[kk]->Move();
                   }
           
-                  for(int kk = 0; kk < RightDCRotors.size(); kk++){
-                    RightDCRotors[kk].SetDirection(1);
-                    RightDCRotors[kk].Move();
+                  for(int kk = 0; kk < NRightDCRotors ; kk++){
+                    RightDCRotors[kk]->SetDirection(1);
+                    RightDCRotors[kk]->Move();
                   }
          break;
 
          case 'R':
-                  for(int kk = 0; kk < LeftDCRotors.size(); kk++){
-                    LeftDCRotors[kk].SetDirection(0);
-                    LeftDCRotors[kk].Move();
+                  for(int kk = 0; kk < NLeftDCRotors ; kk++){
+                    LeftDCRotors[kk]->SetDirection(0);
+                    LeftDCRotors[kk]->Move();
                   }
           
-                  for(int kk = 0; kk < RightDCRotors.size(); kk++){
-                    RightDCRotors[kk].SetDirection(0);
-                    RightDCRotors[kk].Move();
+                  for(int kk = 0; kk < NRightDCRotors ; kk++){
+                    RightDCRotors[kk]->SetDirection(0);
+                    RightDCRotors[kk]->Move();
                   }
          break;
 
         case 'S' :
-                  for(int kk = 0; kk < LeftDCRotors.size(); kk++){
-                    LeftDCRotors[kk].Stop();
+                  for(int kk = 0; kk < NLeftDCRotors ; kk++){
+                    LeftDCRotors[kk]->Stop();
                   }
           
-                  for(int kk = 0; kk < RightDCRotors.size(); kk++){
-                    RightDCRotors[kk].Stop();
+                  for(int kk = 0; kk < NRightDCRotors ; kk++){
+                    RightDCRotors[kk]->Stop();
                   }
          break; 
 //*******************************************************************************
          case 'K' :
-                  for(int kk = 0; kk < LeftDCRotors.size(); kk++){
-                    LeftDCRotors[kk].SetDirection(1);
-                    LeftDCRotors[kk].Move();
+                  for(int kk = 0; kk < NLeftDCRotors ; kk++){
+                    LeftDCRotors[kk]->SetDirection(1);
+                    LeftDCRotors[kk]->Move();
                   }
           
-                  for(int kk = 0; kk < RightDCRotors.size(); kk++){
-                    RightDCRotors[kk].SetDirection(1);
-                    RightDCRotors[kk].Move();
+                  for(int kk = 0; kk < NRightDCRotors ; kk++){
+                    RightDCRotors[kk]->SetDirection(1);
+                    RightDCRotors[kk]->Move();
                   }
          break;
 
          case 'Z' :
-                    for(int kk = 0; kk < LeftDCRotors.size(); kk++){
-                    LeftDCRotors[kk].SetDirection(0);
-                    LeftDCRotors[kk].Move();
+                    for(int kk = 0; kk < NLeftDCRotors ; kk++){
+                    LeftDCRotors[kk]->SetDirection(0);
+                    LeftDCRotors[kk]->Move();
                   }
           
-                  for(int kk = 0; kk < RightDCRotors.size(); kk++){
-                    RightDCRotors[kk].SetDirection(1);
-                    RightDCRotors[kk].SetSpeed(0.5*DCSpeed);
-                    RightDCRotors[kk].Move();
+                  for(int kk = 0; kk < NRightDCRotors ; kk++){
+                    RightDCRotors[kk]->SetDirection(1);
+                    RightDCRotors[kk]->SetSpeed(0.5*DCSpeed);
+                    RightDCRotors[kk]->Move();
                   }
          break;
 
          case 'M' :
-                   for(int kk = 0; kk < LeftDCRotors.size(); kk++){
-                    LeftDCRotors[kk].SetDirection(0);
-                    LeftDCRotors[kk].SetSpeed(0.5*DCSpeed);
-                    LeftDCRotors[kk].Move();
+                   for(int kk = 0; kk < NLeftDCRotors ; kk++){
+                    LeftDCRotors[kk]->SetDirection(0);
+                    LeftDCRotors[kk]->SetSpeed(0.5*DCSpeed);
+                    LeftDCRotors[kk]->Move();
                   }
           
-                  for(int kk = 0; kk < RightDCRotors.size(); kk++){
-                    RightDCRotors[kk].SetDirection(1);
-                    RightDCRotors[kk].Move();
+                  for(int kk = 0; kk < NRightDCRotors ; kk++){
+                    RightDCRotors[kk]->SetDirection(1);
+                    RightDCRotors[kk]->Move();
                   }
          break;
 
@@ -343,14 +252,14 @@
         
         if(ms > 0 ){
           delay(ms);
-          for(int kk = 0; kk < LeftDCRotors.size(); kk++){
-                    LeftDCRotors[kk].SetSpeed(DCSpeed);
-                    LeftDCRotors[kk].Stop();
+          for(int kk = 0; kk < NLeftDCRotors ; kk++){
+                    LeftDCRotors[kk]->SetSpeed(DCSpeed);
+                    LeftDCRotors[kk]->Stop();
                   }
           
-           for(int kk = 0; kk < RightDCRotors.size(); kk++){
-                    RightDCRotors[kk].SetSpeed(DCSpeed);
-                    RightDCRotors[kk].Stop();
+           for(int kk = 0; kk < NRightDCRotors ; kk++){
+                    RightDCRotors[kk]->SetSpeed(DCSpeed);
+                    RightDCRotors[kk]->Stop();
             }
       }
 
@@ -385,28 +294,28 @@
 
 
 
-                for(int kk = 0; kk < LeftDCRotors.size(); kk++){
-                    LeftDCRotors[kk].SetDirection(leftDir);
-                    LeftDCRotors[kk].SetSpeed(leftSpeed);
-                    LeftDCRotors[kk].Move();
+                for(int kk = 0; kk < NLeftDCRotors ; kk++){
+                    LeftDCRotors[kk]->SetDirection(leftDir);
+                    LeftDCRotors[kk]->SetSpeed(leftSpeed);
+                    LeftDCRotors[kk]->Move();
                   }
           
-                  for(int kk = 0; kk < RightDCRotors.size(); kk++){
-                    RightDCRotors[kk].SetDirection(rightDir);
-                    RightDCRotors[kk].SetSpeed(rightSpeed);
-                    RightDCRotors[kk].Move();
+                  for(int kk = 0; kk < NRightDCRotors ; kk++){
+                    RightDCRotors[kk]->SetDirection(rightDir);
+                    RightDCRotors[kk]->SetSpeed(rightSpeed);
+                    RightDCRotors[kk]->Move();
                   }
   }
 
     void SkriBot::SetSpeed(int s){ 
       DCSpeed = s;
-      for(int kk = 0; kk < LeftDCRotors.size(); kk++){
-                    LeftDCRotors[kk].SetSpeed(DCSpeed);
+      for(int kk = 0; kk < NLeftDCRotors ; kk++){
+                    LeftDCRotors[kk]->SetSpeed(DCSpeed);
                     
                   }
           
-      for(int kk = 0; kk < RightDCRotors.size(); kk++){
-                    RightDCRotors[kk].SetSpeed(DCSpeed);
+      for(int kk = 0; kk < NRightDCRotors ; kk++){
+                    RightDCRotors[kk]->SetSpeed(DCSpeed);
                     
             }
     }
@@ -418,4 +327,37 @@
     void SkriBot::MoveForward(int ms){Move('F',ms);}
     void SkriBot::MoveBack(int ms){Move('B',ms);}
     void SkriBot::Stop(){Move('S',-1);}
+
+    void SkriBot::CloseClaw(byte id){
+         for(int zz = 0; zz < NClaws ; zz++){
+                    if(Claws[zz]->GetID() == id){
+                      Claws[zz]->Close();
+                      break;
+                    }
+        }
+    }
+    void SkriBot::OpenClaw(byte id){
+          for(int zz = 0; zz < NClaws ; zz++){
+                    if(Claws[zz]->GetID() == id){
+                      Claws[zz]->Open();
+                      break;
+                    }
+        }
+    }
+    void SkriBot::Pick_Up(byte id){
+          for(int zz = 0; zz < NClaws ; zz++){
+                    if(Claws[zz]->GetID() == id){
+                      Claws[zz]->Pick_Up();
+                      break;
+                    }
+        }
+    }
+    void SkriBot::Put_Down(byte id){
+          for(int zz = 0; zz < NClaws ; zz++){
+                    if(Claws[zz]->GetID() == id){
+                      Claws[zz]->Put_Down();
+                      break;
+                    }
+        }
+    }
 
