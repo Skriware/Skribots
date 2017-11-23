@@ -83,18 +83,36 @@
   }
 
 
-  void SkriBot::TurnOnLED(String name){
+  void SkriBot::TurnLEDOn(int R,int G, int B, String name){
     for(int zz = 0; zz < NLEDs ; zz++){
-                    if(LEDs[zz]->name() == name){
-                      LEDs[zz]->turnON();
+                    if(name == "ALL" || LEDs[zz]->GetName() == name){
+                      LEDs[zz]->turnON(R,G,B);
                       break;
                     }
       }
   }
 
-  void SkriBot::TurnOffLED(String name){
+   void SkriBot::TurnLEDOff(String name){
     for(int zz = 0; zz < NLEDs ; zz++){
-                    if(LEDs[zz]->name() == name){
+                    if(name == "ALL" || LEDs[zz]->GetName() == name){
+                      LEDs[zz]->turnOFF();
+                      break;
+                    }
+      }
+  }
+
+  void SkriBot::TurnLEDOn(int R,int G, int B, int _id){
+    for(int zz = 0; zz < NLEDs ; zz++){
+                    if(_id == -69 || LEDs[zz]->GetID() == _id){
+                      LEDs[zz]->turnON(R,G,B);
+                      break;
+                    }
+      }
+  }
+
+  void SkriBot::TurnLEDOff(int _id){
+    for(int zz = 0; zz < NLEDs ; zz++){
+                    if(_id == -69 || LEDs[zz]->GetID() == _id){
                       LEDs[zz]->turnOFF();
                       break;
                     }

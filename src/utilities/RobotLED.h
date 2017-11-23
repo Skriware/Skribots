@@ -1,20 +1,23 @@
 #ifndef RobotLED_H
 #define RobotLED_H
 #include "Arduino.h"
+#include <Adafruit_NeoPixel.h>
 
   class RobotLED
  {
   public:
   	RobotLED(int pin,String name);
-    void turnON();
+  	RobotLED(int pin,byte id);
+    void turnON(int R,int G, int B);
+    void Set_Predef_Color(int color_id);
     void turnOFF();
-    bool readState();
-    String name();
+    byte GetID();
+    String GetName();
   	
   private:
-  int  LEDpin;
-  bool LEDstate;
-  String LEDname;
+ Adafruit_NeoPixel pixel;
+ byte id;
+ String name;
  };
 
  #endif

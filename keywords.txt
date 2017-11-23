@@ -21,19 +21,24 @@ AddDCRotor				KEYWORD2
 ReadLineSensor			KEYWORD2
 AddScope				KEYWORD2
 AddLED					KEYWORD2
+AddClaw					KEYWORD2
 Move					KEYWORD2
 Stop					KEYWORD2
 TurnLeft				KEYWORD2
 TurnRight				KEYWORD2
 FaceLeft				KEYWORD2
 FaceRight				KEYWORD2
-TurnOnLED				KEYWORD2
-TurnOffLED				KEYWORD2
+TurnLEDOn				KEYWORD2
+TurnLEDOff				KEYWORD2
 MoveForward				KEYWORD2
 MoveBack				KEYWORD2
 GetScopeDistance		KEYWORD2
 SetScopeAngle			KEYWORD2
 SetSpeed				KEYWORD2
+CloseClaw				KEYWORD2
+OpenClaw				KEYWORD2
+Pick_Up					KEYWORD2
+Put_Down				KEYWORD2
 
 
 #######################################

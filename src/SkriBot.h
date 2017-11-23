@@ -10,7 +10,7 @@
 #include <utilities/Rotor.h>
 #include <utilities/SoundDetector.h>
 #include <utilities/Claw.h>
-#include <vector>
+#include <Adafruit_NeoPixel.h>
 
   class SkriBot
  {
@@ -42,8 +42,10 @@
     int ReadDistSensor(int id, int max = 100);
                                                                   //distance sensor readout
 
-    void TurnOnLED(String name);
-    void TurnOffLED(String name);                                 // LED functions
+    void TurnLEDOn(int R,int G, int B,String name);
+    void TurnLEDOff(String name); 
+    void TurnLEDOn(int R,int G, int B,int _id = -69);
+    void TurnLEDOff(int _id = -69);                                // LED functions
 
     void CloseClaw(byte id = 0);
     void OpenClaw(byte id  = 0);
