@@ -58,6 +58,12 @@
     NLEDs++;
   }
 
+   void SkriBot::AddLED(int pin,int id){
+    RobotLED *led = new RobotLED(pin,id);
+    LEDs[NLEDs] = led;
+    NLEDs++;
+  }
+
   void SkriBot::AddScope(int EchoPin,int Trigg,int ServoPin,String Name){
     Scope *scope = new Scope(EchoPin,Trigg,ServoPin,Name);
     Scopes[NScopes] = scope;
@@ -87,7 +93,7 @@
     for(int zz = 0; zz < NLEDs ; zz++){
                     if(name == "ALL" || LEDs[zz]->GetName() == name){
                       LEDs[zz]->turnON(R,G,B);
-                      break;
+                      if(name != "ALL")break;
                     }
       }
   }
@@ -96,7 +102,7 @@
     for(int zz = 0; zz < NLEDs ; zz++){
                     if(name == "ALL" || LEDs[zz]->GetName() == name){
                       LEDs[zz]->turnOFF();
-                      break;
+                      if(name != "ALL")break;
                     }
       }
   }
@@ -105,8 +111,9 @@
     for(int zz = 0; zz < NLEDs ; zz++){
                     if(_id == -69 || LEDs[zz]->GetID() == _id){
                       LEDs[zz]->turnON(R,G,B);
-                      break;
+                      if(_id != -69)break;
                     }
+                  
       }
   }
 
@@ -114,7 +121,7 @@
     for(int zz = 0; zz < NLEDs ; zz++){
                     if(_id == -69 || LEDs[zz]->GetID() == _id){
                       LEDs[zz]->turnOFF();
-                      break;
+                      if(_id != -69)break;
                     }
       }
   }

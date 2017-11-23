@@ -19,6 +19,7 @@
   	void AddDistSensor(int EchoPin,int TrigPin,String Name);
     void AddDistSensor(int EchoPin,int TrigPin,int id);
     void AddLED(int Pin,String name);
+    void AddLED(int Pin, int id);
     void AddLineSensor(int Pin, String Name); 
     void AddLineSensor(int Pin, int id);
     void AddScope(int EchoPin,int Trigg,int ServoPin,String Name);

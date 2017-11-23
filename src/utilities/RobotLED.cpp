@@ -3,12 +3,15 @@
 	RobotLED::RobotLED(int pin,String _name){
 		pixel = Adafruit_NeoPixel(1, pin, NEO_GRB + NEO_KHZ800);
         name = _name;
+        id = 99;
         pixel.begin();
 	}
 
     RobotLED::RobotLED(int pin,byte _id){
         pixel = Adafruit_NeoPixel(1, pin, NEO_GRB + NEO_KHZ800);
         id = _id;
+        name = "none";
+        pixel.begin();
     }
 
     void RobotLED::turnON(int R, int B, int G){
