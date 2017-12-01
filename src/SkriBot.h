@@ -6,7 +6,6 @@
 #include <utilities/RobotLED.h>
 #include <utilities/LineSensor.h>
 #include <utilities/Scope.h>
-#include <StandardCplusplus.h>
 #include <utilities/Rotor.h>
 #include <utilities/SoundDetector.h>
 #include <utilities/Claw.h>
