@@ -1,6 +1,6 @@
 #include "SkriBot.h"
  
-  SkriBot::SkriBot(){
+  SkriBot::SkriBot(String predef){
     NDistSensors    = 0;
     NLEDs           = 0;
     NLineSensors    = 0;
@@ -8,6 +8,19 @@
     NLeftDCRotors   = 0;
     NRightDCRotors  = 0;
     NClaws          = 0;
+
+    if(predef == "EDU_SHIELD"){
+          AddDCRotor(EDU_ROTOR_SPEED_PIN_L,EDU_ROTOR_DIR_PIN_L,"Left");          //adding rotors for movement
+          AddDCRotor(EDU_ROTOR_SPEED_PIN_R,EDU_ROTOR_DIR_PIN_R,"Right");
+          AddDistSensor(EDU_ECHO_PIN_1,EDU_TRIG_PIN_1,1);   //adding Distance Sensors  and naming them "Left and Right";
+          AddDistSensor(EDU_ECHO_PIN_2,EDU_TRIG_PIN_2,2);
+          AddLED(EDU_LED_DATA_PIN_1,1);
+          AddLED(EDU_LED_DATA_PIN,0);
+          AddClaw(EDU_CLAW_PIN1,EDU_CLAW_PIN2);
+          AddLineSensor(EDU_LINE_SENSOR_1, 1);
+          AddLineSensor(EDU_LINE_SENSOR_2, 2);
+          AddLineSensor(EDU_LINE_SENSOR_3, 3);
+    }
 
   }
 

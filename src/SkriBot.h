@@ -5,17 +5,44 @@
 #include <utilities/DistSensor.h>
 #include <utilities/RobotLED.h>
 #include <utilities/LineSensor.h>
-#include <utilities/Scope.h>
-#include <StandardCplusplus.h>
+#include <utilities/Scope.h> 
 #include <utilities/Rotor.h>
 #include <utilities/SoundDetector.h>
 #include <utilities/Claw.h>
 #include <Adafruit_NeoPixel.h>
 
+#define _CAT(a, ...) a ## __VA_ARGS__
+#define SWITCH_ENABLED_false 0
+#define SWITCH_ENABLED_true  1
+#define SWITCH_ENABLED_0     0
+#define SWITCH_ENABLED_1     1
+#define SWITCH_ENABLED_      1
+#define ENABLED(b) _CAT(SWITCH_ENABLED_, b)
+#define DISABLED(b) (!_CAT(SWITCH_ENABLED_, b))
+
+#define EDU_ROTOR_SPEED_PIN_R 6
+#define EDU_ROTOR_DIR_PIN_R 7
+#define EDU_ROTOR_SPEED_PIN_L 5
+#define EDU_ROTOR_DIR_PIN_L 4
+#define EDU_ECHO_PIN_1 10
+#define EDU_ECHO_PIN_2 12
+#define EDU_TRIG_PIN_1 9
+#define EDU_TRIG_PIN_2 11
+#define EDU_LINE_SENSOR_1 1
+#define EDU_LINE_SENSOR_2 2
+#define EDU_LINE_SENSOR_3 3
+#define EDU_LED_DATA_PIN 1
+#define EDU_LED_DATA_PIN_1 0
+#define EDU_BT_STATE_PIN 3
+#define EDU_CLAW_PIN1 2
+#define EDU_CLAW_PIN2 8
+
+
+
   class SkriBot
  {
   public:
-  	SkriBot();
+  	SkriBot(String predef = "");
   	void AddDistSensor(int EchoPin,int TrigPin,String Name);
     void AddDistSensor(int EchoPin,int TrigPin,int id);
     void AddLED(int Pin,String name);
