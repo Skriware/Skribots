@@ -16,10 +16,10 @@ void Claw::SetAngle(int claw_angle,int arm_angle){
 }
 
 	void Claw::Close(){
-		claw_servo->write(135);
+		claw_servo->write(120);
 	}
 	void Claw::Open(){
-		claw_servo->write(180);
+		claw_servo->write(170);
 	}
 	void Claw::Pick_Up(){
 		arm_servo->write(50);
