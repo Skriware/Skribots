@@ -14,8 +14,10 @@
           AddDCRotor(EDU_ROTOR_SPEED_PIN_R,EDU_ROTOR_DIR_PIN_R,"Right");
           AddDistSensor(EDU_ECHO_PIN_1,EDU_TRIG_PIN_1,1);   //adding Distance Sensors  and naming them "Left and Right";
           AddDistSensor(EDU_ECHO_PIN_2,EDU_TRIG_PIN_2,2);
+          #if DISABLED(DEBUG_MODE)
           AddLED(EDU_LED_DATA_PIN_1,1);
           AddLED(EDU_LED_DATA_PIN,0);
+          #endif
           AddClaw(EDU_CLAW_PIN1,EDU_CLAW_PIN2);
           AddLineSensor(EDU_LINE_SENSOR_1, 1);
           AddLineSensor(EDU_LINE_SENSOR_2, 2);
