@@ -194,7 +194,7 @@
          switch(Dir){
         case 'B':
                   for(int kk = 0; kk < NLeftDCRotors ; kk++){
-                    LeftDCRotors[kk]->SetDirection(1);
+                    LeftDCRotors[kk]->SetDirection(0);
                     LeftDCRotors[kk]->Move();
                   }
           
@@ -206,7 +206,7 @@
         
         case 'F':
                   for(int kk = 0; kk < NLeftDCRotors ; kk++){
-                    LeftDCRotors[kk]->SetDirection(0);
+                    LeftDCRotors[kk]->SetDirection(1);
                     LeftDCRotors[kk]->Move();
                   }
           
@@ -223,7 +223,7 @@
                   }
           
                   for(int kk = 0; kk < NRightDCRotors ; kk++){
-                    RightDCRotors[kk]->SetDirection(1);
+                    RightDCRotors[kk]->SetDirection(0);
                     RightDCRotors[kk]->Move();
                   }
          break;
@@ -235,7 +235,7 @@
                   }
           
                   for(int kk = 0; kk < NRightDCRotors ; kk++){
-                    RightDCRotors[kk]->SetDirection(0);
+                    RightDCRotors[kk]->SetDirection(1);
                     RightDCRotors[kk]->Move();
                   }
          break;
