@@ -9,7 +9,7 @@
 #include <utilities/Rotor.h>
 #include <utilities/SoundDetector.h>
 #include <utilities/Claw.h>
-#include <Adafruit_NeoPixel.h>
+#include <utilities/Adafruit_NeoPixel.h>
 
 #define _CAT(a, ...) a ## __VA_ARGS__
 #define SWITCH_ENABLED_false 0
@@ -53,6 +53,13 @@
     void AddDCRotor(int SpeedPin,int DirectionPin, String side);
     void AddClaw(int ClawPin,int Arm_Pin, byte id = 0);
                                                                   //functions for element adding
+    void AddDistSensor(String EDU_SHIELD_SLOT);
+    void AddLED(String EDU_SHIELD_SLOT);
+    void AddLineSensor(String EDU_SHIELD_SLOT);
+    void AddDCRotor(String EDU_SHIELD_SLOT);
+    void AddClaw();                                               //functions for elements adding when using Skriware Edu shield
+
+
 
     void Move(char Direction,int ms);
     void FaceLeft(int ms = 200);

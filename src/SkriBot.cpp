@@ -23,7 +23,7 @@
           AddLineSensor(EDU_LINE_SENSOR_2, 2);
           AddLineSensor(EDU_LINE_SENSOR_3, 3);
     }
-
+   Stop();
   }
 
   void SkriBot::AddDCRotor(int SpeedPin,int DirectionPin, String Side){
@@ -93,6 +93,41 @@
                     }
       }
   }
+
+
+    void SkriBot::AddDistSensor(String EDU_SHIELD_SLOT){
+      if(EDU_SHIELD_SLOT == "D1"){
+        AddDistSensor(EDU_ECHO_PIN_1,EDU_TRIG_PIN_1,"D1");  
+      }else if(EDU_SHIELD_SLOT == "D2"){
+        AddDistSensor(EDU_ECHO_PIN_2,EDU_TRIG_PIN_2,"D2");
+      }
+    }
+    void SkriBot::AddLED(String EDU_SHIELD_SLOT){
+      if(EDU_SHIELD_SLOT == "LED1"){
+        AddLED(EDU_LED_DATA_PIN_1,"LED1");
+      }else if(EDU_SHIELD_SLOT == "LED2"){
+        AddLED(EDU_LED_DATA_PIN,"LED2");
+      }
+    }
+    void SkriBot::AddLineSensor(String EDU_SHIELD_SLOT){
+       if(EDU_SHIELD_SLOT == "L1"){
+        AddLineSensor(EDU_LINE_SENSOR_1,"L1");
+      }else if(EDU_SHIELD_SLOT == "L2"){
+        AddLineSensor(EDU_LINE_SENSOR_2,"L2");
+      }else if(EDU_SHIELD_SLOT == "L3" ){
+        AddLineSensor(EDU_LINE_SENSOR_3,"L3");
+      }
+    }
+    void SkriBot::AddDCRotor(String EDU_SHIELD_SLOT){
+      if(EDU_SHIELD_SLOT == "LEFT"){
+        AddDCRotor(EDU_ROTOR_SPEED_PIN_L,EDU_ROTOR_DIR_PIN_L,"Left");          
+      }else if(EDU_SHIELD_SLOT == "RIGHT"){
+        AddDCRotor(EDU_ROTOR_SPEED_PIN_L,EDU_ROTOR_DIR_PIN_L,"Right");
+      }
+    }
+    void SkriBot::AddClaw(){
+        AddClaw(EDU_CLAW_PIN1,EDU_CLAW_PIN2);
+    }    
 
   int SkriBot::GetScopeDistance(String name){
     for(int zz = 0; zz < NScopes ; zz++){
@@ -194,7 +229,7 @@
          switch(Dir){
         case 'B':
                   for(int kk = 0; kk < NLeftDCRotors ; kk++){
-                    LeftDCRotors[kk]->SetDirection(1);
+                    LeftDCRotors[kk]->SetDirection(0);
                     LeftDCRotors[kk]->Move();
                   }
           
@@ -206,7 +241,7 @@
         
         case 'F':
                   for(int kk = 0; kk < NLeftDCRotors ; kk++){
-                    LeftDCRotors[kk]->SetDirection(0);
+                    LeftDCRotors[kk]->SetDirection(1);
                     LeftDCRotors[kk]->Move();
                   }
           
@@ -223,7 +258,7 @@
                   }
           
                   for(int kk = 0; kk < NRightDCRotors ; kk++){
-                    RightDCRotors[kk]->SetDirection(1);
+                    RightDCRotors[kk]->SetDirection(0);
                     RightDCRotors[kk]->Move();
                   }
          break;
@@ -235,7 +270,7 @@
                   }
           
                   for(int kk = 0; kk < NRightDCRotors ; kk++){
-                    RightDCRotors[kk]->SetDirection(0);
+                    RightDCRotors[kk]->SetDirection(1);
                     RightDCRotors[kk]->Move();
                   }
          break;
@@ -312,13 +347,13 @@
  
        if(left > 250){
         leftSpeed = left - 250;
-        leftDir = 0;
+        leftDir = 1;
       }else if(left == 250){
         leftSpeed = 0;
-        leftDir = 0;
+        leftDir = 1;
       }else{
         leftSpeed = 250 - left;
-        leftDir = 1;
+        leftDir = 0;
       }
 
         if(right > 250){
