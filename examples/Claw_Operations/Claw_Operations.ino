@@ -15,12 +15,8 @@
  *
  * Additonaly robot has got a claw plugged into the claw slots on Skriware EDU Shield.
  */
-<<<<<<< HEAD
   SkriBot robot;                      //defining our hero 
   int LeftSensor, RightSensor;        // variables to keep measurements form detectors 
-=======
-  SkriBot robot;                                  //defining our hero                   // variables to keep measurements form detectors 
->>>>>>> 4a39864de8d1ec663b0df6e7b03e530a073a019b
 void setup() {
 
   robot.SetSpeed(250);               // set maximum speed
