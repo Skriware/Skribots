@@ -30,7 +30,7 @@ void SoundDetector::SoundDetected(){
 }
 
 int SoundDetector::CountSound(int sec){
-	int sounds = 0;
+	/*int sounds = 0;
 	int diftimes[5];
 	diftimes[0] = abs(times[0] - times[5]);
 	times[0] = 0;
@@ -44,5 +44,6 @@ int SoundDetector::CountSound(int sec){
 	}
 
 	return(sounds);
-
+	*/
+	return(0);
 }

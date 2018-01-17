@@ -17,12 +17,13 @@
     void RobotLED::turnON(int R, int B, int G){
           pixel.setPixelColor(0, pixel.Color(R,G,B)); 
           pixel.show(); 
-
+          delay(10);
     }
 
     void RobotLED::turnOFF(){
             pixel.setPixelColor(0, pixel.Color(0,0,0)); 
             pixel.show(); 
+            delay(10);
     }
 
 
