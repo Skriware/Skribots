@@ -165,11 +165,9 @@
                     }
                   
       }
-<<<<<<< HEAD
-      delay(10);
-=======
+
+     
       delay(50);
->>>>>>> 2e5cfa2f251b651389afc9523cbfe27e6989ae0f
   }
 
   void SkriBot::TurnLEDOff(int _id){
@@ -179,11 +177,7 @@
                       if(_id != -69)break;
                     }
       }
-<<<<<<< HEAD
-      delay(10);
-=======
       delay(50);
->>>>>>> 2e5cfa2f251b651389afc9523cbfe27e6989ae0f
   }
 
   int SkriBot::ReadLineSensor(String name){ 
