@@ -122,7 +122,7 @@
       if(EDU_SHIELD_SLOT == "LEFT"){
         AddDCRotor(EDU_ROTOR_SPEED_PIN_L,EDU_ROTOR_DIR_PIN_L,"Left");          
       }else if(EDU_SHIELD_SLOT == "RIGHT"){
-        AddDCRotor(EDU_ROTOR_SPEED_PIN_L,EDU_ROTOR_DIR_PIN_L,"Right");
+        AddDCRotor(EDU_ROTOR_SPEED_PIN_R,EDU_ROTOR_DIR_PIN_R,"Right");
       }
     }
     void SkriBot::AddClaw(){
@@ -165,7 +165,11 @@
                     }
                   
       }
+<<<<<<< HEAD
       delay(10);
+=======
+      delay(50);
+>>>>>>> 2e5cfa2f251b651389afc9523cbfe27e6989ae0f
   }
 
   void SkriBot::TurnLEDOff(int _id){
@@ -175,7 +179,11 @@
                       if(_id != -69)break;
                     }
       }
+<<<<<<< HEAD
       delay(10);
+=======
+      delay(50);
+>>>>>>> 2e5cfa2f251b651389afc9523cbfe27e6989ae0f
   }
 
   int SkriBot::ReadLineSensor(String name){ 
