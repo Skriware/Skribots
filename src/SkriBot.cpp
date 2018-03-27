@@ -231,6 +231,7 @@
         AddDCRotor(EDU_ROTOR_SPEED_PIN_L,EDU_ROTOR_DIR_PIN_L,"Left");          
       }else if(EDU_SHIELD_SLOT == "RIGHT"){
         AddDCRotor(EDU_ROTOR_SPEED_PIN_R,EDU_ROTOR_DIR_PIN_R,"Right");
+<<<<<<< HEAD
       }
     }
   
