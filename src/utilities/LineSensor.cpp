@@ -1,5 +1,6 @@
 #include "LineSensor.h"
 
+
 LineSensor::LineSensor(int PinL, String Name){
  name = Name;
  sensorPin = PinL;
