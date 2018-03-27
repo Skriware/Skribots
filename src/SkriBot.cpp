@@ -370,6 +370,7 @@
       }
       delay(10);
       #endif
+      delay(50);
   }
 
   void SkriBot::TurnLEDOff(int _id){
@@ -382,6 +383,7 @@
       }
       delay(10);
       #endif
+      delay(50);
   }
 
   int SkriBot::ReadLineSensor(String name){ 
