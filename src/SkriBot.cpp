@@ -34,7 +34,6 @@
   Serial3.begin(9600);
   Serial3.setTimeout(50);
   #endif
-  BLE_nameSetup();
   }
 
   char SkriBot::BLE_read(){
@@ -85,7 +84,7 @@
 
   }
 
-  void SkriBot::BLE_nameSetup(){
+  void SkriBot::BLE_Setup(){
     byte IfNamed = 0;
     #ifndef _VARIANT_BBC_MICROBIT_
     IfNamed = EEPROM.read(10);
