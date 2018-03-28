@@ -109,7 +109,7 @@
     bool BLE_checkConnection();
     int  BLE_dataAvailable();
     void BLE_changeName(char name[],bool userConncection = true);
-    void BLE_nameSetup();
+    void BLE_Setup();
     void BLE_reset();
 
     void sendNameInfo();
