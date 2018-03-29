@@ -129,7 +129,7 @@
        #ifndef _VARIANT_BBC_MICROBIT_
        EEPROM.write(10, 0);
        #endif
-       BLE_nameSetup();
+       BLE_Setup();
        
   }
 
