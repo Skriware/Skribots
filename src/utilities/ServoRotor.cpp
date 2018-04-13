@@ -1,9 +1,10 @@
+#include <Arduino.h>
+#ifndef _VARIANT_BBC_MICROBIT_
 #include "ServoRotor.h"
 
 ServoRotor::ServoRotor(int Pin, String Side, int neu){
   _pin  = Pin;
   _side = Side; 
-  //pinMode(_pin, OUTPUT);
   servo.attach(_pin,1000,2000);
   _neutral = neu;
   servo.writeMicroseconds(_neutral);
@@ -23,3 +24,4 @@ void ServoRotor::Move(char dir){
 void ServoRotor::Stop(int serv){
   servo.writeMicroseconds(_neutral);
 }
+#endif

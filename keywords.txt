@@ -6,7 +6,7 @@
 # Datatypes (KEYWORD1)
 #######################################
 
-SkriBot		KEYWORD1	MainRobot
+Skribot		KEYWORD1	MainRobot
 ServoRotor	KEYWORD1	MainRobot
 DistSensor	KEYWORD1	MainRobot
 
@@ -22,6 +22,7 @@ ReadLineSensor			KEYWORD2
 AddScope				KEYWORD2
 AddLED					KEYWORD2
 AddClaw					KEYWORD2
+Configure_Connections	KEYWORD2
 Move					KEYWORD2
 Stop					KEYWORD2
 TurnLeft				KEYWORD2

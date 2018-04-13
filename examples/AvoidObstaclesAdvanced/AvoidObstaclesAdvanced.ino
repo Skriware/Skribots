@@ -1,4 +1,4 @@
-#include <SkriBot.h>
+#include <Skribot.h>
  /* In this example we present the more advance obstacle avoiding algorithm, which is more complexed then the basic 
  *  form and allows our robot to escape from cornerners and avoid difficult obstacles.
  *  
@@ -21,7 +21,7 @@
  * Pointing them right ahead is not always the best option...
  *
  */
-  SkriBot robot;                                  //defining our hero
+  Skribot robot;                                  //defining our hero
   int LeftSensor,RightSensor;                     // variables to keep measurements form detectors. 
   int lastRightSensor, lastLeftSensor;            // variables to keep measurements from previous algorithm step.
 void setup() {

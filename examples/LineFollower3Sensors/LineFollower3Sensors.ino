@@ -1,4 +1,4 @@
-#include <SkriBot.h>
+#include <Skribot.h>
 /*
  * In this example we present Line folower which uses three sensors from the LineSenosor bar. 
  * We can read specific values for each of 3 detectors in Line detector left, right and center instead of reading from it as one. 
@@ -16,7 +16,7 @@
  * Timmings for turns are set for example values, when building own robot you should do some tests to set good working turning times.
  */
 
-SkriBot robot;
+Skribot robot;
 bool LeftSensor;
 bool RightSensor;
 bool CenterSensor;                    // variables to keep sensor measurements.

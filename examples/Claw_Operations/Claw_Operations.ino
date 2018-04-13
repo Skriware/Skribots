@@ -1,4 +1,4 @@
-#include <SkriBot.h>
+#include <Skribot.h>
  /* In this example we present commnads used for claw operations
  * 
  Robot will wait for the signal form one of its distance detectors and perform all avaliable Claw operations in a sequence.
@@ -15,7 +15,7 @@
  *
  * Additonaly robot has got a claw plugged into the claw slots on Skriware EDU Shield.
  */
-  SkriBot robot;                      //defining our hero 
+  Skribot robot;                      //defining our hero 
   int LeftSensor, RightSensor;        // variables to keep measurements form detectors 
 void setup() {
 

@@ -1,3 +1,5 @@
+#include <Arduino.h>
+#ifndef _VARIANT_BBC_MICROBIT_
 #include "Claw.h"
 
 Claw::Claw(int Claw_Pin,int Arm_Pin,byte _id){
@@ -31,3 +33,5 @@ void Claw::SetAngle(int claw_angle,int arm_angle){
 byte Claw::GetID(){
 	return(id);
 }
+
+#endif

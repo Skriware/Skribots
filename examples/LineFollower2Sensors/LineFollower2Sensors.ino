@@ -1,4 +1,4 @@
-#include <SkriBot.h>
+#include <Skribot.h>
 /*
  * In this example we present basic algorithm for line followe with two line sensors. Robot will go forward if both don't see the line and lurn if one will. 
  * We want our robot to keep line between sensors.
@@ -12,7 +12,7 @@
  * IMPORTANT!!!
  * Timmings for turns are set for example values, when building own robot you should do some tests to set good working turning times.
  */
-SkriBot robot;
+Skribot robot;
 bool LEFTSens, RIGHTSens;                 // variables to keep sensor measurements.
                         
 void setup() {

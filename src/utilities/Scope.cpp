@@ -1,3 +1,5 @@
+#include <Arduino.h>
+#ifndef _VARIANT_BBC_MICROBIT_
 #include "Scope.h"
 
 Scope::Scope(int EP,int Trigg,int ServoPin, String Name){
@@ -21,3 +23,5 @@ int Scope::GetDistance(){
 String Scope::GetName(){
 	return(name);
 }
+
+#endif

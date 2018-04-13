@@ -1,4 +1,4 @@
-#include <SkriBot.h>
+#include <Skribot.h>
 
 /*In this example robot has got two rotors one for each side. 
  *  For this example robot has got two rotors plugged by Skriware EDU Shield, LEFT and RIGHT rotors are plugged to the rotors connections.
@@ -11,7 +11,7 @@
  * Timmings for turns are set for example values, when building own robot you should do some tests to set good working turning times.
  */
  
-SkriBot robot;                      //defining our hero
+Skribot robot;                      //defining our hero
 
 void setup() {
   

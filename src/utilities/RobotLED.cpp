@@ -1,3 +1,5 @@
+#include<Arduino.h>
+#ifndef _VARIANT_BBC_MICROBIT_
 #include "RobotLED.h"
 
 	RobotLED::RobotLED(int pin,String _name){
@@ -17,12 +19,13 @@
     void RobotLED::turnON(int R, int B, int G){
           pixel.setPixelColor(0, pixel.Color(R,G,B)); 
           pixel.show(); 
-
+          delay(10);
     }
 
     void RobotLED::turnOFF(){
             pixel.setPixelColor(0, pixel.Color(0,0,0)); 
             pixel.show(); 
+            delay(10);
     }
 
 
@@ -60,3 +63,5 @@
     String RobotLED::GetName(){
     	return(name);
     }
+
+    #endif

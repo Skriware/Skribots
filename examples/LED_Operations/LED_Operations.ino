@@ -1,11 +1,11 @@
-#include <SkriBot.h>
+#include <Skribot.h>
 
 /*In this example robot has got two LEDs which he uses to send multicolor light signals.
  * 
  * When sending color configuration to the robot you need to send it in RGB(RED,GREEN,BLUE) format. You set the color by sending 3 numbers to the LED each coresponding to one of three basic colors.
  */
 
-  SkriBot robot;    //defining our hero
+  Skribot robot;    //defining our hero
   
 void setup() {
   

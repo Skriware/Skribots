@@ -30,7 +30,8 @@
   License along with NeoPixel.  If not, see
   <http://www.gnu.org/licenses/>.
   -------------------------------------------------------------------------*/
-
+#include<Arduino.h>
+#ifndef _VARIANT_BBC_MICROBIT_
 #include "Adafruit_NeoPixel.h"
 
 #if defined(NRF52)
@@ -2096,3 +2097,4 @@ uint8_t Adafruit_NeoPixel::getBrightness(void) const {
 void Adafruit_NeoPixel::clear() {
   memset(pixels, 0, numBytes);
 }
+#endif

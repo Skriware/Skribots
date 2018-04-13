@@ -1,4 +1,4 @@
-#include <SkriBot.h>
+#include <Skribot.h>
  /* In this example we present the simplest obstacle avoiding algorithm:
  * 
  * If you see obstacle on right side - Turn Left
@@ -18,7 +18,7 @@
  * Pointing them right ahead is not always the best option...
  *
  */
-  SkriBot robot;                                  //defining our hero
+  Skribot robot;                                  //defining our hero
   int LeftSensor,RightSensor;                     // variables to keep measurements form detectors 
 void setup() {
 

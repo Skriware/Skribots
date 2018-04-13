@@ -12,8 +12,13 @@
     int GetSpeed();
     int GetDirection();
   private:
-  int _speed_pin;
-  int _dir_pin;
+  #ifndef _VARIANT_BBC_MICROBIT_
+  byte _speed_pin;
+  byte _dir_pin;
+  #else
+  byte _dir_pin_1;
+  byte _dir_pin_2;
+  #endif
   int _speed;
   int _dir;
  };
