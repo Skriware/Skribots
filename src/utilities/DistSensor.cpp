@@ -20,7 +20,7 @@ DistSensor::DistSensor(int EP,int Trigg, byte _ID){
     digitalWrite(TriggerPin,HIGH);
     delayMicroseconds(10);
     digitalWrite(TriggerPin,LOW);
-    unsigned long int sigT = pulseIn(EchoPin,HIGH);
+    unsigned long int sigT = pulseIn(EchoPin,HIGH,15000);
     long int l = sigT/58;
     if(l < cm){
       return(l);
@@ -35,7 +35,7 @@ DistSensor::DistSensor(int EP,int Trigg, byte _ID){
     digitalWrite(TriggerPin,HIGH);
     delayMicroseconds(10);
     digitalWrite(TriggerPin,LOW);
-    unsigned long int sigT = pulseIn(EchoPin,HIGH);
+    unsigned long int sigT = pulseIn(EchoPin,HIGH,15000);
     long int l = sigT/58;
     return(l);
   }

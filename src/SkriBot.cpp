@@ -10,7 +10,8 @@
     NLeftDCRotors   = 0;
     NRightDCRotors  = 0;
     NClaws          = 0;
-
+    connection_Break_Reported = false;
+    using_BLE_Connection = false;
     Configure_Connections(predef);
   }
 
@@ -35,11 +36,27 @@
     }else if (predef == "SKRIBOT_MINI"){
            #ifdef _VARIANT_BBC_MICROBIT_
           AddDCRotor(SKRIBOT_MINI_SHILELD_MOTOR_1_DIR1_PIN,SKRIBOT_MINI_SHILELD_MOTOR_1_DIR2_PIN,"Left");
-          AddDCRotor(SKRIBOT_MINI_SHILELD_MOTOR_2_DIR1_PIN,SKRIBOT_MINI_SHILELD_MOTOR_2_DIR1_PIN,"Right");
-          AddLineSensor(SKRIBOT_MINI_SHILELD_SENSOR_0, 0);
-          AddLineSensor(SKRIBOT_MINI_SHILELD_SENSOR_1, 1);
-          AddLineSensor(SKRIBOT_MINI_SHILELD_SENSOR_2, 2);
+          AddDCRotor(SKRIBOT_MINI_SHILELD_MOTOR_2_DIR1_PIN,SKRIBOT_MINI_SHILELD_MOTOR_2_DIR2_PIN,"Right");
+          AddLineSensor(SKRIBOT_MINI_SHILELD_SENSOR_0, 1);
+          AddLineSensor(SKRIBOT_MINI_SHILELD_SENSOR_1, 2);
+          AddLineSensor(SKRIBOT_MINI_SHILELD_SENSOR_2, 3);
           #endif
+    }else if (predef == "EDU_SHIELD_NO_GRABBER"){
+          AddDCRotor(EDU_ROTOR_SPEED_PIN_L,EDU_ROTOR_DIR_PIN_L,"Left");          //adding rotors for movement
+          AddDCRotor(EDU_ROTOR_SPEED_PIN_R,EDU_ROTOR_DIR_PIN_R,"Right");
+          AddDistSensor(EDU_ECHO_PIN_1,EDU_TRIG_PIN_1,1);   //adding Distance Sensors  and naming them "Left and Right";
+          AddDistSensor(EDU_ECHO_PIN_2,EDU_TRIG_PIN_2,2);
+          
+          #ifndef _VARIANT_BBC_MICROBIT_
+          #if DISABLED(DEBUG_MODE)
+          AddLED(EDU_LED_DATA_PIN_1,1);
+          AddLED(EDU_LED_DATA_PIN,0);
+          #endif
+          #endif
+          AddLineSensor(EDU_LINE_SENSOR_1, 1);
+          AddLineSensor(EDU_LINE_SENSOR_2, 2);
+          AddLineSensor(EDU_LINE_SENSOR_3, 3);
+          pinMode(EDU_BT_STATE_PIN,INPUT);
     }
    SetSpeed(250);
    Stop();
@@ -67,6 +84,8 @@
 
   bool Skribot::BLE_checkConnection(){
   bool connection;  
+
+  
   #ifdef _VARIANT_BBC_MICROBIT_
      //BTLESerial.poll();
      delay(1);
@@ -74,6 +93,11 @@
   #else 
     connection = digitalRead(EDU_BT_STATE_PIN) == HIGH;
   #endif
+if(connection_Break_Reported){
+    connection_Break_Reported = false;
+    connection = false;
+  }
+
     return(connection);
   }
 
@@ -91,6 +115,23 @@
   #endif
     return(dataAvalible);
 
+  }
+
+  void Skribot::wait_And_Check_BLE_Connection(int ms,int interval){
+
+    int loop_iterator = ms/interval;
+    int ms_left_after_loop = loop_iterator%interval;
+    delay(ms_left_after_loop);
+    for(int yy = 1; yy < loop_iterator; yy++){
+          if(using_BLE_Connection && !connection_Break_Reported && BLE_checkConnection() == false){
+          connection_Break_Reported = true;
+          break;
+      }
+      delay(interval);
+    } 
+    #ifdef DEBUG_MODE
+    if(connection_Break_Reported)Serial.println("Connection LOST!");
+    #endif
   }
 
   void Skribot::BLE_Setup(){
@@ -135,6 +176,8 @@
     BTLESerial.begin();
     ledMatrix.begin();
     #endif
+
+    using_BLE_Connection = true;
   }
 
   void Skribot::BLE_reset(){
@@ -444,8 +487,6 @@
       return(0);
   }
 
-
-
   
   void Skribot::Move(char Dir,int ms){
       if (NLeftDCRotors  > 0 && NRightDCRotors  >0){
@@ -549,7 +590,7 @@
       }
         
         if(ms > 0 ){
-          delay(ms);
+          wait_And_Check_BLE_Connection(ms,10);
           for(int kk = 0; kk < NLeftDCRotors ; kk++){
                     LeftDCRotors[kk]->SetSpeed(DCSpeed);
                     LeftDCRotors[kk]->Stop();
@@ -590,19 +631,21 @@
         rightDir = 0;
       }
 
-
-
-                for(int kk = 0; kk < NLeftDCRotors ; kk++){
-                    LeftDCRotors[kk]->SetDirection(leftDir);
-                    LeftDCRotors[kk]->SetSpeed(leftSpeed);
-                    LeftDCRotors[kk]->Move();
-                  }
-          
                   for(int kk = 0; kk < NRightDCRotors ; kk++){
                     RightDCRotors[kk]->SetDirection(rightDir);
                     RightDCRotors[kk]->SetSpeed(rightSpeed);
                     RightDCRotors[kk]->Move();
                   }
+                   for(int yy = 0; yy < NLeftDCRotors ; yy++){
+                    LeftDCRotors[yy]->SetDirection(leftDir);
+                    LeftDCRotors[yy]->SetSpeed(leftSpeed);
+                    LeftDCRotors[yy]->Move();
+                  }
+
+                
+               
+          
+                
   }
 
     void Skribot::SetSpeed(int s){ 

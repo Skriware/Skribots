@@ -8,6 +8,7 @@
 #include <utilities/Scope.h> 
 #include <utilities/Adafruit_NeoPixel.h>
 #include <utilities/RobotLED.h>
+#include <utilities/RGB_LED_Matrix.h>
 #include <utilities/IRStation.h>
 #endif
 #include <utilities/DistSensor.h>
@@ -35,9 +36,9 @@
 #define EDU_ECHO_PIN_2 12
 #define EDU_TRIG_PIN_1 9
 #define EDU_TRIG_PIN_2 11
-#define EDU_LINE_SENSOR_1 1
-#define EDU_LINE_SENSOR_2 2
-#define EDU_LINE_SENSOR_3 3
+#define EDU_LINE_SENSOR_1 A1
+#define EDU_LINE_SENSOR_2 A2
+#define EDU_LINE_SENSOR_3 A3
 #define EDU_LED_DATA_PIN 1
 #define EDU_LED_DATA_PIN_1 0
 #define EDU_BT_STATE_PIN 3
@@ -84,6 +85,8 @@
 
     void Configure_Connections(String predef="");
 
+    void wait_And_Check_BLE_Connection(int ms,int interval);
+
     void Move(char Direction,int ms);
     void FaceLeft(int ms = 200);
     void FaceRight(int ms = 200);
@@ -96,8 +99,8 @@
 
     void SetSpeed(int speed);                                                                    //functions for movements
 
-    int ReadDistSensor(String id, int max = 100);
-    int ReadDistSensor(int id, int max = 100);
+    int ReadDistSensor(String id, int max = 150);
+    int ReadDistSensor(int id, int max = 150);
                                                                                                 //distance sensor readout
     int ReadLineSensor(String name);
     int ReadLineSensor(int id);
@@ -128,17 +131,19 @@
 
     void sendNameInfo();
 
+
   private:
- 
   DistSensor *DistSensors[5];
   LineSensor *LineSensors[6];
   Rotor *LeftDCRotors[3];
   Rotor *RightDCRotors[3];
+  bool connection_Break_Reported,using_BLE_Connection;
 
   #ifndef _VARIANT_BBC_MICROBIT_
   RobotLED *LEDs[5];
   Claw *Claws[2];
   Scope *Scopes[3];
+  RGB_LED_Matrix *RGB_Matrix[3];
   #endif
 
   byte NDistSensors,NLEDs,NLineSensors,NScopes,NLeftDCRotors,NRightDCRotors,NClaws;           //counters

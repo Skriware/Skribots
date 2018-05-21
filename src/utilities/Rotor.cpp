@@ -24,13 +24,22 @@ void Rotor::SetSpeed(int speed){
 
 void Rotor::Move(){
 	#ifndef _VARIANT_BBC_MICROBIT_
+	digitalWrite(_dir_pin,LOW);
+	digitalWrite(_speed_pin,LOW);
 	digitalWrite(_dir_pin,_dir);
 	analogWrite(_speed_pin,abs(_dir*255-_speed));
 	#else
+	
+if(_speed == 0){
+Stop();
+}else if(_dir == 1){
 	digitalWrite(_dir_pin_1,LOW);
+	digitalWrite(_dir_pin_2,HIGH);
+}else{
 	digitalWrite(_dir_pin_2,LOW);
-	analogWrite(_dir_pin_1,abs(_dir-1)*_speed);
-	analogWrite(_dir_pin_2,_dir*_speed);
+	digitalWrite(_dir_pin_1,HIGH);
+}
+
 	#endif
 
 }
