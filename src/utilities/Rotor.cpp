@@ -39,9 +39,7 @@ Stop();
 	digitalWrite(_dir_pin_2,LOW);
 	digitalWrite(_dir_pin_1,HIGH);
 }
-
 	#endif
-
 }
 
 void Rotor::Stop(){

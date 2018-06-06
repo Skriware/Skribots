@@ -10,10 +10,12 @@
 #include <utilities/RobotLED.h>
 #include <utilities/RGB_LED_Matrix.h>
 #include <utilities/IRStation.h>
+#include <utilities/BLEModule.h>
 #endif
 #include <utilities/DistSensor.h>
 #include <utilities/LineSensor.h>
 #include <utilities/Rotor.h>
+#include <utilities/LightSensor.h>
 #include <utilities/SoundDetector.h>
 #ifdef _VARIANT_BBC_MICROBIT_
 #include <utilities/Adafruit_Microbit.h>
@@ -41,7 +43,6 @@
 #define EDU_LINE_SENSOR_3 A3
 #define EDU_LED_DATA_PIN 1
 #define EDU_LED_DATA_PIN_1 0
-#define EDU_BT_STATE_PIN 3
 #define EDU_CLAW_PIN1 2
 #define EDU_CLAW_PIN2 8
 
@@ -59,6 +60,7 @@
 
 
 
+
   class Skribot
  {
   public:
@@ -68,6 +70,7 @@
     void AddLineSensor(int Pin, String Name); 
     void AddLineSensor(int Pin, int id);
     void AddDCRotor(int SpeedPin,int DirectionPin, String side);
+    void AddLightSensor(int _pin,int id);
 
      #ifndef _VARIANT_BBC_MICROBIT_
     void AddClaw(int ClawPin,int Arm_Pin, byte id = 0);
@@ -116,6 +119,11 @@
     void TurnLEDOn(int R,int G, int B,int _id = -69);
     void TurnLEDOff(int _id = -69);                                                            // LED functions
 
+    int ReadLightRaw(int id);
+    bool LightSensorDark(int id);
+    bool LightSensorBright(int id);
+                                                                                               //Light Sensor Functions
+
     #ifndef _VARIANT_BBC_MICROBIT_
     void SetScopeAngle(String id, int deg);  
     int  GetScopeDistance(String id);                                                         //Scope functions
@@ -128,7 +136,7 @@
     void BLE_changeName(char name[],bool userConncection = true);
     void BLE_Setup();
     void BLE_reset();
-
+    void BLE_Set_Module(moduleType type);
     void sendNameInfo();
 
 
@@ -137,16 +145,19 @@
   LineSensor *LineSensors[6];
   Rotor *LeftDCRotors[3];
   Rotor *RightDCRotors[3];
-  bool connection_Break_Reported,using_BLE_Connection;
+  LightSensor *LightSensors[4];
+  bool using_BLE_Connection,connection_Break_Reported;
+  moduleType BLE_MODULE_TYPE;
 
   #ifndef _VARIANT_BBC_MICROBIT_
   RobotLED *LEDs[5];
   Claw *Claws[2];
   Scope *Scopes[3];
   RGB_LED_Matrix *RGB_Matrix[3];
+  BLEModule *BTmodule;
   #endif
 
-  byte NDistSensors,NLEDs,NLineSensors,NScopes,NLeftDCRotors,NRightDCRotors,NClaws;           //counters
+  byte NDistSensors,NLEDs,NLineSensors,NScopes,NLeftDCRotors,NRightDCRotors,NClaws,NLightSensors;           //counters
   int DCSpeed = 0;
   
   #ifdef _VARIANT_BBC_MICROBIT_

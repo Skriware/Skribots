@@ -10,7 +10,6 @@
     NLeftDCRotors   = 0;
     NRightDCRotors  = 0;
     NClaws          = 0;
-    connection_Break_Reported = false;
     using_BLE_Connection = false;
     Configure_Connections(predef);
   }
@@ -31,8 +30,8 @@
           #endif
           AddLineSensor(EDU_LINE_SENSOR_1, 1);
           AddLineSensor(EDU_LINE_SENSOR_2, 2);
-          AddLineSensor(EDU_LINE_SENSOR_3, 3);
-          pinMode(EDU_BT_STATE_PIN,INPUT);
+          AddLineSensor(EDU_LINE_SENSOR_3, 3);;
+          BLE_Set_Module(HM_10);
     }else if (predef == "SKRIBOT_MINI"){
            #ifdef _VARIANT_BBC_MICROBIT_
           AddDCRotor(SKRIBOT_MINI_SHILELD_MOTOR_1_DIR1_PIN,SKRIBOT_MINI_SHILELD_MOTOR_1_DIR2_PIN,"Left");
@@ -46,7 +45,6 @@
           AddDCRotor(EDU_ROTOR_SPEED_PIN_R,EDU_ROTOR_DIR_PIN_R,"Right");
           AddDistSensor(EDU_ECHO_PIN_1,EDU_TRIG_PIN_1,1);   //adding Distance Sensors  and naming them "Left and Right";
           AddDistSensor(EDU_ECHO_PIN_2,EDU_TRIG_PIN_2,2);
-          
           #ifndef _VARIANT_BBC_MICROBIT_
           #if DISABLED(DEBUG_MODE)
           AddLED(EDU_LED_DATA_PIN_1,1);
@@ -56,7 +54,7 @@
           AddLineSensor(EDU_LINE_SENSOR_1, 1);
           AddLineSensor(EDU_LINE_SENSOR_2, 2);
           AddLineSensor(EDU_LINE_SENSOR_3, 3);
-          pinMode(EDU_BT_STATE_PIN,INPUT);
+          BLE_Set_Module(HM_10);
     }
    SetSpeed(250);
    Stop();
@@ -69,7 +67,7 @@
     BTLESerial.poll();
     tmp = BTLESerial.read();
   #else 
-    tmp = Serial3.read();
+   tmp = BTmodule->BLE_read();
   #endif
     return(tmp);
   }
@@ -78,20 +76,16 @@
   #ifdef _VARIANT_BBC_MICROBIT_
     BTLESerial.println(msg);
   #else 
-    Serial3.println(msg);
+    BTmodule->BLE_write(msg);
   #endif
   }
 
   bool Skribot::BLE_checkConnection(){
   bool connection;  
-
-  
   #ifdef _VARIANT_BBC_MICROBIT_
-     //BTLESerial.poll();
-     delay(1);
     connection = BTLESerial;
   #else 
-    connection = digitalRead(EDU_BT_STATE_PIN) == HIGH;
+   connection = BTmodule->BLE_checkConnection();
   #endif
 if(connection_Break_Reported){
     connection_Break_Reported = false;
@@ -111,7 +105,7 @@ if(connection_Break_Reported){
     dataAvalible = 0;
   }
   #else 
-    dataAvalible = Serial3.available();
+    dataAvalible = BTmodule->BLE_dataAvailable();
   #endif
     return(dataAvalible);
 
@@ -134,51 +128,23 @@ if(connection_Break_Reported){
     #endif
   }
 
+
   void Skribot::BLE_Setup(){
-
     #ifndef _VARIANT_BBC_MICROBIT_
-    Serial3.begin(9600);
-    Serial3.setTimeout(50);
-    #endif
-
-    byte IfNamed = 0;
-    #ifndef _VARIANT_BBC_MICROBIT_
-    IfNamed = EEPROM.read(10);                         
-    if(IfNamed != 1){
-       char MAC[23] = {' '};
-       delay(100);
-       Serial3.write("AT");
-       delay(100);
-       Serial3.write("AT+ADDR?");
-       delay(100);
-       int MACCounter = 0;
-       while(BLE_dataAvailable()){
-        MAC[MACCounter] = Serial3.read();
-        MACCounter++;
-        if(MACCounter > 23)break;
-       }
-        char tmpmess[32] = {' '};
-       sprintf(tmpmess,"AT+NAMESKRIBOT_%c%c%c",MAC[19],MAC[20],MAC[21]);
-       delay(100);
-       Serial3.write(tmpmess);
-       delay(100);
-       Serial3.write("AT+RESET");
-       delay(100);
-       
-    }else{
-      #ifdef DEBUG_MODE
-      Serial.println("Robot named!");
-      #endif
-    }
+    BTmodule = new BLEModule(BLE_MODULE_TYPE);
+    BTmodule->BLE_Setup();
     #else
     Serial.begin(9600);
     BTLESerial.setLocalName("SkriBotMini");
     BTLESerial.begin();
     ledMatrix.begin();
     #endif
-
     using_BLE_Connection = true;
   }
+
+   void Skribot::BLE_Set_Module(moduleType type){
+    BLE_MODULE_TYPE = type;
+   }
 
   void Skribot::BLE_reset(){
        while(BLE_checkConnection()){
@@ -261,6 +227,13 @@ if(connection_Break_Reported){
     LineSensors[NLineSensors] =  lsensor;
     NLineSensors++;
   }
+
+  void Skribot::AddLightSensor(int pinL,int id){
+    LightSensor *lsensor = new LightSensor(pinL,id);
+    LightSensors[NLightSensors] =  lsensor;
+    NLightSensors++;
+  }
+
 
   void Skribot::AddLineSensor(int pinL,int id){
     LineSensor *lsensor = new LineSensor(pinL,id);
@@ -631,6 +604,11 @@ if(connection_Break_Reported){
         rightDir = 0;
       }
 
+      #ifdef _VARIANT_BBC_MICROBIT_
+      
+
+
+      #else 
                   for(int kk = 0; kk < NRightDCRotors ; kk++){
                     RightDCRotors[kk]->SetDirection(rightDir);
                     RightDCRotors[kk]->SetSpeed(rightSpeed);
@@ -641,7 +619,7 @@ if(connection_Break_Reported){
                     LeftDCRotors[yy]->SetSpeed(leftSpeed);
                     LeftDCRotors[yy]->Move();
                   }
-
+      #endif
                 
                
           
@@ -669,5 +647,37 @@ if(connection_Break_Reported){
     void Skribot::MoveBack(int ms){Move('B',ms);}
     void Skribot::Stop(){Move('S',-1);}
 
-   
+  int Skribot::ReadLightRaw(int id){
+    int output;
+    for(int zz = 0; zz < NLightSensors ; zz++){
+                    if(LightSensors[zz]->GetID() == id){
+                      output = LightSensors[zz]->ReadRaw();
+                      break;
+                    }
+                  
+      }
+      return(output);
+     }
+    bool Skribot::LightSensorDark(int id){
+          bool output;
+    for(int zz = 0; zz < NLightSensors ; zz++){
+                    if(LightSensors[zz]->GetID() == id){
+                      output = LightSensors[zz]->isDark();
+                      break;
+                    }
+                  
+      }
+      return(output);
+    }
+    bool Skribot::LightSensorBright(int id){
+          bool output;
+    for(int zz = 0; zz < NLightSensors ; zz++){
+                    if(LightSensors[zz]->GetID() == id){
+                      output = LightSensors[zz]->isBright();
+                      break;
+                    }
+                  
+      }
+      return(output);
+    }
 
