@@ -1,34 +1,27 @@
 #include "LineSensor.h"
 
-
 LineSensor::LineSensor(int PinL, String Name){
  name = Name;
  sensorPin = PinL;
-  delay(500);
-  int blackReadOut = 0;
-  /*for(int kk = 0; kk< 100; kk++){
-    blackReadOut += analogRead(sensorPin);
-    delay(20);
-  }*/
-    blackReadOut = blackReadOut/100;
-    logicBorder = 500;
-    //Serial.println(logicBorder);
+  delay(100);
+  logicBorder = 500;
+    
 }
 
 LineSensor::LineSensor(int PinL, int _id){
  id = _id;
  sensorPin = PinL;
  name = "";
-  delay(500);
-  int blackReadOut = 0;
-    blackReadOut = blackReadOut/100;
-    logicBorder = 500;
+ delay(100);
+ logicBorder = 500;
 }
 
 int LineSensor::ReadSensor(){
   int readout = analogRead(sensorPin);
+  #ifdef DEBUG_MODE
   Serial.print("READ:");
   Serial.println(readout);
+  #endif
     if(readout > logicBorder){
       return(1);
     }else{
