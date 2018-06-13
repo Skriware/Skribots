@@ -1,4 +1,10 @@
 	#include "RN4020.h"
+	
+	#define BLERXBUFFER_SIZE 21
+
+	char RXBLE_buffer[BLERXBUFFER_SIZE];
+	byte RXBLE_buffer_iterator_end = 1;
+	byte RXBLE_buffer_iterator_beg = 0;
 
 	
 	void serialFlush(){
@@ -9,19 +15,90 @@
 	}   
 
 	char RN4020_read(){
-		return("B");
+		if(substractBufforIterators() >1){
+			char tmp = RXBLE_buffer[RXBLE_buffer_iterator_beg];
+			incrementRXbuffIterator_beg();
+			return(tmp);
+		}
 
 	}                                                        
     void RN4020_write(char *msg){
-
+       char tmpmess[60] = {' '};
+       sprintf(tmpmess,"SUW,12345678901234567890123456789022,%s",msg);
+       RN4020_UARTwrite(tmpmess);
     }
     bool RN4020_checkConnection(){
-
     	RN4020_info info = RN4020_getInfo();
     	return(info.connected);
     }
+
+    void incrementRXbuffIterator_end(){
+    	if(RXBLE_buffer_iterator_end == BLERXBUFFER_SIZE-1){
+    		RXBLE_buffer_iterator_end = 0;
+    	}else{
+    		RXBLE_buffer_iterator_end++;
+    	}
+    }
+
+      void incrementRXbuffIterator_beg(){
+    	if(RXBLE_buffer_iterator_beg == BLERXBUFFER_SIZE-1){
+    		RXBLE_buffer_iterator_beg = 0;
+    	}else{
+    		RXBLE_buffer_iterator_beg++;
+    	}
+    }
+
+    byte substractBufforIterators(){
+    	if(RXBLE_buffer_iterator_end < RXBLE_buffer_iterator_beg){
+    		return(RXBLE_buffer_iterator_beg - RXBLE_buffer_iterator_end);
+    	}else if(RXBLE_buffer_iterator_beg < RXBLE_buffer_iterator_end){
+    		return(BLERXBUFFER_SIZE - RXBLE_buffer_iterator_end + RXBLE_buffer_iterator_beg);
+    	}else{
+    		return(0);
+    	}
+    }
+
+    int cti(char x){
+  		int y = x - '0';
+ 	 	return(y);
+	}
+
     int  RN4020_dataAvailable(){
-    	return(7);
+    	for(int kk = 0; kk < BLERXBUFFER_SIZE; kk++)Serial.print(RXBLE_buffer[kk]);
+    		Serial.println();
+    	Serial.print(RXBLE_buffer_iterator_end);
+    	Serial.print(RXBLE_buffer_iterator_beg);
+    	if(Serial3.available()){
+    		char tmp;
+    		while(Serial3.available()){
+    			tmp = Serial3.read();
+    			if(tmp == 'W' && Serial3.read() == 'V'){
+    				serialFlush();
+    				Serial.println("DATA in characteristic");
+    				RN4020_UARTwrite("SUR,12345678901234567890123456789011",10);		//Reading the characteristic
+    				while(Serial3.available() && substractBufforIterators() >= 1 ){
+    					byte hex1 = cti(Serial3.read());
+    					byte hex2 = cti(Serial3.read());
+    					if(hex1 > 47 && hex1 < 59){
+    						hex1 -= 48;
+    					}else if(hex1 > 64 && hex1 < 71){
+    						hex1 -= 54;
+    					}
+    					if(hex2 > 47 && hex2 < 59){
+    						hex2 -= 48;
+    					}else if(hex2 > 64 && hex2 < 71){
+    						hex2 -= 54;
+    					}
+    					char ascii = 16*hex1+hex2;
+    					RXBLE_buffer[RXBLE_buffer_iterator_end] = ascii;
+    					incrementRXbuffIterator_end();
+    					}
+    				serialFlush();
+    			
+    				}
+    		}
+    	}
+    		return(BLERXBUFFER_SIZE-substractBufforIterators()-1);
     }
 
     RN4020_info RN4020_getInfo(){
@@ -35,7 +112,7 @@
     	
     	byte kk = 0;
     	
-    	while(Serial3.available() || kk < 70){
+    	while(Serial3.available() || kk < 70){		//70 - number of bytes after which we have all the information
     		if(Serial3.available()){
     		tmp[kk] = Serial3.read(); 
     		kk++;
@@ -56,7 +133,6 @@
     		else if(thingsRead == 2 && tmp[zz] == '='){
     			thingsRead++;
     		}else if(thingsRead == 3 && tmp[zz] == '='){
-    			Serial.println(tmp[zz+1]);
     		 if(tmp[zz+1] == 'n' && tmp[zz+2] == 'o'){
     		 	conn = false;
     		 }else{
@@ -76,7 +152,6 @@
        char tmpmess[32] = {' '};
        sprintf(tmpmess,"SN,%s",name);
        RN4020_UARTwrite(tmpmess);
-
        RN4020_reset();
     }
     void RN4020_Setup(){
@@ -96,10 +171,10 @@
 		RN4020_UARTwrite("PS,123456789012345678901234567890FF"); // Set private service UUID 
 									
 																								    // Set private
-		RN4020_UARTwrite("PC,12345678901234567890123456789011,12,02");			
+		RN4020_UARTwrite("PC,12345678901234567890123456789011,04,20");			
 															// characteristic to be readable, notifiable and 2 bytes
 																									// in length
-		RN4020_UARTwrite("PC,12345678901234567890123456789022,02,02");
+		RN4020_UARTwrite("PC,12345678901234567890123456789022,10,20");
 									 // Set private
 												  // characteristic to be readable and 2 bytes in length
 		RN4020_info info = RN4020_getInfo();
@@ -110,6 +185,7 @@
     }
     void RN4020_reset(){
     	RN4020_UARTwrite("R,1",2000); // Reboot
+    	serialFlush();
 
     }
 

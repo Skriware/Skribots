@@ -19,5 +19,9 @@
     void RN4020_UARTwrite(char *str, int delayTime = 50);
     void RN4020_Setup();
     void RN4020_reset();
+    int cti(char x);
+    void incrementRXbuffIterator_beg();
+    void incrementRXbuffIterator_deg();
+	byte substractBufforIterators();
 
 #endif
