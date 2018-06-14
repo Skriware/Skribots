@@ -33,10 +33,10 @@
     	char tmp[21];
     	sprintf(tmp,"%s\n",msg);
        Serial3.print("SUW,12345678901234567890123456789022,");
-       for(int yy = 0; yy < sizeof(msg) ; yy++){
+       for(int yy = 0; yy < 21 ; yy++){
        	if(tmp[yy] == '\n')break;
        	Serial3.print(int(tmp[yy]),HEX);
-       	Serial.print(int(tmp[yy]),HEX);
+       	//Serial.print(int(tmp[yy]),HEX);
        }
        	Serial3.println();
        serialFlush();
