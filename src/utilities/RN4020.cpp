@@ -5,28 +5,47 @@
 	char RXBLE_buffer[BLERXBUFFER_SIZE];
 	byte RXBLE_buffer_iterator_end = 1;
 	byte RXBLE_buffer_iterator_beg = 0;
+	bool newdataArrived = false;
 
 	
 	void serialFlush(){
 		delay(30);
+		if(Serial3.available()){
   		while(Serial3.available() > 0) {
     		char t = Serial3.read();
+    		if(t == 'W' && Serial3.read() == 'V')newdataArrived = true;
+    		delay(1);
+  		}
   		}
 	}   
 
 	char RN4020_read(){
-		if(substractBufforIterators() >1){
+		if(substractBufforIterators() > 0){
 			char tmp = RXBLE_buffer[RXBLE_buffer_iterator_beg];
 			incrementRXbuffIterator_beg();
 			return(tmp);
 		}
 
+		return('Q');
+
 	}                                                        
     void RN4020_write(char *msg){
-       char tmpmess[60] = {' '};
-       sprintf(tmpmess,"SUW,12345678901234567890123456789022,%s",msg);
-       RN4020_UARTwrite(tmpmess);
+    	char tmp[21];
+    	sprintf(tmp,"%s\n",msg);
+       Serial3.print("SUW,12345678901234567890123456789022,");
+       for(int yy = 0; yy < sizeof(msg) ; yy++){
+       	if(tmp[yy] == '\n')break;
+       	Serial3.print(int(tmp[yy]),HEX);
+       	Serial.print(int(tmp[yy]),HEX);
+       }
+       	Serial3.println();
+       serialFlush();
     }
+
+    char* asciiToHexString(char ascii){
+
+    }
+
     bool RN4020_checkConnection(){
     	RN4020_info info = RN4020_getInfo();
     	return(info.connected);
@@ -64,40 +83,32 @@
 	}
 
     int  RN4020_dataAvailable(){
-    	for(int kk = 0; kk < BLERXBUFFER_SIZE; kk++)Serial.print(RXBLE_buffer[kk]);
-    		Serial.println();
-    	Serial.print(RXBLE_buffer_iterator_end);
-    	Serial.print(RXBLE_buffer_iterator_beg);
-    	if(Serial3.available()){
-    		char tmp;
-    		while(Serial3.available()){
-    			tmp = Serial3.read();
-    			if(tmp == 'W' && Serial3.read() == 'V'){
-    				serialFlush();
-    				Serial.println("DATA in characteristic");
+    			serialFlush();
+    			if(newdataArrived){
     				RN4020_UARTwrite("SUR,12345678901234567890123456789011",10);		//Reading the characteristic
     				while(Serial3.available() && substractBufforIterators() >= 1 ){
     					byte hex1 = cti(Serial3.read());
     					byte hex2 = cti(Serial3.read());
-    					if(hex1 > 47 && hex1 < 59){
+    					if(hex1 > 47 && hex1 < 58){
     						hex1 -= 48;
     					}else if(hex1 > 64 && hex1 < 71){
-    						hex1 -= 54;
+    						hex1 -= 55;
     					}
-    					if(hex2 > 47 && hex2 < 59){
+    					if(hex2 > 47 && hex2 < 58){
     						hex2 -= 48;
     					}else if(hex2 > 64 && hex2 < 71){
-    						hex2 -= 54;
+    						hex2 -= 55;
     					}
     					char ascii = 16*hex1+hex2;
     					RXBLE_buffer[RXBLE_buffer_iterator_end] = ascii;
     					incrementRXbuffIterator_end();
     					}
+    				newdataArrived = false;
     				serialFlush();
     			
     				}
-    		}
-    	}
+    		
+    	
     		return(BLERXBUFFER_SIZE-substractBufforIterators()-1);
     }
 
@@ -116,6 +127,7 @@
     		if(Serial3.available()){
     		tmp[kk] = Serial3.read(); 
     		kk++;
+    		delay(1);
     		}
     	}
 

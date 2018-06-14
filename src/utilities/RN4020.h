@@ -23,5 +23,6 @@
     void incrementRXbuffIterator_beg();
     void incrementRXbuffIterator_deg();
 	byte substractBufforIterators();
+	char* asciiToHexString(char ascii);
 
 #endif
