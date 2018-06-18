@@ -1,7 +1,6 @@
 	#include "RN4020.h"
 	
 	#define BLERXBUFFER_SIZE 21
-
 	char RXBLE_buffer[BLERXBUFFER_SIZE];
 	byte RXBLE_buffer_iterator_end = 1;
 	byte RXBLE_buffer_iterator_beg = 0;
@@ -13,16 +12,16 @@
 		if(Serial3.available()){
   		while(Serial3.available() > 0) {
     		char t = Serial3.read();
-    		if(t == 'W' && Serial3.read() == 'V')newdataArrived = true;
-    		delay(1);
+    		if(t == 'W' && Serial3.read() == 'V'){newdataArrived = true;}
+;    		delay(1);
   		}
   		}
 	}   
 
 	char RN4020_read(){
-		if(substractBufforIterators() > 0){
-			char tmp = RXBLE_buffer[RXBLE_buffer_iterator_beg];
+        if(BLERXBUFFER_SIZE - substractBufforIterators() >= 0){
 			incrementRXbuffIterator_beg();
+            char tmp = RXBLE_buffer[RXBLE_buffer_iterator_beg];
 			return(tmp);
 		}
 
@@ -36,14 +35,9 @@
        for(int yy = 0; yy < 21 ; yy++){
        	if(tmp[yy] == '\n')break;
        	Serial3.print(int(tmp[yy]),HEX);
-       	//Serial.print(int(tmp[yy]),HEX);
        }
        	Serial3.println();
        serialFlush();
-    }
-
-    char* asciiToHexString(char ascii){
-
     }
 
     bool RN4020_checkConnection(){
@@ -86,7 +80,7 @@
     			serialFlush();
     			if(newdataArrived){
     				RN4020_UARTwrite("SUR,12345678901234567890123456789011",10);		//Reading the characteristic
-    				while(Serial3.available() && substractBufforIterators() >= 1 ){
+    				while(Serial3.available() && substractBufforIterators() >= 1){
     					byte hex1 = cti(Serial3.read());
     					byte hex2 = cti(Serial3.read());
     					if(hex1 > 47 && hex1 < 58){
@@ -105,11 +99,10 @@
     					}
     				newdataArrived = false;
     				serialFlush();
-    			
-    				}
-    		
+    			 
+    		}
     	
-    		return(BLERXBUFFER_SIZE-substractBufforIterators()-1);
+    		return(BLERXBUFFER_SIZE - substractBufforIterators()-1);
     }
 
     RN4020_info RN4020_getInfo(){
