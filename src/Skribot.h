@@ -138,6 +138,7 @@
     void BLE_reset();
     void BLE_Set_Module(moduleType type);
     void sendNameInfo();
+    bool ProgramENDRepotred();
 
 
   private:
@@ -146,7 +147,7 @@
   Rotor *LeftDCRotors[3];
   Rotor *RightDCRotors[3];
   LightSensor *LightSensors[4];
-  bool using_BLE_Connection,connection_Break_Reported;
+  bool using_BLE_Connection,connection_Break_Reported, program_End_Reported;
   moduleType BLE_MODULE_TYPE;
 
   #ifndef _VARIANT_BBC_MICROBIT_

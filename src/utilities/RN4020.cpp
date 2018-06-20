@@ -5,6 +5,7 @@
 	byte RXBLE_buffer_iterator_end = 1;
 	byte RXBLE_buffer_iterator_beg = 0;
 	bool newdataArrived = false;
+    bool connection = false;
 
 	
 	void serialFlush(){
@@ -12,14 +13,25 @@
 		if(Serial3.available()){
   		while(Serial3.available() > 0) {
     		char t = Serial3.read();
+            delay(5);
     		if(t == 'W' && Serial3.read() == 'V'){newdataArrived = true;}
-;    		delay(1);
+            if(t == 'C'){
+                for(int uu = 0; uu < 8; uu++){
+                    t = Serial3.read();
+                }
+                if(t == 'd'){
+                    connection = true;
+                }else if(t == 'o'){
+                    connection = false;
+                }
+            }
+    		delay(1);
   		}
   		}
 	}   
 
 	char RN4020_read(){
-        if(BLERXBUFFER_SIZE - substractBufforIterators() >= 0){
+        if(BLERXBUFFER_SIZE - substractBufforIterators() > 0){
 			incrementRXbuffIterator_beg();
             char tmp = RXBLE_buffer[RXBLE_buffer_iterator_beg];
 			return(tmp);
@@ -29,6 +41,7 @@
 
 	}                                                        
     void RN4020_write(char *msg){
+        
     	char tmp[21];
     	sprintf(tmp,"%s\n",msg);
        Serial3.print("SUW,12345678901234567890123456789022,");
@@ -38,11 +51,12 @@
        }
        	Serial3.println();
        serialFlush();
+       delay(10);
     }
 
     bool RN4020_checkConnection(){
-    	RN4020_info info = RN4020_getInfo();
-    	return(info.connected);
+        serialFlush();
+    	return(connection);
     }
 
     void incrementRXbuffIterator_end(){
@@ -81,8 +95,11 @@
     			if(newdataArrived){
     				RN4020_UARTwrite("SUR,12345678901234567890123456789011",10);		//Reading the characteristic
     				while(Serial3.available() && substractBufforIterators() >= 1){
-    					byte hex1 = cti(Serial3.read());
-    					byte hex2 = cti(Serial3.read());
+    					char tmp1 = Serial3.read();
+                        char tmp2 = Serial3.read();
+                        if(tmp1 == '\n')break;
+                        byte hex1 = int(tmp1);
+    					byte hex2 = int(tmp2);
     					if(hex1 > 47 && hex1 < 58){
     						hex1 -= 48;
     					}else if(hex1 > 64 && hex1 < 71){
@@ -94,6 +111,7 @@
     						hex2 -= 55;
     					}
     					char ascii = 16*hex1+hex2;
+                        if(hex1 == 13 && hex2 == 10) ascii = '\n';
     					RXBLE_buffer[RXBLE_buffer_iterator_end] = ascii;
     					incrementRXbuffIterator_end();
     					}

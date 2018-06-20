@@ -24,5 +24,6 @@
     void incrementRXbuffIterator_deg();
 	byte substractBufforIterators();
 	char* asciiToHexString(char ascii);
+    void serialFlush();
 
 #endif

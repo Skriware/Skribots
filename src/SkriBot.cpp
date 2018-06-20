@@ -11,6 +11,7 @@
     NRightDCRotors  = 0;
     NClaws          = 0;
     using_BLE_Connection = false;
+    program_End_Reported = false;
     Configure_Connections(predef);
   }
 
@@ -119,7 +120,18 @@ if(connection_Break_Reported){
     for(int yy = 1; yy < loop_iterator; yy++){
           if(using_BLE_Connection && !connection_Break_Reported && BLE_checkConnection() == false){
           connection_Break_Reported = true;
-          break;
+        }else if(using_BLE_Connection && !program_End_Reported && BLE_dataAvailable() > 0){
+            char tmp;
+            while(BLE_dataAvailable() > 0){
+              tmp = BLE_read();
+              delay(5);                     // to be sure that next char will be recieved
+              if(tmp == 'E' && BLE_read() == 'N' && BLE_read() == 'D'){
+                program_End_Reported = true;
+              }
+              serialFlush();
+            }
+            if(program_End_Reported || connection_Break_Reported)break;
+          
       }
       delay(interval);
     } 
@@ -127,6 +139,19 @@ if(connection_Break_Reported){
     if(connection_Break_Reported)Serial.println("Connection LOST!");
     #endif
   }
+
+  bool Skribot::ProgramENDRepotred(){
+    
+    if(program_End_Reported){
+      program_End_Reported = false;
+      return(true);
+    }else{
+      return(false);
+    }
+
+    return(program_End_Reported);
+  }
+
 
 
   void Skribot::BLE_Setup(){
@@ -366,8 +391,6 @@ if(connection_Break_Reported){
     }
 
    
-
-
   void Skribot::TurnLEDOn(int R,int G, int B, String name){
     #ifndef _VARIANT_BBC_MICROBIT_
     for(int zz = 0; zz < NLEDs ; zz++){
