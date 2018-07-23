@@ -28,6 +28,9 @@ void BLEModule::BLE_write(char *msg){
 		case HM_10:
     		Serial3.println(msg);
     		break;
+    	case RN4020:
+    		RN4020_write(msg);
+    		break;
 		default:
 			break;
 	}
@@ -39,6 +42,9 @@ bool BLEModule::BLE_checkConnection(){
 		case HM_10:
 			 connection = digitalRead(EDU_BT_STATE_PIN) == HIGH;
 			 break;
+		case RN4020:
+			connection = RN4020_checkConnection();
+			break;
 		default:
 			break;
 	}
@@ -51,6 +57,9 @@ bool BLEModule::BLE_checkConnection(){
 		case HM_10:
     		dataAvalible = Serial3.available();
     		 break;
+    	case RN4020:
+    		dataAvalible = RN4020_dataAvailable();
+    		break;
 		default:
 			break;
 	}
@@ -62,35 +71,38 @@ bool BLEModule::BLE_checkConnection(){
      byte IfNamed = 0;
     switch(_type){
 		case HM_10:
-    Serial3.begin(9600);
-    Serial3.setTimeout(50);
-    pinMode(EDU_BT_STATE_PIN,INPUT);
-    IfNamed = EEPROM.read(10);                         
-    if(IfNamed != 1){
-       char MAC[23] = {' '};
-       delay(100);
-       Serial3.write("AT");
-       delay(100);
-       Serial3.write("AT+ADDR?");
-       delay(100);
-       int MACCounter = 0;
-       while(BLE_dataAvailable()){
-        MAC[MACCounter] = Serial3.read();
-        MACCounter++;
-        if(MACCounter > 23)break;
-       }
-        char tmpmess[32] = {' '};
-       sprintf(tmpmess,"AT+NAMESkribot_%c%c%c",MAC[19],MAC[20],MAC[21]);
-       delay(100);
-       Serial3.write(tmpmess);
-       delay(100);
-       Serial3.write("AT+RESET");
-       delay(100);
-    }else{
-      #ifdef DEBUG_MODE
-      Serial.println("Robot named!");
-      #endif
-    }
+		    Serial3.begin(9600);
+		    Serial3.setTimeout(50);
+		    pinMode(EDU_BT_STATE_PIN,INPUT);
+		    IfNamed = EEPROM.read(10);                         
+		    if(IfNamed != 1){
+		       char MAC[23] = {' '};
+		       delay(100);
+		       Serial3.write("AT");
+		       delay(100);
+		       Serial3.write("AT+ADDR?");
+		       delay(100);
+		       int MACCounter = 0;
+		       while(BLE_dataAvailable()){
+		        MAC[MACCounter] = Serial3.read();
+		        MACCounter++;
+		        if(MACCounter > 23)break;
+		       }
+		        char tmpmess[32] = {' '};
+		       sprintf(tmpmess,"AT+NAMESkribot_%c%c%c",MAC[19],MAC[20],MAC[21]);
+		       delay(100);
+		       Serial3.write(tmpmess);
+		       delay(100);
+		       Serial3.write("AT+RESET");
+		       delay(100);
+		    }else{
+		      #ifdef DEBUG_MODE
+		      Serial.println("Robot named!");
+		      #endif
+		    }
+     break;
+     case RN4020:
+     	  RN4020_Setup();
      break;
 	default:
 	 break;
@@ -98,7 +110,7 @@ bool BLEModule::BLE_checkConnection(){
 
   }
 
-  void BLEModule::BLE_changeName(char name[], bool userConncection){
+  void BLEModule::BLE_changeName(char *name, bool userConncection){
 	  switch(_type){
 			case HM_10:
 				  while(BLE_checkConnection()){
@@ -119,6 +131,9 @@ bool BLEModule::BLE_checkConnection(){
 				   Serial3.write("AT+RESET");
 				   delay(100);
 				   if(userConncection)EEPROM.write(10,1);
+				break;
+			case RN4020:
+				RN4020_changeName(name);
 				break;
 			default:
 				break;

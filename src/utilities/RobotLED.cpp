@@ -16,7 +16,7 @@
         pixel.begin();
     }
 
-    void RobotLED::turnON(int R, int B, int G){
+    void RobotLED::turnON(int R, int G, int B){
           pixel.setPixelColor(0, pixel.Color(R,G,B)); 
           pixel.show(); 
           delay(10);
