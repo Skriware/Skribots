@@ -9,6 +9,13 @@ StatusLED::StatusLED(byte R, byte G, byte B,byte batery){
 	 pinMode(G_pin,OUTPUT);
 	 pinMode(B_pin,OUTPUT);
 	 TurnOn(OFF);
+	 TurnOn(WHITE);
+	 delay(200);
+	 TurnOn(OFF);
+	 delay(200);
+	 TurnOn(WHITE);
+	 delay(200);
+	 TurnOn(OFF);
 	 Current_color = OFF;
 	 pinMode(Battery_pin,INPUT);
 }
