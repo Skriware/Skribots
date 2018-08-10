@@ -29,7 +29,7 @@
     }
 
 
-    void RobotLED::Set_Predef_Color(int color_id){
+    void RobotLED::Set_Predef_Color(int color_id){          //Not used so far
 
         switch(color_id){
             case 0 : 

@@ -4,8 +4,8 @@ Rotor::Rotor(int SpeedPin,int DirectionPin){
 	#ifndef _VARIANT_BBC_MICROBIT_
 	_speed_pin 	= SpeedPin;
 	_dir_pin 	= DirectionPin;
-	pinMode(_speed_pin, OUTPUT);
-	pinMode(_dir_pin, OUTPUT);
+	SetNewPWMChannel(_speed_pin);
+	pinMode(_dir_pin,OUTPUT);
 	#else
 	_dir_pin_1 = SpeedPin;
   	_dir_pin_2 = DirectionPin;
@@ -27,7 +27,7 @@ void Rotor::Move(){
 	digitalWrite(_dir_pin,LOW);
 	digitalWrite(_speed_pin,LOW);
 	digitalWrite(_dir_pin,_dir);
-	analogWrite(_speed_pin,abs(_dir*255-_speed));
+	PWM_Write(_speed_pin,abs(_dir*255-_speed));
 	#else
 	
 if(_speed == 0){
@@ -47,10 +47,10 @@ void Rotor::Stop(){
 	#ifndef _VARIANT_BBC_MICROBIT_
 	if(_dir){
 	digitalWrite(_dir_pin,_dir);
-	analogWrite(_speed_pin,255);
+	PWM_Write(_speed_pin,255);
 	}else{
 	digitalWrite(_dir_pin,_dir);
-	analogWrite(_speed_pin,0);
+	PWM_Write(_speed_pin,0);
 	}
 	#else
 	digitalWrite(_dir_pin_1,LOW);

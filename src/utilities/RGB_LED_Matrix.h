@@ -2,8 +2,7 @@
 #define RobotLEDM_H
 #include "Arduino.h"
 #include "Adafruit_NeoPixel.h"
-
-enum color {RED = 0,GREEN = 1, BLUE = 2, WHITE = 3, PURPLE = 4, YELLOW =5};
+#include "StatusLED.h"
 
 class RGB_LED_Matrix
  {

@@ -12,10 +12,13 @@
     NClaws          = 0;
     using_BLE_Connection = false;
     program_End_Reported = false;
+    stausLEDused = false;
+    high_power_usage = false;
     Configure_Connections(predef);
   }
 
   void Skribot::Configure_Connections(String predef){
+    #ifndef ARDUINO_ARCH_ESP32
     if(predef == "EDU_SHIELD"){
           AddDCRotor(EDU_ROTOR_SPEED_PIN_L,EDU_ROTOR_DIR_PIN_L,"Left");          //adding rotors for movement
           AddDCRotor(EDU_ROTOR_SPEED_PIN_R,EDU_ROTOR_DIR_PIN_R,"Right");
@@ -31,7 +34,9 @@
           #endif
           AddLineSensor(EDU_LINE_SENSOR_1, 1);
           AddLineSensor(EDU_LINE_SENSOR_2, 2);
-          AddLineSensor(EDU_LINE_SENSOR_3, 3);;
+          AddLineSensor(EDU_LINE_SENSOR_3, 3);
+          status = new StatusLED(EDU_SHIELD_STATUS_LED_R_PIN,EDU_SHIELD_STATUS_LED_G_PIN,EDU_SHIELD_STATUS_LED_B_PIN,EDU_SHILED_POWER_READOUT_PIN);
+          stausLEDused = true;
           BLE_Set_Module(HM_10);
     }else if (predef == "SKRIBOT_MINI"){
            #ifdef _VARIANT_BBC_MICROBIT_
@@ -57,6 +62,7 @@
           AddLineSensor(EDU_LINE_SENSOR_3, 3);
           BLE_Set_Module(HM_10);
     }
+    #endif
    SetSpeed(250);
    Stop();
   }
@@ -92,10 +98,8 @@ if(connection_Break_Reported){
     connection_Break_Reported = false;
     connection = false;
   }
-
     return(connection);
   }
-
   int Skribot::BLE_dataAvailable(){
     int dataAvalible;
   #ifdef _VARIANT_BBC_MICROBIT_
@@ -111,6 +115,7 @@ if(connection_Break_Reported){
     return(dataAvalible);
 
   }
+
 
   void Skribot::wait_And_Check_BLE_Connection(int ms,int interval){
 
@@ -128,11 +133,14 @@ if(connection_Break_Reported){
               if(tmp == 'E' && BLE_read() == 'N' && BLE_read() == 'D'){
                 program_End_Reported = true;
               }
+              #ifndef ARDUINO_ARCH_ESP32 && _VARIANT_BBC_MICROBIT_
               serialFlush();
+              #endif
             }
             if(program_End_Reported || connection_Break_Reported)break;
           
       }
+      if(stausLEDused)BaterryCheck();
       delay(interval);
     } 
     #ifdef DEBUG_MODE
@@ -197,30 +205,7 @@ if(connection_Break_Reported){
       }
   }
   void Skribot::BLE_changeName(char name[], bool userConncection){
-  while(BLE_checkConnection()){
-    #ifdef DEBUG_MODE
-    Serial.println("waiting...");
-    #endif
-  }
-    #ifdef DEBUG_MODE
-    Serial.println("disconnected!");
-    #endif
-  #ifdef _VARIANT_BBC_MICROBIT_
-   BTLESerial.setLocalName(name);
-   BTLESerial.begin();
-   ledMatrix.begin();
-  #else 
-   char tmpmess[32];
-   delay(100);
-   Serial3.write("AT");
-   delay(100);
-   sprintf(tmpmess,"AT+NAME%s",name);
-   Serial3.write(tmpmess);
-   delay(100);
-   Serial3.write("AT+RESET");
-   delay(100);
-   if(userConncection)EEPROM.write(10,1);
-  #endif
+    BTmodule->BLE_changeName(name);
   
   }
 
@@ -267,6 +252,8 @@ if(connection_Break_Reported){
   }
 
 
+#ifndef ARDUINO_ARCH_ESP32 && _VARIANT_BBC_MICROBIT_
+         // functions for EDUSHIELD_1
     void Skribot::AddDistSensor(String EDU_SHIELD_SLOT){
       if(EDU_SHIELD_SLOT == "D1"){
         AddDistSensor(EDU_ECHO_PIN_1,EDU_TRIG_PIN_1,"D1");  
@@ -290,8 +277,19 @@ if(connection_Break_Reported){
         AddDCRotor(EDU_ROTOR_SPEED_PIN_R,EDU_ROTOR_DIR_PIN_R,"Right");
       }
     }
-  
+   void Skribot::AddLED(String EDU_SHIELD_SLOT){
+      if(EDU_SHIELD_SLOT == "LED1"){
+        AddLED(EDU_LED_DATA_PIN_1,"LED1");
+      }else if(EDU_SHIELD_SLOT == "LED2"){
+        AddLED(EDU_LED_DATA_PIN,"LED2");
+      }
+    }
 
+     void Skribot::AddClaw(){
+        AddClaw(EDU_CLAW_PIN1,EDU_CLAW_PIN2);
+    } 
+
+#endif
   #ifndef _VARIANT_BBC_MICROBIT_
 
   void Skribot::AddClaw(int Claw_Pin, int Arm_Pin, byte id){
@@ -317,14 +315,6 @@ if(connection_Break_Reported){
     NLEDs++;
   }
 
-   void Skribot::AddLED(String EDU_SHIELD_SLOT){
-      if(EDU_SHIELD_SLOT == "LED1"){
-        AddLED(EDU_LED_DATA_PIN_1,"LED1");
-      }else if(EDU_SHIELD_SLOT == "LED2"){
-        AddLED(EDU_LED_DATA_PIN,"LED2");
-      }
-    }
-
   void Skribot::SetScopeAngle(String name,int deg){
     for(int zz = 0; zz < NScopes ; zz++){
                     if(Scopes[zz]->GetName() == name){
@@ -334,9 +324,7 @@ if(connection_Break_Reported){
       }
   }
 
-  void Skribot::AddClaw(){
-        AddClaw(EDU_CLAW_PIN1,EDU_CLAW_PIN2);
-    }    
+    
 
   int Skribot::GetScopeDistance(String name){
     for(int zz = 0; zz < NScopes ; zz++){
@@ -354,6 +342,7 @@ if(connection_Break_Reported){
          for(int zz = 0; zz < NClaws ; zz++){
                     if(Claws[zz]->GetID() == id){
                       Claws[zz]->Close();
+                      high_power_usage = true;
                       break;
                     }
         }
@@ -364,6 +353,7 @@ if(connection_Break_Reported){
           for(int zz = 0; zz < NClaws ; zz++){
                     if(Claws[zz]->GetID() == id){
                       Claws[zz]->Open();
+                      high_power_usage = false;
                       break;
                     }
         }
@@ -374,6 +364,7 @@ if(connection_Break_Reported){
           for(int zz = 0; zz < NClaws ; zz++){
                     if(Claws[zz]->GetID() == id){
                       Claws[zz]->Pick_Up();
+                      high_power_usage = true;
                       break;
                     }
         }
@@ -384,6 +375,7 @@ if(connection_Break_Reported){
           for(int zz = 0; zz < NClaws ; zz++){
                     if(Claws[zz]->GetID() == id){
                       Claws[zz]->Put_Down();
+                      high_power_usage = false;
                       break;
                     }
         }
@@ -543,6 +535,7 @@ if(connection_Break_Reported){
                   for(int kk = 0; kk < NRightDCRotors ; kk++){
                     RightDCRotors[kk]->Stop();
                   }
+                  high_power_usage = false;
          break; 
 //*******************************************************************************
          case 'K' :
@@ -583,7 +576,8 @@ if(connection_Break_Reported){
                   }
          break;
 
-      }
+      } 
+      if(Dir != 'S')high_power_usage = true;
         
         if(ms > 0 ){
           wait_And_Check_BLE_Connection(ms,10);
@@ -596,8 +590,8 @@ if(connection_Break_Reported){
                     RightDCRotors[kk]->SetSpeed(DCSpeed);
                     RightDCRotors[kk]->Stop();
             }
+            high_power_usage=false;
       }
-
     }
   }
 
@@ -627,11 +621,6 @@ if(connection_Break_Reported){
         rightDir = 0;
       }
 
-      #ifdef _VARIANT_BBC_MICROBIT_
-      
-
-
-      #else 
                   for(int kk = 0; kk < NRightDCRotors ; kk++){
                     RightDCRotors[kk]->SetDirection(rightDir);
                     RightDCRotors[kk]->SetSpeed(rightSpeed);
@@ -642,10 +631,12 @@ if(connection_Break_Reported){
                     LeftDCRotors[yy]->SetSpeed(leftSpeed);
                     LeftDCRotors[yy]->Move();
                   }
-      #endif
-                
-               
-          
+
+                  if (rightSpeed != 0 && leftSpeed != 0){
+                    high_power_usage = true;
+                  }else{
+                    high_power_usage = false;
+                  }
                 
   }
 
@@ -704,3 +695,13 @@ if(connection_Break_Reported){
       return(output);
     }
 
+
+    int Skribot::BaterryCheck(){
+      int tmpStatus;
+      if(stausLEDused && !high_power_usage){
+        tmpStatus = status->CheckBateryStatus();
+      }else{
+        tmpStatus = 0;
+      }
+      return(tmpStatus);
+    }

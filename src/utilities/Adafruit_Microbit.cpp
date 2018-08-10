@@ -1,5 +1,3 @@
-
-
 /**
  *  Includes ftoa() code from stm32tpl --  STM32 C++ Template Peripheral Library
  *

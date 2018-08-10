@@ -3,7 +3,6 @@
 #include "Arduino.h"
 #ifndef _VARIANT_BBC_MICROBIT_
 #include <EEPROM.h>
-#include <utilities/ServoRotor.h>
 #include <utilities/Claw.h>
 #include <utilities/Scope.h> 
 #include <utilities/Adafruit_NeoPixel.h>
@@ -12,14 +11,18 @@
 #include <utilities/IRStation.h>
 #include <utilities/BLEModule.h>
 #endif
+#ifdef _VARIANT_BBC_MICROBIT_
+#include <utilities/Adafruit_Microbit.h>
+#endif
+
 #include <utilities/DistSensor.h>
 #include <utilities/LineSensor.h>
 #include <utilities/Rotor.h>
 #include <utilities/LightSensor.h>
 #include <utilities/SoundDetector.h>
-#ifdef _VARIANT_BBC_MICROBIT_
-#include <utilities/Adafruit_Microbit.h>
-#endif
+#include <utilities/PWM_Handler.h>
+#include <utilities/StatusLED.h>
+
 
 #define _CAT(a, ...) a ## __VA_ARGS__
 #define SWITCH_ENABLED_false 0
@@ -30,6 +33,7 @@
 #define ENABLED(b) _CAT(SWITCH_ENABLED_, b)
 #define DISABLED(b) (!_CAT(SWITCH_ENABLED_, b))
 
+#ifndef ARDUINO_ARCH_ESP32
 #define EDU_ROTOR_SPEED_PIN_R 6
 #define EDU_ROTOR_DIR_PIN_R 7
 #define EDU_ROTOR_SPEED_PIN_L 5
@@ -45,6 +49,12 @@
 #define EDU_LED_DATA_PIN_1 0
 #define EDU_CLAW_PIN1 2
 #define EDU_CLAW_PIN2 8
+#define EDU_SHIELD
+#define EDU_SHIELD_STATUS_LED_R_PIN A6
+#define EDU_SHIELD_STATUS_LED_G_PIN A5
+#define EDU_SHIELD_STATUS_LED_B_PIN A4
+#define EDU_SHILED_POWER_READOUT_PIN A7
+#endif
 
 #ifdef _VARIANT_BBC_MICROBIT_
 #define SKRIBOT_MINI_SHILELD_MOTOR_1_DIR1_PIN 13 
@@ -72,20 +82,21 @@
     void AddDCRotor(int SpeedPin,int DirectionPin, String side);
     void AddLightSensor(int _pin,int id);
 
-     #ifndef _VARIANT_BBC_MICROBIT_
+     #ifndef _VARIANT_BBC_MICROBIT_ 
     void AddClaw(int ClawPin,int Arm_Pin, byte id = 0);
     void AddScope(int EchoPin,int Trigg,int ServoPin,String Name);
     void AddLED(int Pin,String name);
     void AddLED(int Pin, int id);
     #endif
     
-                                                                  //functions for element adding
+    
+    #ifndef ARDUINO_ARCH_ESP32                                                              //functions for element adding
     void AddDistSensor(String EDU_SHIELD_SLOT);
     void AddLED(String EDU_SHIELD_SLOT);
     void AddLineSensor(String EDU_SHIELD_SLOT);
     void AddDCRotor(String EDU_SHIELD_SLOT);
     void AddClaw();                                               //functions for elements adding when using Skriware Edu shield
-
+    #endif
     void Configure_Connections(String predef="");
 
     void wait_And_Check_BLE_Connection(int ms,int interval);
@@ -139,6 +150,7 @@
     void BLE_Set_Module(moduleType type);
     void sendNameInfo();
     bool ProgramENDRepotred();
+    int BaterryCheck();
 
 
   private:
@@ -147,8 +159,9 @@
   Rotor *LeftDCRotors[3];
   Rotor *RightDCRotors[3];
   LightSensor *LightSensors[4];
-  bool using_BLE_Connection,connection_Break_Reported, program_End_Reported;
+  bool using_BLE_Connection,connection_Break_Reported, program_End_Reported,stausLEDused,high_power_usage;
   moduleType BLE_MODULE_TYPE;
+  StatusLED *status;
 
   #ifndef _VARIANT_BBC_MICROBIT_
   RobotLED *LEDs[5];

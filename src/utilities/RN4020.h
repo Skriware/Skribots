@@ -1,5 +1,6 @@
 #ifndef RN4020_FUNCT
 #define RN4020_FUNCT
+#ifndef ARDUINO_ARCH_ESP32 && _VARIANT_BBC_MICROBIT_
 #include "Arduino.h"
 
 
@@ -26,4 +27,5 @@
 	char* asciiToHexString(char ascii);
     void serialFlush();
 
+#endif
 #endif

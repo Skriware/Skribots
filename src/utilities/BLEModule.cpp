@@ -3,6 +3,15 @@
 #include "BLEModule.h"
 #include <EEPROM.h>
 
+#ifdef ARDUINO_ARCH_ESP32
+
+bool BLEModule::deviceConnected = false;
+char BLEModule::RXBLE_buffer[BLERXBUFFER_SIZE];
+byte BLEModule::RXBLE_buffer_iterator_end = 1;
+byte BLEModule::RXBLE_buffer_iterator_beg = 0;
+#endif 
+
+
 BLEModule::BLEModule(moduleType type){
 	_type = type;
 }
@@ -12,10 +21,25 @@ char BLEModule::BLE_read(){
 
 switch(_type){
 		case HM_10:
+		#ifndef ARDUINO_ARCH_ESP32 && _VARIANT_BBC_MICROBIT_
 			tmp = Serial3.read();
+			#endif
 		break;
 		case RN4020:
+			#ifndef ARDUINO_ARCH_ESP32 && _VARIANT_BBC_MICROBIT_
 			tmp = RN4020_read();
+			#endif
+		break;
+	case ESP32_BLE:
+
+		#ifdef ARDUINO_ARCH_ESP32
+		if(BLERXBUFFER_SIZE - substractBufforIterators() > 0){
+			incrementRXbuffIterator_beg();
+	        tmp = RXBLE_buffer[RXBLE_buffer_iterator_beg];
+		}else{
+		tmp = 'Q';
+		}
+		#endif
 		break;
 		default:
 		break;
@@ -24,12 +48,25 @@ switch(_type){
   }
   
 void BLEModule::BLE_write(char *msg){
+	#ifdef ARDUINO_ARCH_ESP32
+		std::string _tmp = std::string(msg);
+	#endif
 	switch(_type){
 		case HM_10:
+			#ifndef ARDUINO_ARCH_ESP32 && _VARIANT_BBC_MICROBIT_
     		Serial3.println(msg);
+    		#endif
     		break;
     	case RN4020:
+    		#ifndef ARDUINO_ARCH_ESP32 && _VARIANT_BBC_MICROBIT_
     		RN4020_write(msg);
+    		#endif
+    		break;
+    	case ESP32_BLE:
+    	#ifdef ARDUINO_ARCH_ESP32
+    		 TxCharacteristic->setValue(_tmp);
+        	 TxCharacteristic->notify();
+			#endif
     		break;
 		default:
 			break;
@@ -43,7 +80,14 @@ bool BLEModule::BLE_checkConnection(){
 			 connection = digitalRead(EDU_BT_STATE_PIN) == HIGH;
 			 break;
 		case RN4020:
+			#ifndef ARDUINO_ARCH_ESP32 && _VARIANT_BBC_MICROBIT_
 			connection = RN4020_checkConnection();
+			#endif
+			break;
+		case ESP32_BLE:
+		#ifdef ARDUINO_ARCH_ESP32
+			connection = BLEModule::deviceConnected;
+		#endif
 			break;
 		default:
 			break;
@@ -55,10 +99,21 @@ bool BLEModule::BLE_checkConnection(){
     		int dataAvalible;
     switch(_type){
 		case HM_10:
+			#ifndef ARDUINO_ARCH_ESP32 && _VARIANT_BBC_MICROBIT_
     		dataAvalible = Serial3.available();
+    		#endif
     		 break;
     	case RN4020:
+    		#ifndef ARDUINO_ARCH_ESP32 && _VARIANT_BBC_MICROBIT_
     		dataAvalible = RN4020_dataAvailable();
+    		#endif
+    		break;
+    	case ESP32_BLE:
+
+    	#ifdef ARDUINO_ARCH_ESP32
+    		dataAvalible = BLERXBUFFER_SIZE - substractBufforIterators()-1;
+    	#endif
+
     		break;
 		default:
 			break;
@@ -71,6 +126,7 @@ bool BLEModule::BLE_checkConnection(){
      byte IfNamed = 0;
     switch(_type){
 		case HM_10:
+		#ifndef ARDUINO_ARCH_ESP32 && _VARIANT_BBC_MICROBIT_
 		    Serial3.begin(9600);
 		    Serial3.setTimeout(50);
 		    pinMode(EDU_BT_STATE_PIN,INPUT);
@@ -100,10 +156,43 @@ bool BLEModule::BLE_checkConnection(){
 		      Serial.println("Robot named!");
 		      #endif
 		    }
+		   #endif
      break;
      case RN4020:
+     	#ifndef ARDUINO_ARCH_ESP32 && _VARIANT_BBC_MICROBIT_
      	  RN4020_Setup();
-     break;
+     	  #endif
+     	break;
+    case ESP32_BLE:
+    #ifdef ARDUINO_ARCH_ESP32
+    	  // Create the BLE Device
+  		 BLEDevice::init("Skribot_ESP");
+
+  		  Server = BLEDevice::createServer();
+
+  		  Server->setCallbacks(new MyServerCallbacks());
+
+    	  Service = Server->createService(SERVICE_UUID);
+
+    	  TxCharacteristic = Service->createCharacteristic(
+										CHARACTERISTIC_UUID_TX,
+										BLECharacteristic::PROPERTY_NOTIFY
+									);
+
+    	  TxCharacteristic->addDescriptor(new BLE2902());
+    	  
+    	  RxCharacteristic = Service->createCharacteristic(
+											 CHARACTERISTIC_UUID_RX,
+											BLECharacteristic::PROPERTY_WRITE);
+
+    	  RxCharacteristic->setCallbacks(new MyCallbacks());
+
+    	  Service->start();
+
+  			// Start advertising
+  		  Server->getAdvertising()->start();
+    #endif
+    	break;
 	default:
 	 break;
 	}
@@ -113,6 +202,8 @@ bool BLEModule::BLE_checkConnection(){
   void BLEModule::BLE_changeName(char *name, bool userConncection){
 	  switch(_type){
 			case HM_10:
+
+				 #ifndef ARDUINO_ARCH_ESP32 && _VARIANT_BBC_MICROBIT_
 				  while(BLE_checkConnection()){
 				    #ifdef DEBUG_MODE
 				    Serial.println("waiting...");
@@ -131,13 +222,55 @@ bool BLEModule::BLE_checkConnection(){
 				   Serial3.write("AT+RESET");
 				   delay(100);
 				   if(userConncection)EEPROM.write(10,1);
+				   #endif
 				break;
 			case RN4020:
+				#ifndef ARDUINO_ARCH_ESP32 && _VARIANT_BBC_MICROBIT_
 				RN4020_changeName(name);
+				#endif
+				break;
+			case ESP32_BLE:
+
+			#ifdef ARDUINO_ARCH_ESP32
+
+			#endif
+
 				break;
 			default:
 				break;
 		}
 }
+
+
+#ifdef ARDUINO_ARCH_ESP32
+
+  void incrementRXbuffIterator_end(){
+    	if(BLEModule::RXBLE_buffer_iterator_end == BLERXBUFFER_SIZE-1){
+    		BLEModule::RXBLE_buffer_iterator_end = 0;
+    	}else{
+    		BLEModule::RXBLE_buffer_iterator_end++;
+    	}
+    }
+
+      void incrementRXbuffIterator_beg(){
+    	if(BLEModule::RXBLE_buffer_iterator_beg == BLERXBUFFER_SIZE-1){
+    		BLEModule::RXBLE_buffer_iterator_beg = 0;
+    	}else{
+    		BLEModule::RXBLE_buffer_iterator_beg++;
+    	}
+    }
+
+    byte substractBufforIterators(){
+    	if(BLEModule::RXBLE_buffer_iterator_end < BLEModule::RXBLE_buffer_iterator_beg){
+    		return(BLEModule::RXBLE_buffer_iterator_beg - BLEModule::RXBLE_buffer_iterator_end);
+    	}else if(BLEModule::RXBLE_buffer_iterator_beg < BLEModule::RXBLE_buffer_iterator_end){
+    		return(BLERXBUFFER_SIZE - BLEModule::RXBLE_buffer_iterator_end + BLEModule::RXBLE_buffer_iterator_beg);
+    	}else{
+    		return(0);
+    	}
+    }
+
+ #endif
+
 
   #endif

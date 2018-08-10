@@ -1,5 +1,5 @@
 	#include "RN4020.h"
-	
+	#ifndef ARDUINO_ARCH_ESP32 && _VARIANT_BBC_MICROBIT_
 	#define BLERXBUFFER_SIZE 21
 	char RXBLE_buffer[BLERXBUFFER_SIZE];
 	byte RXBLE_buffer_iterator_end = 1;
@@ -219,3 +219,4 @@
 
     }
 
+#endif

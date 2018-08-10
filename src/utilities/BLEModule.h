@@ -3,8 +3,18 @@
 #include "Arduino.h"
 #include "RN4020.h"
 #define EDU_BT_STATE_PIN 3
-	enum moduleType {HM_10 = 0,RN4020 = 1};
-
+#ifdef ARDUINO_ARCH_ESP32
+#include <BLEDevice.h>
+#include <BLEServer.h>
+#include <BLEUtils.h>
+#include <BLE2902.h>
+#define SERVICE_UUID           "6E400001-B5A3-F393-E0A9-E50E24DCCA9E" // UART service UUID
+#define CHARACTERISTIC_UUID_RX "6E400002-B5A3-F393-E0A9-E50E24DCCA9E"
+#define CHARACTERISTIC_UUID_TX "6E400003-B5A3-F393-E0A9-E50E24DCCA9E"
+#define BLERXBUFFER_SIZE 21
+#endif
+	enum moduleType {HM_10 = 0,RN4020 = 1,ESP32_BLE = 2};
+  
 	class BLEModule
 {
 public:
@@ -17,9 +27,53 @@ public:
     void BLE_Setup();
     void BLE_reset();
 
+    #ifdef ARDUINO_ARCH_ESP32
+        static bool deviceConnected;
+        static char RXBLE_buffer[BLERXBUFFER_SIZE];
+        static byte RXBLE_buffer_iterator_end;
+        static byte RXBLE_buffer_iterator_beg;
+    #endif
 private:
 	moduleType	_type;
+    #ifdef ARDUINO_ARCH_ESP32
+    BLEServer *Server = NULL;
+    BLEService *Service; 
+    BLECharacteristic * TxCharacteristic;
+    BLECharacteristic * RxCharacteristic;
+    #endif
 
 };
+#ifdef ARDUINO_ARCH_ESP32
+void incrementRXbuffIterator_beg();
+void incrementRXbuffIterator_end();
+byte substractBufforIterators();
+
+class MyServerCallbacks: public BLEServerCallbacks {
+    void onConnect(BLEServer* pServer) {
+      BLEModule::deviceConnected = true;
+    };
+
+    void onDisconnect(BLEServer* pServer) {
+      BLEModule::deviceConnected = false;
+    }
+};
+
+class MyCallbacks: public BLECharacteristicCallbacks {
+    void onWrite(BLECharacteristic *pCharacteristic) {
+      char ascii;
+      std::string rxValue = pCharacteristic->getValue();
+      if (rxValue.length() > 0) {
+        for (int i = 0; i < rxValue.length(); i++){
+          if(substractBufforIterators() < 1)break;
+          ascii = rxValue[i];
+          BLEModule::RXBLE_buffer[BLEModule::RXBLE_buffer_iterator_end] = ascii;
+          incrementRXbuffIterator_end();
+        }
+      }
+    }
+};
+
+
+#endif
 
 #endif

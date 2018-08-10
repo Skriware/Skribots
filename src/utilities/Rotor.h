@@ -1,6 +1,7 @@
 #ifndef Rotor_H
 #define Rotor_H
 #include "Arduino.h"
+#include "PWM_Handler.h"
   class Rotor
  {
   public:
