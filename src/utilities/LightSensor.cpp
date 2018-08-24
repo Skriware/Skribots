@@ -3,24 +3,29 @@
 LightSensor::LightSensor(int _PIN,int _ID){
     PIN = _PIN;
     ID = _ID;
-    TestLight();
+    CalibrateLight();
 }
 
 int LightSensor::ReadRaw(){
     return(analogRead(PIN));   
 }
 
-void LightSensor::TestLight(){
+void LightSensor::CalibrateLight(){
     int Reads[100]; 
     for (int i=0; i < 100; i++){
         Reads[i] = ReadRaw();
         delay(30);
     }
 
-#ifdef Debug
+#ifdef DEBUG_MODE
+    Serial.print("Calibrating Light Sensor ");
+    Serial.print(ID);
+    Serial.println(":");
     for(int i = 0; i < 100; i++)
     {
-        Serial.println(Reads[i]);
+        Serial.print(Reads[i]);
+        Serial.print(" ");
+        if(i%10 == 0 )Serial.println();
     }
 #endif
 
@@ -43,18 +48,16 @@ void LightSensor::TestLight(){
     {
         Reads_new[i] = Reads[9+i];
     }
-
-
-#ifdef Debug
-    Serial.println("UPORZADKOWANA");
-    for(int i = 0; i < 80; i++)
-    {
-        Serial.println(Reads_new[i]);
-    }
-#endif
     
     avrage = Reads_new[39];
-    threshold = avrage*0.1+(Reads[79]-Reads[0]);
+    threshold = 50+(Reads[79]-Reads[0]);
+
+    #ifdef DEBUG_MODE
+    Serial.print("Avrage:");
+    Serial.println(avrage);
+    Serial.print("Threshold:");
+    Serial.println(threshold);
+    #endif
 
 }
 

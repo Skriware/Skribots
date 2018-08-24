@@ -1,7 +1,7 @@
 #include "Rotor.h"
 
 Rotor::Rotor(int SpeedPin,int DirectionPin){
-	#ifndef _VARIANT_BBC_MICROBIT_
+	#ifndef _VARIANT_BBC_MICROBIT_  
 	_speed_pin 	= SpeedPin;
 	_dir_pin 	= DirectionPin;
 	SetNewPWMChannel(_speed_pin);
@@ -23,11 +23,11 @@ void Rotor::SetSpeed(int speed){
 }
 
 void Rotor::Move(){
-	#ifndef _VARIANT_BBC_MICROBIT_
+	#ifndef _VARIANT_BBC_MICROBIT_ 
 	digitalWrite(_dir_pin,LOW);
 	digitalWrite(_speed_pin,LOW);
 	digitalWrite(_dir_pin,_dir);
-	PWM_Write(_speed_pin,abs(_dir*255-_speed));
+	PWM_Write(_speed_pin,abs(_dir*255-_speed+1));
 	#else
 	
 if(_speed == 0){
@@ -44,7 +44,7 @@ Stop();
 
 void Rotor::Stop(){
 	
-	#ifndef _VARIANT_BBC_MICROBIT_
+	#ifndef _VARIANT_BBC_MICROBIT_ 
 	if(_dir){
 	digitalWrite(_dir_pin,_dir);
 	PWM_Write(_speed_pin,255);

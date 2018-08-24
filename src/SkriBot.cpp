@@ -16,7 +16,6 @@
     high_power_usage = false;
     Configure_Connections(predef);
   }
-
   void Skribot::Configure_Connections(String predef){
     #ifndef ARDUINO_ARCH_ESP32
     if(predef == "EDU_SHIELD"){
@@ -24,7 +23,6 @@
           AddDCRotor(EDU_ROTOR_SPEED_PIN_R,EDU_ROTOR_DIR_PIN_R,"Right");
           AddDistSensor(EDU_ECHO_PIN_1,EDU_TRIG_PIN_1,1);   //adding Distance Sensors  and naming them "Left and Right";
           AddDistSensor(EDU_ECHO_PIN_2,EDU_TRIG_PIN_2,2);
-          
           #ifndef _VARIANT_BBC_MICROBIT_
           AddClaw(EDU_CLAW_PIN1,EDU_CLAW_PIN2);
           #if DISABLED(DEBUG_MODE)
@@ -62,7 +60,18 @@
           AddLineSensor(EDU_LINE_SENSOR_3, 3);
           BLE_Set_Module(HM_10);
     }
+    #else
+    if(predef == "SKRIBRAIN"){
+          AddDCRotor(SKRIBRAIN_MOTOR_L_DIR1_PIN,SKRIBRAIN_MOTOR_L_DIR2_PIN,"Left");
+          AddDCRotor(SKRIBRAIN_MOTOR_R_DIR1_PIN,SKRIBRAIN_MOTOR_R_DIR2_PIN,"Right");
+          AddLED(SKRIBRAIN_LED_PIN_1,1);
+          AddLED(SKRIBRAIN_LED_PIN_2,2);
+          AddDistSensor(SKRIBRAIN_ECHO_PIN_1,SKRIBRAIN_TRIG_PIN_1,1);   //adding Distance Sensors  and naming them "Left and Right";
+          AddDistSensor(SKRIBRAIN_ECHO_PIN_2,SKRIBRAIN_TRIG_PIN_2,2);
+          BLE_Set_Module(ESP32_BLE); 
+    }
     #endif
+   
    SetSpeed(250);
    Stop();
   }
@@ -303,14 +312,14 @@ if(connection_Break_Reported){
     NScopes++;
   }
 
-   void Skribot::AddLED(int pin,String name){
-    RobotLED *led = new RobotLED(pin,name);
+   void Skribot::AddLED(int pin,String name,byte N_LED){
+    RobotLED *led = new RobotLED(pin,name,N_LED);
     LEDs[NLEDs] = led;
     NLEDs++;
   }
 
-   void Skribot::AddLED(int pin,int id){
-    RobotLED *led = new RobotLED(pin,id);
+   void Skribot::AddLED(int pin,int id,byte N_LED){
+    RobotLED *led = new RobotLED(pin,id,N_LED);
     LEDs[NLEDs] = led;
     NLEDs++;
   }
@@ -383,33 +392,33 @@ if(connection_Break_Reported){
     }
 
    
-  void Skribot::TurnLEDOn(int R,int G, int B, String name){
+  void Skribot::TurnLEDOn(int R,int G, int B, String name,byte N_LED){
     #ifndef _VARIANT_BBC_MICROBIT_
     for(int zz = 0; zz < NLEDs ; zz++){
                     if(name == "ALL" || LEDs[zz]->GetName() == name){
-                      LEDs[zz]->turnON(R,G,B);
+                      LEDs[zz]->turnON(R,G,B,N_LED);
                       if(name != "ALL")break;
                     }
       }
       #endif
   }
 
-   void Skribot::TurnLEDOff(String name){
+   void Skribot::TurnLEDOff(String name,byte N_LED){
     #ifndef _VARIANT_BBC_MICROBIT_
     for(int zz = 0; zz < NLEDs ; zz++){
                     if(name == "ALL" || LEDs[zz]->GetName() == name){
-                      LEDs[zz]->turnOFF();
+                      LEDs[zz]->turnOFF(N_LED);
                       if(name != "ALL")break;
                     }
       }
       #endif
   }
 
-  void Skribot::TurnLEDOn(int R,int G, int B, int _id){
+  void Skribot::TurnLEDOn(int R,int G, int B, int _id,byte N_LED){
     #ifndef _VARIANT_BBC_MICROBIT_
     for(int zz = 0; zz < NLEDs ; zz++){
                     if(_id == -69 || LEDs[zz]->GetID() == _id){
-                      LEDs[zz]->turnON(R,G,B);
+                      LEDs[zz]->turnON(R,G,B,N_LED);
                       if(_id != -69)break;
                     }
                   
@@ -418,11 +427,11 @@ if(connection_Break_Reported){
       #endif
   }
 
-  void Skribot::TurnLEDOff(int _id){
+  void Skribot::TurnLEDOff(int _id, byte N_LED){
     #ifndef _VARIANT_BBC_MICROBIT_
     for(int zz = 0; zz < NLEDs ; zz++){
                     if(_id == -69 || LEDs[zz]->GetID() == _id){
-                      LEDs[zz]->turnOFF();
+                      LEDs[zz]->turnOFF(N_LED);
                       if(_id != -69)break;
                     }
       }
@@ -661,7 +670,7 @@ if(connection_Break_Reported){
     void Skribot::MoveBack(int ms){Move('B',ms);}
     void Skribot::Stop(){Move('S',-1);}
 
-  int Skribot::ReadLightRaw(int id){
+  int Skribot::LightSensor_Raw(int id){
     int output;
     for(int zz = 0; zz < NLightSensors ; zz++){
                     if(LightSensors[zz]->GetID() == id){
@@ -672,7 +681,7 @@ if(connection_Break_Reported){
       }
       return(output);
      }
-    bool Skribot::LightSensorDark(int id){
+    bool Skribot::LightSensor_Dark(int id){
           bool output;
     for(int zz = 0; zz < NLightSensors ; zz++){
                     if(LightSensors[zz]->GetID() == id){
@@ -683,7 +692,7 @@ if(connection_Break_Reported){
       }
       return(output);
     }
-    bool Skribot::LightSensorBright(int id){
+    bool Skribot::LightSensor_Bright(int id){
           bool output;
     for(int zz = 0; zz < NLightSensors ; zz++){
                     if(LightSensors[zz]->GetID() == id){

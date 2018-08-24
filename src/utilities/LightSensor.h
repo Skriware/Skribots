@@ -1,6 +1,6 @@
 #ifndef LIGHTSENSOR
 #define LIGHTSENSOR
-//#define Debug
+//#define DEBUG_MODE
 #include "Arduino.h"
 
 class LightSensor 
@@ -13,11 +13,10 @@ public:
     int threshold;
     String NAME;
     int ReadRaw();
-    void TestLight();
+    void CalibrateLight();
     bool isDark();
     bool isBright();
     int GetID();
-
 };
 
 #endif

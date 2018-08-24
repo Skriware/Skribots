@@ -18,6 +18,10 @@ AddDistSensor			KEYWORD2
 ReadDistSensor			KEYWORD2
 AddLineSensor			KEYWORD2
 AddDCRotor				KEYWORD2
+AddLightSensor			KEYWORD2
+LightSensor_Raw			KEYWORD2
+LightSensor_Dark		KEYWORD2
+LightSensor_Bright		KEYWORD2
 ReadLineSensor			KEYWORD2
 AddScope				KEYWORD2
 AddLED					KEYWORD2

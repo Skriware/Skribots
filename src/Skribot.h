@@ -22,7 +22,7 @@
 #include <utilities/SoundDetector.h>
 #include <utilities/PWM_Handler.h>
 #include <utilities/StatusLED.h>
-
+#include <utilities/Speaker.h>
 
 #define _CAT(a, ...) a ## __VA_ARGS__
 #define SWITCH_ENABLED_false 0
@@ -34,6 +34,7 @@
 #define DISABLED(b) (!_CAT(SWITCH_ENABLED_, b))
 
 #ifndef ARDUINO_ARCH_ESP32
+
 #define EDU_ROTOR_SPEED_PIN_R 6
 #define EDU_ROTOR_DIR_PIN_R 7
 #define EDU_ROTOR_SPEED_PIN_L 5
@@ -54,6 +55,26 @@
 #define EDU_SHIELD_STATUS_LED_G_PIN A5
 #define EDU_SHIELD_STATUS_LED_B_PIN A4
 #define EDU_SHILED_POWER_READOUT_PIN A7
+
+#define L1 A1
+#define L2 A2
+#define L3 A3
+
+#else
+
+#define SKRIBRAIN_MOTOR_L_DIR1_PIN 12 
+#define SKRIBRAIN_MOTOR_L_DIR2_PIN 21
+#define SKRIBRAIN_MOTOR_R_DIR1_PIN 22
+#define SKRIBRAIN_MOTOR_R_DIR2_PIN 23
+#define SKRIBRAIN_ECHO_PIN_1 5
+#define SKRIBRAIN_ECHO_PIN_2 19
+#define SKRIBRAIN_TRIG_PIN_1 17
+#define SKRIBRAIN_TRIG_PIN_2 18
+#define SKRIBRAIN_SERVO_PIN_1 13
+#define SKRIBRAIN_SERVO_PIN_2 4
+#define SKRIBRAIN_SERVO_PIN_3 16
+#define SKRIBRAIN_LED_PIN_1 15
+#define SKRIBRAIN_LED_PIN_2 15
 #endif
 
 #ifdef _VARIANT_BBC_MICROBIT_
@@ -85,8 +106,8 @@
      #ifndef _VARIANT_BBC_MICROBIT_ 
     void AddClaw(int ClawPin,int Arm_Pin, byte id = 0);
     void AddScope(int EchoPin,int Trigg,int ServoPin,String Name);
-    void AddLED(int Pin,String name);
-    void AddLED(int Pin, int id);
+    void AddLED(int Pin,String name,byte N_LED = 1);
+    void AddLED(int Pin, int id, byte N_LED  = 1);
     #endif
     
     
@@ -125,14 +146,14 @@
     void Pick_Up(byte id = 0);
     void Put_Down(byte id = 0);                                                                //Claw functins
     
-    void TurnLEDOn(int R,int G, int B,String name);
-    void TurnLEDOff(String name); 
-    void TurnLEDOn(int R,int G, int B,int _id = -69);
-    void TurnLEDOff(int _id = -69);                                                            // LED functions
+    void TurnLEDOn(int R,int G, int B,String name,byte N_LED =1);
+    void TurnLEDOff(String name,byte N_LED =1); 
+    void TurnLEDOn(int R,int G, int B,int _id = -69,byte N_LED = 1);
+    void TurnLEDOff(int _id = -69,byte N_LED = 1);                                                            // LED functions
 
-    int ReadLightRaw(int id);
-    bool LightSensorDark(int id);
-    bool LightSensorBright(int id);
+    int  LightSensor_Raw(int id);
+    bool LightSensor_Dark(int id);
+    bool LightSensor_Bright(int id);
                                                                                                //Light Sensor Functions
 
     #ifndef _VARIANT_BBC_MICROBIT_
