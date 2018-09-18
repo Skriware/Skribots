@@ -608,23 +608,23 @@ if(connection_Break_Reported){
       byte leftDir,leftSpeed,rightDir,rightSpeed;
 
  
-       if(left > 250){
+      if(left > 250){
         leftSpeed = left - 250;
         leftDir = 1;
       }else if(left == 250){
         leftSpeed = 0;
-        leftDir = 1;
+        leftDir = 0;
       }else{
         leftSpeed = 250 - left;
         leftDir = 0;
       }
 
-        if(right > 250){
+      if(right > 250){
         rightSpeed = right-250;
         rightDir = 1;
       }else if(right == 250){
         rightSpeed = 0;
-        rightDir = 1;
+        rightDir = 0;
       }else{
         rightSpeed = 250-right;
         rightDir = 0;
