@@ -1,7 +1,7 @@
 #ifndef PWM_HANDLE_H
 #define PWM_HANDLE_H
 #include "Arduino.h"
-#ifdef ARDUINO_ARCH_ESP32
+#ifdef ESP_H
 #include "esp32-hal-ledc.h"
 #define MAX_PWM_CHANNELS 16
 #define PWM_FREQ 500

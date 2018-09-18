@@ -5,7 +5,7 @@
 Claw::Claw(int Claw_Pin,int Arm_Pin,byte _id){
 	
 	
-	#ifdef ARDUINO_ARCH_ESP32
+	#ifdef ESP_H
 	SetNewPWMChannel(Claw_Pin);
 	SetNewPWMChannel(Arm_Pin);
 	claw_pin = Claw_Pin;
@@ -23,7 +23,7 @@ Claw::Claw(int Claw_Pin,int Arm_Pin,byte _id){
 
 
 void Claw::SetAngle(int claw_angle,int arm_angle){
-	#ifdef ARDUINO_ARCH_ESP32
+	#ifdef ESP_H
 	PWM_Write(claw_pin,claw_angle);
 	PWM_Write(arm_pin,arm_angle);
 	#else
@@ -32,7 +32,7 @@ void Claw::SetAngle(int claw_angle,int arm_angle){
 	#endif
 }
 	void Claw::Close(){	
-		#ifndef ARDUINO_ARCH_ESP32 
+		#ifndef ESP_H 
 		claw_servo->write(120);
 		#else
 		PWM_Write(claw_pin,120);
@@ -40,7 +40,7 @@ void Claw::SetAngle(int claw_angle,int arm_angle){
 
 	}
 	void Claw::Open(){
-		#ifndef ARDUINO_ARCH_ESP32 
+		#ifndef ESP_H 
 		claw_servo->write(170);
 		#else
 		PWM_Write(claw_pin,170);
@@ -48,7 +48,7 @@ void Claw::SetAngle(int claw_angle,int arm_angle){
 	}
 	void Claw::Pick_Up(){
 		
-		#ifndef ARDUINO_ARCH_ESP32 
+		#ifndef ESP_H 
 		arm_servo->write(50);
 		#else
 		PWM_Write(arm_pin,120);
@@ -56,7 +56,7 @@ void Claw::SetAngle(int claw_angle,int arm_angle){
 	}
 	void Claw::Put_Down(){
 		
-		#ifndef ARDUINO_ARCH_ESP32 
+		#ifndef ESP_H 
 		arm_servo->write(10);
 		#else
 		PWM_Write(arm_pin,70);

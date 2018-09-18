@@ -2,7 +2,7 @@
 #define Claw_H
 #include "Arduino.h"
 #include "PWM_Handler.h"
-#ifndef ARDUINO_ARCH_ESP32
+#ifndef ESP_H
 #include <Servo.h>
 #endif
 
@@ -18,7 +18,7 @@ public:
 	void Put_Down();
 	byte GetID();
 private:
-	#ifndef ARDUINO_ARCH_ESP32
+	#ifndef ESP_H
 	Servo 	*claw_servo;
 	Servo 	*arm_servo;
 	#endif

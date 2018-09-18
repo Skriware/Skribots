@@ -1,6 +1,6 @@
 #include <Arduino.h>
 #ifndef _VARIANT_BBC_MICROBIT_ 
-#ifndef ARDUINO_ARCH_ESP32
+#ifndef ESP_H
 #include "Scope.h"
 
 Scope::Scope(int EP,int Trigg,int ServoPin, String Name){

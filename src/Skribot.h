@@ -33,7 +33,7 @@
 #define ENABLED(b) _CAT(SWITCH_ENABLED_, b)
 #define DISABLED(b) (!_CAT(SWITCH_ENABLED_, b))
 
-#ifndef ARDUINO_ARCH_ESP32
+#ifndef ESP_H
 
 #define EDU_ROTOR_SPEED_PIN_R 6
 #define EDU_ROTOR_DIR_PIN_R 7
@@ -111,7 +111,7 @@
     #endif
     
     
-    #ifndef ARDUINO_ARCH_ESP32                                                              //functions for element adding
+    #ifndef ESP_H                                                              //functions for element adding
     void AddDistSensor(String EDU_SHIELD_SLOT);
     void AddLED(String EDU_SHIELD_SLOT);
     void AddLineSensor(String EDU_SHIELD_SLOT);

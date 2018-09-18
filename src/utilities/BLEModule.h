@@ -3,7 +3,7 @@
 #include "Arduino.h"
 #include "RN4020.h"
 #define EDU_BT_STATE_PIN 3
-#ifdef ARDUINO_ARCH_ESP32
+#ifdef ESP_H
 #include <BLEDevice.h>
 #include <BLEServer.h>
 #include <BLEUtils.h>
@@ -27,7 +27,7 @@ public:
     void BLE_Setup();
     void BLE_reset();
 
-    #ifdef ARDUINO_ARCH_ESP32
+    #ifdef ESP_H
         static bool deviceConnected;
         static char RXBLE_buffer[BLERXBUFFER_SIZE];
         static byte RXBLE_buffer_iterator_end;
@@ -35,7 +35,7 @@ public:
     #endif
 private:
 	moduleType	_type;
-    #ifdef ARDUINO_ARCH_ESP32
+    #ifdef ESP_H
     BLEServer *Server = NULL;
     BLEService *Service; 
     BLECharacteristic * TxCharacteristic;
@@ -43,7 +43,7 @@ private:
     #endif
 
 };
-#ifdef ARDUINO_ARCH_ESP32
+#ifdef ESP_H
 void incrementRXbuffIterator_beg();
 void incrementRXbuffIterator_end();
 byte substractBufforIterators();

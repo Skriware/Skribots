@@ -3,7 +3,7 @@
 #include "BLEModule.h"
 #include <EEPROM.h>
 
-#ifdef ARDUINO_ARCH_ESP32
+#ifdef ESP_H
 
 bool BLEModule::deviceConnected = false;
 char BLEModule::RXBLE_buffer[BLERXBUFFER_SIZE];
@@ -21,18 +21,18 @@ char BLEModule::BLE_read(){
 
 switch(_type){
 		case HM_10:
-		#ifndef ARDUINO_ARCH_ESP32 && _VARIANT_BBC_MICROBIT_
+		#ifndef ESP_H && _VARIANT_BBC_MICROBIT_
 			tmp = Serial3.read();
 			#endif
 		break;
 		case RN4020:
-			#ifndef ARDUINO_ARCH_ESP32 && _VARIANT_BBC_MICROBIT_
+			#ifndef ESP_H && _VARIANT_BBC_MICROBIT_
 			tmp = RN4020_read();
 			#endif
 		break;
 	case ESP32_BLE:
 
-		#ifdef ARDUINO_ARCH_ESP32
+		#ifdef ESP_H
 		if(BLERXBUFFER_SIZE - substractBufforIterators() > 0){
 			incrementRXbuffIterator_beg();
 	        tmp = RXBLE_buffer[RXBLE_buffer_iterator_beg];
@@ -48,22 +48,22 @@ switch(_type){
   }
   
 void BLEModule::BLE_write(char *msg){
-	#ifdef ARDUINO_ARCH_ESP32
+	#ifdef ESP_H
 		std::string _tmp = std::string(msg);
 	#endif
 	switch(_type){
 		case HM_10:
-			#ifndef ARDUINO_ARCH_ESP32 && _VARIANT_BBC_MICROBIT_
+			#ifndef ESP_H && _VARIANT_BBC_MICROBIT_
     		Serial3.println(msg);
     		#endif
     		break;
     	case RN4020:
-    		#ifndef ARDUINO_ARCH_ESP32 && _VARIANT_BBC_MICROBIT_
+    		#ifndef ESP_H && _VARIANT_BBC_MICROBIT_
     		RN4020_write(msg);
     		#endif
     		break;
     	case ESP32_BLE:
-    	#ifdef ARDUINO_ARCH_ESP32
+    	#ifdef ESP_H
     		 TxCharacteristic->setValue(_tmp);
         	 TxCharacteristic->notify();
 			#endif
@@ -80,12 +80,12 @@ bool BLEModule::BLE_checkConnection(){
 			 connection = digitalRead(EDU_BT_STATE_PIN) == HIGH;
 			 break;
 		case RN4020:
-			#ifndef ARDUINO_ARCH_ESP32 && _VARIANT_BBC_MICROBIT_
+			#ifndef ESP_H && _VARIANT_BBC_MICROBIT_
 			connection = RN4020_checkConnection();
 			#endif
 			break;
 		case ESP32_BLE:
-		#ifdef ARDUINO_ARCH_ESP32
+		#ifdef ESP_H
 			connection = BLEModule::deviceConnected;
 		#endif
 			break;
@@ -99,18 +99,18 @@ bool BLEModule::BLE_checkConnection(){
     		int dataAvalible;
     switch(_type){
 		case HM_10:
-			#ifndef ARDUINO_ARCH_ESP32 && _VARIANT_BBC_MICROBIT_
+			#ifndef ESP_H && _VARIANT_BBC_MICROBIT_
     		dataAvalible = Serial3.available();
     		#endif
     		 break;
     	case RN4020:
-    		#ifndef ARDUINO_ARCH_ESP32 && _VARIANT_BBC_MICROBIT_
+    		#ifndef ESP_H && _VARIANT_BBC_MICROBIT_
     		dataAvalible = RN4020_dataAvailable();
     		#endif
     		break;
     	case ESP32_BLE:
 
-    	#ifdef ARDUINO_ARCH_ESP32
+    	#ifdef ESP_H
     		dataAvalible = BLERXBUFFER_SIZE - substractBufforIterators()-1;
     	#endif
 
@@ -126,7 +126,7 @@ bool BLEModule::BLE_checkConnection(){
      byte IfNamed = 0;
     switch(_type){
 		case HM_10:
-		#ifndef ARDUINO_ARCH_ESP32 && _VARIANT_BBC_MICROBIT_
+		#ifndef ESP_H && _VARIANT_BBC_MICROBIT_
 		    Serial3.begin(9600);
 		    Serial3.setTimeout(50);
 		    pinMode(EDU_BT_STATE_PIN,INPUT);
@@ -159,12 +159,12 @@ bool BLEModule::BLE_checkConnection(){
 		   #endif
      break;
      case RN4020:
-     	#ifndef ARDUINO_ARCH_ESP32 && _VARIANT_BBC_MICROBIT_
+     	#ifndef ESP_H && _VARIANT_BBC_MICROBIT_
      	  RN4020_Setup();
      	  #endif
      	break;
     case ESP32_BLE:
-    #ifdef ARDUINO_ARCH_ESP32
+    #ifdef ESP_H
     	  // Create the BLE Device
   		 BLEDevice::init("Skribot_ESP");
 
@@ -203,7 +203,7 @@ bool BLEModule::BLE_checkConnection(){
 	  switch(_type){
 			case HM_10:
 
-				 #ifndef ARDUINO_ARCH_ESP32 && _VARIANT_BBC_MICROBIT_
+				 #ifndef ESP_H && _VARIANT_BBC_MICROBIT_
 				  while(BLE_checkConnection()){
 				    #ifdef DEBUG_MODE
 				    Serial.println("waiting...");
@@ -225,13 +225,13 @@ bool BLEModule::BLE_checkConnection(){
 				   #endif
 				break;
 			case RN4020:
-				#ifndef ARDUINO_ARCH_ESP32 && _VARIANT_BBC_MICROBIT_
+				#ifndef ESP_H && _VARIANT_BBC_MICROBIT_
 				RN4020_changeName(name);
 				#endif
 				break;
 			case ESP32_BLE:
 
-			#ifdef ARDUINO_ARCH_ESP32
+			#ifdef ESP_H
 
 			#endif
 
@@ -242,7 +242,7 @@ bool BLEModule::BLE_checkConnection(){
 }
 
 
-#ifdef ARDUINO_ARCH_ESP32
+#ifdef ESP_H
 
   void incrementRXbuffIterator_end(){
     	if(BLEModule::RXBLE_buffer_iterator_end == BLERXBUFFER_SIZE-1){

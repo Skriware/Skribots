@@ -17,7 +17,7 @@
     Configure_Connections(predef);
   }
   void Skribot::Configure_Connections(String predef){
-    #ifndef ARDUINO_ARCH_ESP32
+    #ifndef ESP_H
     if(predef == "EDU_SHIELD"){
           AddDCRotor(EDU_ROTOR_SPEED_PIN_L,EDU_ROTOR_DIR_PIN_L,"Left");          //adding rotors for movement
           AddDCRotor(EDU_ROTOR_SPEED_PIN_R,EDU_ROTOR_DIR_PIN_R,"Right");
@@ -142,7 +142,7 @@ if(connection_Break_Reported){
               if(tmp == 'E' && BLE_read() == 'N' && BLE_read() == 'D'){
                 program_End_Reported = true;
               }
-              #ifndef ARDUINO_ARCH_ESP32 && _VARIANT_BBC_MICROBIT_
+              #ifndef ESP_H && _VARIANT_BBC_MICROBIT_
               serialFlush();
               #endif
             }
@@ -261,7 +261,7 @@ if(connection_Break_Reported){
   }
 
 
-#ifndef ARDUINO_ARCH_ESP32 && _VARIANT_BBC_MICROBIT_
+#ifndef ESP_H && _VARIANT_BBC_MICROBIT_
          // functions for EDUSHIELD_1
     void Skribot::AddDistSensor(String EDU_SHIELD_SLOT){
       if(EDU_SHIELD_SLOT == "D1"){

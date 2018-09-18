@@ -8,7 +8,7 @@
 	void PWM_Write(byte _PWMPin,int value){
 			for(byte ii = 0; ii < MAX_PWM_CHANNELS;ii++){
 				if(PWM_Channels[ii].pwmPin == _PWMPin){
-				#ifdef ARDUINO_ARCH_ESP32
+				#ifdef ESP_H
 					ledcWrite(PWM_Channels[ii].pwmChannel,value);
 				#else 
 					analogWrite(PWM_Channels[ii].pwmPin,value);
@@ -29,7 +29,7 @@
 					newChannelToUse.pwmChannel = used_PWM_channels;
 					PWM_Channels[used_PWM_channels] = newChannelToUse;
 					used_PWM_channels++;
-				#ifdef ARDUINO_ARCH_ESP32
+				#ifdef ESP_H
 					ledcSetup(newChannelToUse.pwmChannel, PWM_FREQ, PWM_RESOLUTION);
 					ledcAttachPin(newChannelToUse.pwmPin, newChannelToUse.pwmChannel); 
 				#endif

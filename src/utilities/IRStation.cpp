@@ -1,5 +1,5 @@
 #include "Arduino.h"
-#ifndef _VARIANT_BBC_MICROBIT_ && ARDUINO_ARCH_ESP32
+#ifndef _VARIANT_BBC_MICROBIT_ && ESP_H
 #include "IRStation.h"
 
 

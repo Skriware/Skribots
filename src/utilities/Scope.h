@@ -2,7 +2,7 @@
 #define Scope_H
 #include "Arduino.h"
 #include "DistSensor.h"
-#ifndef ARDUINO_ARCH_ESP32
+#ifndef ESP_H
 #include <Servo.h>
 #endif
 
@@ -14,7 +14,7 @@ public:
 	int GetDistance();
 	String GetName();
 private:
-	#ifndef ARDUINO_ARCH_ESP32
+	#ifndef ESP_H
 	Servo *servo;
 	#endif
 	DistSensor *sensor;
