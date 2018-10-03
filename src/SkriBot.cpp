@@ -26,7 +26,7 @@
           #ifndef _VARIANT_BBC_MICROBIT_
           AddClaw(EDU_CLAW_PIN1,EDU_CLAW_PIN2);
           #if DISABLED(DEBUG_MODE)
-          AddLED(EDU_LED_DATA_PIN_1,1);
+          AddLED(EDU_LED_DATA_PIN_1,1,5);
           AddLED(EDU_LED_DATA_PIN,0);
           #endif
           #endif
@@ -489,26 +489,29 @@ if(connection_Break_Reported){
       if (NLeftDCRotors  > 0 && NRightDCRotors  >0){
          switch(Dir){
         case 'B':
+                     for(int zz = 0; zz < NRightDCRotors ; zz++){
+                    RightDCRotors[zz]->SetDirection(0);
+                    RightDCRotors[zz]->Move();
+                  }
+
                   for(int kk = 0; kk < NLeftDCRotors ; kk++){
                     LeftDCRotors[kk]->SetDirection(0);
                     LeftDCRotors[kk]->Move();
                   }
           
-                  for(int zz = 0; zz < NRightDCRotors ; zz++){
-                    RightDCRotors[zz]->SetDirection(0);
-                    RightDCRotors[zz]->Move();
-                  }
+               
         break;
         
         case 'F':
-                  for(int kk = 0; kk < NLeftDCRotors ; kk++){
-                    LeftDCRotors[kk]->SetDirection(1);
-                    LeftDCRotors[kk]->Move();
-                  }
-          
+                  
                   for(int kk = 0; kk < NRightDCRotors ; kk++){
                     RightDCRotors[kk]->SetDirection(1);
                     RightDCRotors[kk]->Move();
+                  }
+
+                  for(int kk = 0; kk < NLeftDCRotors ; kk++){
+                    LeftDCRotors[kk]->SetDirection(1);
+                    LeftDCRotors[kk]->Move();
                   }
         break;
 
@@ -606,8 +609,7 @@ if(connection_Break_Reported){
 
   void Skribot::RawRotorMove(int left, int right){
       byte leftDir,leftSpeed,rightDir,rightSpeed;
-
- 
+      
       if(left > 250){
         leftSpeed = left - 250;
         leftDir = 1;
@@ -645,9 +647,8 @@ if(connection_Break_Reported){
                     high_power_usage = true;
                   }else{
                     high_power_usage = false;
-                  }
-                
   }
+}
 
     void Skribot::SetSpeed(int s){ 
       DCSpeed = s;

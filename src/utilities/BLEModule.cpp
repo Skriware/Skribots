@@ -166,7 +166,9 @@ bool BLEModule::BLE_checkConnection(){
     case ESP32_BLE:
     #ifdef ESP_H
     	  // Create the BLE Device
-  		 BLEDevice::init("Skribot_ESP");
+    
+  		 BLEDevice::init("Skri");
+  
 
   		  Server = BLEDevice::createServer();
 
@@ -174,23 +176,26 @@ bool BLEModule::BLE_checkConnection(){
 
     	  Service = Server->createService(SERVICE_UUID);
 
+    	  
+    	  RxCharacteristic = Service->createCharacteristic(
+											 CHARACTERISTIC_UUID_RX,
+											BLECharacteristic::PROPERTY_WRITE_NR);
+
+    	  RxCharacteristic->setCallbacks(new MyCallbacks());
+
     	  TxCharacteristic = Service->createCharacteristic(
 										CHARACTERISTIC_UUID_TX,
 										BLECharacteristic::PROPERTY_NOTIFY
 									);
 
     	  TxCharacteristic->addDescriptor(new BLE2902());
-    	  
-    	  RxCharacteristic = Service->createCharacteristic(
-											 CHARACTERISTIC_UUID_RX,
-											BLECharacteristic::PROPERTY_WRITE);
-
-    	  RxCharacteristic->setCallbacks(new MyCallbacks());
 
     	  Service->start();
 
   			// Start advertising
+    	  Server->getAdvertising()->addServiceUUID(BLEUUID(SERVICE_UUID));
   		  Server->getAdvertising()->start();
+
     #endif
     	break;
 	default:
