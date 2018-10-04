@@ -21,6 +21,7 @@
     if(predef == "EDU_SHIELD"){
           AddDCRotor(EDU_ROTOR_SPEED_PIN_L,EDU_ROTOR_DIR_PIN_L,"Left");          //adding rotors for movement
           AddDCRotor(EDU_ROTOR_SPEED_PIN_R,EDU_ROTOR_DIR_PIN_R,"Right");
+          Stop();
           AddDistSensor(EDU_ECHO_PIN_1,EDU_TRIG_PIN_1,1);   //adding Distance Sensors  and naming them "Left and Right";
           AddDistSensor(EDU_ECHO_PIN_2,EDU_TRIG_PIN_2,2);
           #ifndef _VARIANT_BBC_MICROBIT_
