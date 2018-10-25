@@ -565,7 +565,7 @@ if(connection_Break_Reported){
 
          case 'Z' :
                     for(int kk = 0; kk < NLeftDCRotors ; kk++){
-                    LeftDCRotors[kk]->SetDirection(0);
+                    LeftDCRotors[kk]->SetDirection(1);
                     LeftDCRotors[kk]->Move();
                   }
           
@@ -578,7 +578,7 @@ if(connection_Break_Reported){
 
          case 'M' :
                    for(int kk = 0; kk < NLeftDCRotors ; kk++){
-                    LeftDCRotors[kk]->SetDirection(0);
+                    LeftDCRotors[kk]->SetDirection(1);
                     LeftDCRotors[kk]->SetSpeed(0.5*DCSpeed);
                     LeftDCRotors[kk]->Move();
                   }

@@ -1,8 +1,8 @@
 #ifndef STATUSLED_H
 #define STATUSLED_H
 #include "Arduino.h"
-#define FULL_BateryLevel 8.6
-#define USED_BateryLevel 8.2
+#define FULL_BateryLevel 10.5//8.6
+#define USED_BateryLevel 10.0//8.2
 
 enum color {RED = 0,GREEN = 1,BLUE = 2,YELLOW = 3,WHITE = 4,PURPLE = 5,OFF = 6};
 	class StatusLED
