@@ -46,8 +46,8 @@
 #define EDU_LINE_SENSOR_1 A1
 #define EDU_LINE_SENSOR_2 A2
 #define EDU_LINE_SENSOR_3 A3
-#define EDU_LED_DATA_PIN 1
-#define EDU_LED_DATA_PIN_1 0
+#define EDU_LED_DATA_PIN 0 
+#define EDU_LED_DATA_PIN_1 1
 #define EDU_CLAW_PIN1 2
 #define EDU_CLAW_PIN2 8
 #define EDU_SHIELD
@@ -73,8 +73,11 @@
 #define SKRIBRAIN_SERVO_PIN_1 13
 #define SKRIBRAIN_SERVO_PIN_2 4
 #define SKRIBRAIN_SERVO_PIN_3 16
-#define SKRIBRAIN_LED_PIN_1 15
+#define SKRIBRAIN_LED_PIN_1 2
 #define SKRIBRAIN_LED_PIN_2 15
+#define SKRIBRAIN_ANALOG_PIN_1 36  
+#define SKRIBRAIN_ANALOG_PIN_2 39 
+#define SKRIBRAIN_ANALOG_PIN_3 34
 #endif
 
 #ifdef _VARIANT_BBC_MICROBIT_
@@ -174,7 +177,7 @@
     int BaterryCheck();
 
 
-  private:
+ // private:
   DistSensor *DistSensors[5];
   LineSensor *LineSensors[6];
   Rotor *LeftDCRotors[3];

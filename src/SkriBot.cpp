@@ -65,10 +65,13 @@
     if(predef == "SKRIBRAIN"){
           AddDCRotor(SKRIBRAIN_MOTOR_L_DIR1_PIN,SKRIBRAIN_MOTOR_L_DIR2_PIN,"Left");
           AddDCRotor(SKRIBRAIN_MOTOR_R_DIR1_PIN,SKRIBRAIN_MOTOR_R_DIR2_PIN,"Right");
-          AddLED(SKRIBRAIN_LED_PIN_1,1);
-          AddLED(SKRIBRAIN_LED_PIN_2,2);
+          AddLED(SKRIBRAIN_LED_PIN_1,0);
+          AddLED(SKRIBRAIN_LED_PIN_2,1);
           AddDistSensor(SKRIBRAIN_ECHO_PIN_1,SKRIBRAIN_TRIG_PIN_1,1);   //adding Distance Sensors  and naming them "Left and Right";
           AddDistSensor(SKRIBRAIN_ECHO_PIN_2,SKRIBRAIN_TRIG_PIN_2,2);
+          AddLineSensor(SKRIBRAIN_ANALOG_PIN_1, 1);
+          AddLineSensor(SKRIBRAIN_ANALOG_PIN_2, 2);
+          AddLineSensor(SKRIBRAIN_ANALOG_PIN_3, 3);
           BLE_Set_Module(ESP32_BLE); 
     }
     #endif
@@ -140,11 +143,11 @@ if(connection_Break_Reported){
             while(BLE_dataAvailable() > 0){
               tmp = BLE_read();
               delay(5);                     // to be sure that next char will be recieved
-              if(tmp == 'E' && BLE_read() == 'N' && BLE_read() == 'D'){
+              if((tmp == 'E' && BLE_read() == 'N' && BLE_read() == 'D') || (tmp == 'B' && BLE_read() == 'E' && BLE_read() == 'G')){
                 program_End_Reported = true;
               }
               #ifndef ESP_H && _VARIANT_BBC_MICROBIT_
-              serialFlush();
+              if(tmp != 'B')serialFlush();
               #endif
             }
             if(program_End_Reported || connection_Break_Reported)break;
