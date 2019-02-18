@@ -19,9 +19,11 @@
     }
 
     void RobotLED::turnON(int R, int G, int B,byte N_LED){
+
           if(N_LED == 0){
             for(int yy = 0; yy < nLED; yy++)pixel->setPixelColor(yy, pixel->Color(R,G,B));
           }else{
+          turnOFF();  
           pixel->setPixelColor(N_LED-1, pixel->Color(R,G,B)); 
           }
           pixel->show(); 
@@ -36,6 +38,14 @@
             }
             pixel->show(); 
             delay(10);
+
+             if(N_LED == 0){
+                for(int yy = 0; yy < nLED; yy++)pixel->setPixelColor(yy, pixel->Color(0,0,0));
+            }else{
+            pixel->setPixelColor(0, pixel->Color(0,0,0)); 
+            }
+            pixel->show(); 
+            delay(10);                              //do the cycle again to ensure that there was no buffer clerance problem
     }
 
 

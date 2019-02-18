@@ -51,7 +51,7 @@ void loop() {
         robot.FaceLeft(300);                                 // Turning Left
       }
       else{
-        robot.FaceRight(1200);                                 // We turned Right and now we are turning Left again?! We are probably in the corner lets escape!
+        robot.FaceRight(600);                                 // We turned Right and now we are turning Left again?! We are probably in the corner lets escape!
       }
     }
     else{

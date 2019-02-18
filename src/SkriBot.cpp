@@ -72,6 +72,7 @@
           AddLineSensor(SKRIBRAIN_ANALOG_PIN_1, 1);
           AddLineSensor(SKRIBRAIN_ANALOG_PIN_2, 2);
           AddLineSensor(SKRIBRAIN_ANALOG_PIN_3, 3);
+          AddClaw(SKRIBRAIN_SERVO_PIN_1,SKRIBRAIN_SERVO_PIN_2);
           BLE_Set_Module(ESP32_BLE); 
     }
     #endif

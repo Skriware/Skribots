@@ -4,7 +4,7 @@
 #ifdef ESP_H
 #include "esp32-hal-ledc.h"
 #define MAX_PWM_CHANNELS 16
-#define PWM_FREQ 500
+#define PWM_FREQ 490
 #define PWM_RESOLUTION 8 //in bits
 #endif
 #ifdef _VARIANT_BBC_MICROBIT_
