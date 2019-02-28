@@ -176,7 +176,6 @@
     bool ProgramENDRepotred();
     int BaterryCheck();
 
-
  // private:
   DistSensor *DistSensors[5];
   LineSensor *LineSensors[6];
@@ -194,7 +193,6 @@
   RGB_LED_Matrix *RGB_Matrix[3];
   BLEModule *BTmodule;
   #endif
-
   byte NDistSensors,NLEDs,NLineSensors,NScopes,NLeftDCRotors,NRightDCRotors,NClaws,NLightSensors;           //counters
   int DCSpeed = 0;
   

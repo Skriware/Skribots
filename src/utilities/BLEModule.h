@@ -1,7 +1,6 @@
 #ifndef BLE_MOD_H
 #define BLE_MOD_H
 #include "Arduino.h"
-#include "RN4020.h"
 #define EDU_BT_STATE_PIN 3
 #ifdef ESP_H
 #include <BLEDevice.h>
@@ -12,6 +11,8 @@
 #define CHARACTERISTIC_UUID_RX "6E400002-B5A3-F393-E0A9-E50E24DCCA9E"
 #define CHARACTERISTIC_UUID_TX "6E400003-B5A3-F393-E0A9-E50E24DCCA9E"
 #define BLERXBUFFER_SIZE 21
+#else
+#include "RN4020.h"
 #endif
 	enum moduleType {HM_10 = 0,RN4020 = 1,ESP32_BLE = 2};
   
