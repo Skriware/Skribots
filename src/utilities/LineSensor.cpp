@@ -4,7 +4,7 @@ LineSensor::LineSensor(int PinL, String Name){
  name = Name;
  sensorPin = PinL;
   delay(100);
-  #ifndef ESP_H
+  #ifdef ESP_H
     logicBorder = 400;
   #else
     logicBorder = 200;
@@ -16,7 +16,7 @@ LineSensor::LineSensor(int PinL, int _id){
  id = _id;
  sensorPin = PinL;
  name = "";
-#ifndef ESP_H
+  #ifdef ESP_H
     logicBorder = 400;
   #else
     logicBorder = 200;

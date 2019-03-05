@@ -33,7 +33,7 @@ void Claw::SetAngle(int claw_angle,int arm_angle){
 }
 	void Claw::Close(){	
 		#ifndef ESP_H 
-		claw_servo->write(10);
+		claw_servo->write(120);
 		#else
 		PWM_Write(claw_pin,70);
 		#endif
@@ -41,7 +41,7 @@ void Claw::SetAngle(int claw_angle,int arm_angle){
 	}
 	void Claw::Open(){
 		#ifndef ESP_H 
-		claw_servo->write(50);
+		claw_servo->write(170);
 		#else
 		PWM_Write(claw_pin,120);
 		#endif

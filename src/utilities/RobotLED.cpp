@@ -22,8 +22,7 @@
 
           if(N_LED == 0){
             for(int yy = 0; yy < nLED; yy++)pixel->setPixelColor(yy, pixel->Color(R,G,B));
-          }else{
-          turnOFF();  
+          }else{ 
           pixel->setPixelColor(N_LED-1, pixel->Color(R,G,B)); 
           }
           pixel->show(); 
