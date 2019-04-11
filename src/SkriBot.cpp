@@ -1,7 +1,5 @@
 #include "Skribot.h"
 
-
-
   Skribot::Skribot(String predef){
     NDistSensors    = 0;
     NLEDs           = 0;
@@ -14,6 +12,9 @@
     program_End_Reported = false;
     stausLEDused = false;
     high_power_usage = false;
+    claw_closed = false;
+    claw_closed_time = true;
+    config_mode = false;
     Configure_Connections(predef);
   }
   void Skribot::Configure_Connections(String predef){
@@ -74,11 +75,92 @@
           AddLineSensor(SKRIBRAIN_ANALOG_PIN_3, 3);
           AddClaw(SKRIBRAIN_SERVO_PIN_1,SKRIBRAIN_SERVO_PIN_2);
           BLE_Set_Module(ESP32_BLE); 
+          status = new StatusLED(SKRIBRAIN_STATUS_LED_PIN,SKRIBRAIN_SERVO_PIN_3);
+          stausLEDused = true;
     }
     #endif
-   
+   ConfigureBoardEEPROM();
    SetSpeed(250);
    Stop();
+  }
+
+  void Skribot::ConfigureBoardEEPROM(){
+    #ifdef ESP_H
+      #ifdef DEBUG_MODE
+          Serial.println("Checking EEPROM...");
+      #endif
+       if(!EEPROM.begin(64)){
+          #ifdef DEBUG_MODE
+          Serial.println("EEPROM init fail, aborting EEPROM check.");
+          #endif
+          return;
+       }
+       Board_type = EEPROM.read(EEPROM_BOARD_VERSION_ADDR);
+       if(Board_type == 255){                                   //No board Version defined
+        EEPROM.write(EEPROM_BOARD_VERSION_ADDR,BOARD_VERSION);
+        Board_type = BOARD_VERSION;                             //Asigning Board Version to the newest one.
+        EEPROM.commit();
+        #ifdef DEBUG_MODE
+          Serial.println("First time flash detected");
+          #endif
+        return;
+       }
+       delay(10);                                              //EEPROM delay in order to avoid EEPROM ERRORS
+       byte userChange = EEPROM.read(EEPROM_SETTINGS_OVERRIDED_ADDR);
+       delay(10);
+       if(userChange== 255){
+         #ifdef DEBUG_MODE
+          Serial.println("No user Settings in EEPROM Configuration");
+          #endif
+        return;                                                                         //No user change done aborting the process;
+       }else if(userChange == 1){
+       delay(10);                                              //EEPROM delay in order to avoid EEPROM ERRORS
+       byte left_invert = EEPROM.read(EEPROM_LEFT_INVERT_ADDR);
+       delay(10);                                              //EEPROM delay in order to avoid EEPROM ERRORS
+       byte right_invert = EEPROM.read(EEPROM_RIGHT_INVER_ADDR);
+       delay(10);                                              //EEPROM delay in order to avoid EEPROM ERRORS
+       byte left_scale = EEPROM.read(EEPROM_RIGHT_SCALE_ADDR);
+       delay(10); 
+       byte right_scale = EEPROM.read(EEPROM_LEFT_SCALE_ADDR);
+       delay(10);                                             //EEPROM delay in order to avoid EEPROM ERRORS
+       int L1_b = Read_EEPROM_INT(EEPROM_L1_BORDER_ADDR);
+       delay(10);                                              //EEPROM delay in order to avoid EEPROM ERRORS
+       int L2_b = Read_EEPROM_INT(EEPROM_L2_BORDER_ADDR);
+       delay(10);                                              //EEPROM delay in order to avoid EEPROM ERRORS
+       int L3_b = Read_EEPROM_INT(EEPROM_L3_BORDER_ADDR);
+       delay(10);
+
+       Set_Line_Sensor_Logic_Border(L1_b,L2_b,L3_b);
+       if(right_invert != 255)Invert_Right_Rotors(right_invert);
+       if(left_invert != 255)Invert_Left_Rotors(left_invert);
+       if(left_scale != 255)Scale_Left_Rotors(left_scale);
+       if(right_scale != 255)Scale_Right_Rotors(right_scale);
+       }
+    #endif
+  }
+
+  void Skribot::Write_EEPROM_INT(byte addr,int value){
+  if(EEPROM.begin(64)){
+      EEPROM.write(addr,value);
+      delay(10);
+      EEPROM.write(addr+1,value>>8);
+      EEPROM.commit();
+    }
+  }
+
+  int Skribot::Read_EEPROM_INT(byte addr){
+    int b3 = 0;
+    if(EEPROM.begin(64)){
+        byte b1 =  EEPROM.read(addr+1);
+        delay(10);
+        byte b2  = EEPROM.read(addr);
+      if(b1 == 255 && b2 == 255){
+        b3 = 0;
+      }else{
+        int b3 = b2 | (int(b1) << 8);
+      }
+    }
+    return(b3);
   }
 
   char Skribot::BLE_read(){
@@ -112,6 +194,24 @@ if(connection_Break_Reported){
     connection_Break_Reported = false;
     connection = false;
   }
+if(claw_closed && (millis() - claw_closed_time > 180000)){
+      #ifdef DEBUG_MODE
+       Serial.println("Program ended due to too long claw in closed state!");
+      #endif
+      OpenClaw();
+      program_End_Reported = true;
+      #ifdef ESP_H
+      status->TurnOn(OFF,2);
+      delay(200);
+      status->TurnOn(RED,2);
+      delay(200);
+      status->TurnOn(OFF,2);
+      delay(200);
+      status->TurnOn(RED,2);
+      delay(200);
+      #endif
+    }
+  
     return(connection);
   }
   int Skribot::BLE_dataAvailable(){
@@ -130,9 +230,7 @@ if(connection_Break_Reported){
 
   }
 
-
   void Skribot::wait_And_Check_BLE_Connection(int ms,int interval){
-
     int loop_iterator = ms/interval;
     int ms_left_after_loop = loop_iterator%interval;
     delay(ms_left_after_loop);
@@ -175,7 +273,6 @@ if(connection_Break_Reported){
   }
 
 
-
   void Skribot::BLE_Setup(){
     #ifndef _VARIANT_BBC_MICROBIT_
     BTmodule = new BLEModule(BLE_MODULE_TYPE);
@@ -190,7 +287,7 @@ if(connection_Break_Reported){
   }
 
    void Skribot::BLE_Set_Module(moduleType type){
-    BLE_MODULE_TYPE = type;
+          BLE_MODULE_TYPE = type;
    }
 
   void Skribot::BLE_reset(){
@@ -199,10 +296,11 @@ if(connection_Break_Reported){
           Serial.println("waiting...");
           #endif
         }
-       #ifndef _VARIANT_BBC_MICROBIT_
-       EEPROM.write(10, 0);
-       #endif
+        #ifdef ESP_H
+        BTmodule->BLE_reset();
+        #else
        BLE_Setup();
+       #endif
        
   }
 
@@ -357,6 +455,8 @@ if(connection_Break_Reported){
                     if(Claws[zz]->GetID() == id){
                       Claws[zz]->Close();
                       high_power_usage = true;
+                      claw_closed = true;
+                      claw_closed_time = millis();
                       break;
                     }
         }
@@ -368,6 +468,7 @@ if(connection_Break_Reported){
                     if(Claws[zz]->GetID() == id){
                       Claws[zz]->Open();
                       high_power_usage = false;
+                      claw_closed = false;
                       break;
                     }
         }
@@ -413,6 +514,7 @@ if(connection_Break_Reported){
     for(int zz = 0; zz < NLEDs ; zz++){
                     if(name == "ALL" || LEDs[zz]->GetName() == name){
                       LEDs[zz]->turnOFF(N_LED);
+                      
                       if(name != "ALL")break;
                     }
       }
@@ -467,8 +569,6 @@ if(connection_Break_Reported){
 
   int Skribot::ReadDistSensor(int id, int max){
      for(int zz = 0; zz < NDistSensors ; zz++){
-                    //Serial->print("Sensor:");
-                    //Serial->println(DistSensors[zz]->GetID());
                     if(DistSensors[zz]->GetID() == id){
                       return(DistSensors[zz]->ReadSensor(max));
                       break;
@@ -489,7 +589,43 @@ if(connection_Break_Reported){
       return(0);
   }
 
+    void Skribot::Set_Line_Sensor_Logic_Border(int L1_border,int L2_border,int L3_border){
+      for(int zz = 0; zz < NLineSensors ; zz++){
+                    if(LineSensors[zz]->GetSensorPin() == SKRIBRAIN_ANALOG_PIN_1 && L1_border != 0){
+                      LineSensors[zz]->SetLogicBorder(L1_border);
+                    }else if(LineSensors[zz]->GetSensorPin() == SKRIBRAIN_ANALOG_PIN_2 && L2_border != 0){
+                      LineSensors[zz]->SetLogicBorder(L2_border);
+                    }else if(LineSensors[zz]->GetSensorPin() == 1 && SKRIBRAIN_ANALOG_PIN_3 != 0){
+                      LineSensors[zz]->SetLogicBorder(L3_border);
+                    }
+      }
+    }
+
+    void Skribot::Invert_Left_Rotors(bool inv){
+       for(int kk = 0; kk < NLeftDCRotors ; kk++){
+                    LeftDCRotors[kk]->invert_rotor(inv);
+                  }
+    }
+    
+    void Skribot::Invert_Right_Rotors(bool inv){
+       for(int zz = 0; zz < NRightDCRotors ; zz++){
+                    RightDCRotors[zz]->invert_rotor(inv);
+                  }
+    }
+
   
+     void Skribot::Scale_Left_Rotors(byte scale){
+       for(int kk = 0; kk < NLeftDCRotors ; kk++){
+                    LeftDCRotors[kk]->scale_speed(scale);
+                  }
+    }
+    
+    void Skribot::Scale_Right_Rotors(byte scale){
+       for(int zz = 0; zz < NRightDCRotors ; zz++){
+                    RightDCRotors[zz]->scale_speed(scale);
+                  }
+    }
+
   void Skribot::Move(char Dir,int ms){
       if (NLeftDCRotors  > 0 && NRightDCRotors  >0){
          switch(Dir){
@@ -710,7 +846,6 @@ if(connection_Break_Reported){
       return(output);
     }
 
-
     int Skribot::BaterryCheck(){
       int tmpStatus;
       if(stausLEDused && !high_power_usage){
@@ -719,4 +854,13 @@ if(connection_Break_Reported){
         tmpStatus = 0;
       }
       return(tmpStatus);
+    }
+
+    void Skribot::EnterConfigMode(){
+      config_mode = true;
+    }
+    void Skribot::ExitConfigMode(){
+      if(config_mode){
+        config_mode = false;
+      }
     }

@@ -12,7 +12,8 @@
     void Stop();
     int GetSpeed();
     int GetDirection();
-  private:
+    void invert_rotor(bool inv = true);
+    void scale_speed(byte _scale);
   #ifndef _VARIANT_BBC_MICROBIT_
   byte _speed_pin;
   byte _dir_pin;
@@ -20,6 +21,8 @@
   byte _dir_pin_1;
   byte _dir_pin_2;
   #endif
+  bool invert;
+  byte speed_scale;
   int _speed;
   int _dir;
  };

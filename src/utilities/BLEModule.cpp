@@ -203,6 +203,13 @@ bool BLEModule::BLE_checkConnection(){
 	}
 
   }
+#ifdef ESP_H
+  void BLEModule::BLE_reset(){
+  	Server->getAdvertising()->stop();
+  	delay(500);
+  	Server->getAdvertising()->start();
+  }
+ #endif
 
   void BLEModule::BLE_changeName(char *name, bool userConncection){
 	  switch(_type){

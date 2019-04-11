@@ -1,7 +1,11 @@
 #ifndef LineSensor3_H
 #define LineSensor3_H
 #include "Arduino.h"
-  
+#ifdef ESP_H
+#define DEFAULT_LINE_SENSOR_LOGIC_BORDER 400
+#else
+#define DEFAULT_LINE_SENSOR_LOGIC_BORDER 200
+#endif
   class LineSensor
  {
   public:
@@ -12,6 +16,7 @@
     void SetLogicBorder(int border);
     String GetName();
     int GetID();
+    int GetSensorPin();
   private:
     int id;
   	int logicBorder;

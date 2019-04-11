@@ -14,23 +14,27 @@ Rotor::Rotor(int SpeedPin,int DirectionPin){
   	digitalWrite(_dir_pin_1,LOW);
 	digitalWrite(_dir_pin_2,LOW);
 	#endif
+	speed_scale = 100;
 	SetSpeed(255);
 	SetDirection(1);
+	invert = false;
 }
 
 void Rotor::SetSpeed(int speed){
-	_speed = speed;
+		_speed = speed*speed_scale/100; 
 }
 void Rotor::Move(){
+byte dir = _dir;
+if(invert) dir = abs(dir-1);
 #ifndef _VARIANT_BBC_MICROBIT_ 
 	digitalWrite(_dir_pin,LOW);
 	digitalWrite(_speed_pin,LOW);
-	digitalWrite(_dir_pin,_dir);
-	PWM_Write(_speed_pin,abs(_dir*255-_speed+1));
+	digitalWrite(_dir_pin,dir);
+	PWM_Write(_speed_pin,abs(dir*255-_speed+1));
 #else	
 if(_speed == 0){
 	Stop();
-}else if(_dir == 1){
+}else if(dir == 1){
 	digitalWrite(_dir_pin_1,LOW);
 	digitalWrite(_dir_pin_2,HIGH);
 }else{
@@ -38,6 +42,10 @@ if(_speed == 0){
 	digitalWrite(_dir_pin_1,HIGH);
 }
 	#endif
+}
+
+void Rotor::invert_rotor(bool inv){
+	invert = inv;
 }
 
 void Rotor::Stop(){
@@ -62,6 +70,10 @@ void Rotor::SetDirection(int dir){
 
 int Rotor::GetSpeed(){
 	return(_speed);
+}
+
+void Rotor::scale_speed(byte _scale){
+	 speed_scale = _scale;
 }
 
 int Rotor::GetDirection(){

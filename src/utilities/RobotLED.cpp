@@ -49,7 +49,6 @@
 
 
     void RobotLED::Set_Predef_Color(int color_id,byte N_LED){          //Not used so far
-
         switch(color_id){
             case 0 : 
                 turnON(0,0,255,N_LED);

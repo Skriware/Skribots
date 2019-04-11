@@ -7,7 +7,7 @@
 #endif
 
 
-	class Claw
+class Claw
 {
 public:
 	Claw(int Claw_Pin,int Arm_Pin,byte id = 0);

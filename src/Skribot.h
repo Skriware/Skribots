@@ -1,5 +1,8 @@
 #ifndef SKRIBOT_H
 #define SKRIBOT_H
+
+#define DEBUG_MODE
+
 #include "Arduino.h"
 #ifndef _VARIANT_BBC_MICROBIT_
 #include <EEPROM.h>
@@ -10,6 +13,8 @@
 #include <utilities/RGB_LED_Matrix.h>
 #include <utilities/IRStation.h>
 #include <utilities/BLEModule.h>
+#include <utilities/SPIHandler.h>
+#include <utilities/I2CHandler.h>
 #endif
 #ifdef _VARIANT_BBC_MICROBIT_
 #include <utilities/Adafruit_Microbit.h>
@@ -62,6 +67,8 @@
 
 #else
 
+#define BOARD_VERSION 1
+
 #define SKRIBRAIN_MOTOR_L_DIR1_PIN 12 
 #define SKRIBRAIN_MOTOR_L_DIR2_PIN 21
 #define SKRIBRAIN_MOTOR_R_DIR1_PIN 23
@@ -78,6 +85,18 @@
 #define SKRIBRAIN_ANALOG_PIN_1 36  
 #define SKRIBRAIN_ANALOG_PIN_2 39 
 #define SKRIBRAIN_ANALOG_PIN_3 34
+#define SKRIBRAIN_STATUS_LED_PIN 14
+
+#define EEPROM_BOARD_VERSION_ADDR 5
+#define EEPROM_SETTINGS_OVERRIDED_ADDR 6
+#define EEPROM_LEFT_INVERT_ADDR 7
+#define EEPROM_RIGHT_INVER_ADDR 8
+#define EEPROM_L1_BORDER_ADDR 9                         //16 bit values stored in two 8 bit addreses(ADDR and ADDR+1)
+#define EEPROM_L2_BORDER_ADDR 11
+#define EEPROM_L3_BORDER_ADDR 13
+#define EEPROM_RIGHT_SCALE_ADDR 15
+#define EEPROM_LEFT_SCALE_ADDR 16
+
 #endif
 
 #ifdef _VARIANT_BBC_MICROBIT_
@@ -91,7 +110,6 @@
 #define SKRIBOT_MINI_SHILELD_IR_IN 11
 #define SKRIBOT_MINI_SHILELD_IR_OUT 9
 #endif
-
 
 
 
@@ -134,16 +152,27 @@
     void MoveBack(int ms = -1);
     void RawRotorMove(int left,int right);
     void Stop();   
+    void Invert_Left_Rotors(bool inv = true);
+    void Invert_Right_Rotors(bool inv = true);
+    void Scale_Left_Rotors(byte scale);
+    void Scale_Right_Rotors(byte scale);
 
     void SetSpeed(int speed);                                                                    //functions for movements
 
     int ReadDistSensor(String id, int max = 150);
     int ReadDistSensor(int id, int max = 150);
+
+    void Set_Line_Sensor_Logic_Border(int L1_border,int L2_border,int L3_border);
                                                                                                 //distance sensor readout
     int ReadLineSensor(String name);
     int ReadLineSensor(int id);
                                                                                               // line sensor readout
-     
+    void ConfigureBoardEEPROM();
+    int  Read_EEPROM_INT(byte addr);
+    void Write_EEPROM_INT(byte addr,int val);
+
+
+
     void CloseClaw(byte id = 0);
     void OpenClaw(byte id  = 0);
     void Pick_Up(byte id = 0);
@@ -176,15 +205,28 @@
     bool ProgramENDRepotred();
     int BaterryCheck();
 
+    void EnterConfigMode();
+    void ExitConfigMode();
+
  // private:
   DistSensor *DistSensors[5];
-  LineSensor *LineSensors[6];
+  LineSensor *LineSensors[5];
   Rotor *LeftDCRotors[3];
   Rotor *RightDCRotors[3];
   LightSensor *LightSensors[4];
-  bool using_BLE_Connection,connection_Break_Reported, program_End_Reported,stausLEDused,high_power_usage;
+  bool using_BLE_Connection,
+       connection_Break_Reported,
+       program_End_Reported,
+       stausLEDused,
+       high_power_usage,
+       claw_closed,
+       config_mode;
+  long claw_closed_time;
   moduleType BLE_MODULE_TYPE;
   StatusLED *status;
+  SPIHandler *SPIcomm;
+  I2CHandler *I2Ccomm;
+  byte Board_type = 0;
 
   #ifndef _VARIANT_BBC_MICROBIT_
   RobotLED *LEDs[5];

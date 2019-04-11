@@ -3,12 +3,7 @@
 LineSensor::LineSensor(int PinL, String Name){
  name = Name;
  sensorPin = PinL;
-  delay(100);
-  #ifdef ESP_H
-    logicBorder = 400;
-  #else
-    logicBorder = 200;
-  #endif
+  logicBorder = DEFAULT_LINE_SENSOR_LOGIC_BORDER;
     
 }
 
@@ -16,19 +11,11 @@ LineSensor::LineSensor(int PinL, int _id){
  id = _id;
  sensorPin = PinL;
  name = "";
-  #ifdef ESP_H
-    logicBorder = 400;
-  #else
-    logicBorder = 200;
-  #endif
+  logicBorder = DEFAULT_LINE_SENSOR_LOGIC_BORDER;
 }
 
 int LineSensor::ReadSensor(){
   int readout = analogRead(sensorPin);
-  #ifdef DEBUG_MODE
-  Serial.print("READ:");
-  Serial.println(readout);
-  #endif
     if(readout > logicBorder){
       return(1);
     }else{
@@ -42,6 +29,10 @@ int LineSensor::ReadSensorRaw(){
 
 int LineSensor::GetID(){
     return(id);
+}
+
+int LineSensor::GetSensorPin(){
+    return(sensorPin);
 }
 
 void LineSensor::SetLogicBorder(int border){
