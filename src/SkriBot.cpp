@@ -70,14 +70,14 @@
           AddLED(SKRIBRAIN_LED_PIN_2,1);
           AddDistSensor(SKRIBRAIN_ECHO_PIN_1,SKRIBRAIN_TRIG_PIN_1,1);   //adding Distance Sensors  and naming them "Left and Right";
           AddDistSensor(SKRIBRAIN_ECHO_PIN_2,SKRIBRAIN_TRIG_PIN_2,2);
-          AddLineSensor(SKRIBRAIN_ANALOG_PIN_1, 1);
-          AddLineSensor(SKRIBRAIN_ANALOG_PIN_2, 2);
-          AddLineSensor(SKRIBRAIN_ANALOG_PIN_3, 3);
+          AddLineSensor(LINE_PIN_1, 1);
+          AddLineSensor(LINE_PIN_2, 2);
+          AddLineSensor(LINE_PIN_3, 3);
           AddClaw(SKRIBRAIN_SERVO_PIN_1,SKRIBRAIN_SERVO_PIN_2);
           BLE_Set_Module(ESP32_BLE); 
           status = new StatusLED(SKRIBRAIN_STATUS_LED_PIN,SKRIBRAIN_SERVO_PIN_3);
           stausLEDused = true;
-    }
+        }
     #endif
    ConfigureBoardEEPROM();
    SetSpeed(250);
@@ -85,21 +85,27 @@
   }
 
   void Skribot::ConfigureBoardEEPROM(){
-    #ifdef ESP_H
+   
       #ifdef DEBUG_MODE
           Serial.println("Checking EEPROM...");
       #endif
+       #ifdef ESP_H
        if(!EEPROM.begin(64)){
           #ifdef DEBUG_MODE
           Serial.println("EEPROM init fail, aborting EEPROM check.");
           #endif
           return;
        }
+      #endif
        Board_type = EEPROM.read(EEPROM_BOARD_VERSION_ADDR);
        if(Board_type == 255){                                   //No board Version defined
         EEPROM.write(EEPROM_BOARD_VERSION_ADDR,BOARD_VERSION);
         Board_type = BOARD_VERSION;                             //Asigning Board Version to the newest one.
-        EEPROM.commit();
+        
+         #ifdef ESP_H 
+              EEPROM.commit(); 
+         #endif 
+
         #ifdef DEBUG_MODE
           Serial.println("First time flash detected");
           #endif
@@ -154,15 +160,19 @@
       #endif
 
        }
-    #endif
+   
   }
 
   void Skribot::Write_EEPROM_INT(byte addr,int value){
       EEPROM.write(addr,value);
-      EEPROM.commit();
+      #ifdef ESP_H 
+ EEPROM.commit(); 
+ #endif
       delay(100);
       EEPROM.write(addr+1,value>>8);
-      EEPROM.commit();
+      #ifdef ESP_H 
+ EEPROM.commit(); 
+ #endif
   }
 
   int Skribot::Read_EEPROM_INT(byte addr){
@@ -302,7 +312,6 @@ if(claw_closed && (millis() - claw_closed_time > 180000)){
     #endif
     using_BLE_Connection = true;
   }
-
    void Skribot::BLE_Set_Module(moduleType type){
           BLE_MODULE_TYPE = type;
    }
@@ -314,7 +323,7 @@ if(claw_closed && (millis() - claw_closed_time > 180000)){
           #endif
         }
         #ifdef ESP_H
-        BTmodule->BLE_reset();
+      BTmodule->BLE_reset();
         #else
        BLE_Setup();
        #endif
@@ -608,11 +617,11 @@ if(claw_closed && (millis() - claw_closed_time > 180000)){
 
     void Skribot::Set_Line_Sensor_Logic_Border(int L1_border,int L2_border,int L3_border){
       for(int zz = 0; zz < NLineSensors ; zz++){
-                    if(LineSensors[zz]->GetSensorPin() == SKRIBRAIN_ANALOG_PIN_1 && L1_border != 0){
+                    if(LineSensors[zz]->GetSensorPin() == LINE_PIN_1 && L1_border != 0){
                       LineSensors[zz]->SetLogicBorder(L1_border);
-                    }else if(LineSensors[zz]->GetSensorPin() == SKRIBRAIN_ANALOG_PIN_2 && L2_border != 0){
+                    }else if(LineSensors[zz]->GetSensorPin() == LINE_PIN_2 && L2_border != 0){
                       LineSensors[zz]->SetLogicBorder(L2_border);
-                    }else if(LineSensors[zz]->GetSensorPin() == 1 && SKRIBRAIN_ANALOG_PIN_3 != 0){
+                    }else if(LineSensors[zz]->GetSensorPin() == 1 && LINE_PIN_3 != 0){
                       LineSensors[zz]->SetLogicBorder(L3_border);
                     }
       }

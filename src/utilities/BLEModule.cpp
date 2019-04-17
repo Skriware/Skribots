@@ -3,7 +3,11 @@
 #include "BLEModule.h"
 #include <EEPROM.h>
 
+
 #ifdef ESP_H
+#define EEPROM_NAME_BEG  40
+#define EEPROM_NAME_END  58
+#define EEPROM_FLAG_ADDR 59
 
 bool BLEModule::deviceConnected = false;
 char BLEModule::RXBLE_buffer[BLERXBUFFER_SIZE];
@@ -31,7 +35,6 @@ switch(_type){
 			#endif
 		break;
 	case ESP32_BLE:
-
 		#ifdef ESP_H
 		if(BLERXBUFFER_SIZE - substractBufforIterators() > 0){
 			incrementRXbuffIterator_beg();
@@ -124,6 +127,11 @@ bool BLEModule::BLE_checkConnection(){
 
   void BLEModule::BLE_Setup(){
      byte IfNamed = 0;
+     #ifdef ESP_H
+     std::string mac;
+     char robot_name_tmp[21] = {' '};
+     byte nameFlag;
+     #endif
     switch(_type){
 		case HM_10:
 		#ifndef ESP_H && _VARIANT_BBC_MICROBIT_
@@ -166,9 +174,27 @@ bool BLEModule::BLE_checkConnection(){
     case ESP32_BLE:
     #ifdef ESP_H
     	  // Create the BLE Device
-
-  		 BLEDevice::init("Skribot");
-
+    	  nameFlag = EEPROM.read(EEPROM_FLAG_ADDR);
+    	  delay(10);
+    	  if(nameFlag != 1){
+  		  BLEDevice::init("Skribot");
+  		  mac = BLEDevice::getAddress().toString();
+  		  sprintf(robot_name_tmp,"Skribot_%c%c%c",mac[mac.length()-1],mac[mac.length()-2],mac[mac.length()-4]);
+  		  for(byte hh = EEPROM_NAME_BEG; hh<EEPROM_NAME_END+1;hh++){
+  		  	EEPROM.write(hh,(byte)robot_name_tmp[hh-EEPROM_NAME_BEG]);
+  		  	EEPROM.commit();
+  		  	delay(10);
+  		  }
+  		  EEPROM.write(EEPROM_FLAG_ADDR,1);
+  		  EEPROM.commit();
+  		  delay(10);
+  		  }else{
+  		  for(byte jj = EEPROM_NAME_BEG; jj<EEPROM_NAME_END+1;jj++){
+  		  robot_name_tmp[jj-EEPROM_NAME_BEG] = EEPROM.read(jj);
+  		  delay(10);
+  		  }
+  		   BLEDevice::init(robot_name_tmp);
+  		  }
   		  Server = BLEDevice::createServer();
 
   		  Server->setCallbacks(new MyServerCallbacks());
@@ -211,6 +237,9 @@ bool BLEModule::BLE_checkConnection(){
  #endif
 
   void BLEModule::BLE_changeName(char *name, bool userConncection){
+	  #ifdef ESP_H
+  	         char robot_name_tmp[21] = {' '};
+  	  #endif
 	  switch(_type){
 			case HM_10:
 
@@ -243,7 +272,12 @@ bool BLEModule::BLE_checkConnection(){
 			case ESP32_BLE:
 
 			#ifdef ESP_H
-
+				sprintf(robot_name_tmp,"%s",name);
+				for(byte hh = EEPROM_NAME_BEG;hh<EEPROM_NAME_END+1;hh++){
+  		  			EEPROM.write(hh,(byte)robot_name_tmp[hh-EEPROM_NAME_BEG]);
+  		  			EEPROM.commit();
+  		  			delay(10);
+  		  		}
 			#endif
 
 				break;
