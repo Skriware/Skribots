@@ -108,16 +108,18 @@
        delay(10);                                              //EEPROM delay in order to avoid EEPROM ERRORS
        byte userChange = EEPROM.read(EEPROM_SETTINGS_OVERRIDED_ADDR);
        delay(10);
-       if(userChange== 255){
+       if(userChange == 255){
          #ifdef DEBUG_MODE
           Serial.println("No user Settings in EEPROM Configuration");
           #endif
+          user_config = false;
         return;                                                                         //No user change done aborting the process;
        }else if(userChange == 1){
+       user_config = true;
        delay(10);                                              //EEPROM delay in order to avoid EEPROM ERRORS
        byte left_invert = EEPROM.read(EEPROM_LEFT_INVERT_ADDR);
        delay(10);                                              //EEPROM delay in order to avoid EEPROM ERRORS
-       byte right_invert = EEPROM.read(EEPROM_RIGHT_INVER_ADDR);
+       byte right_invert = EEPROM.read(EEPROM_RIGHT_INVERT_ADDR);
        delay(10);                                              //EEPROM delay in order to avoid EEPROM ERRORS
        byte left_scale = EEPROM.read(EEPROM_RIGHT_SCALE_ADDR);
        delay(10); 
@@ -126,7 +128,7 @@
        int L1_b = Read_EEPROM_INT(EEPROM_L1_BORDER_ADDR);
        delay(10);                                              //EEPROM delay in order to avoid EEPROM ERRORS
        int L2_b = Read_EEPROM_INT(EEPROM_L2_BORDER_ADDR);
-       delay(10);                                              //EEPROM delay in order to avoid EEPROM ERRORS
+       delay(10);                                             //EEPROM delay in order to avoid EEPROM ERRORS
        int L3_b = Read_EEPROM_INT(EEPROM_L3_BORDER_ADDR);
        delay(10);
 
@@ -135,31 +137,46 @@
        if(left_invert != 255)Invert_Left_Rotors(left_invert);
        if(left_scale != 255)Scale_Left_Rotors(left_scale);
        if(right_scale != 255)Scale_Right_Rotors(right_scale);
+
+      #ifdef DEBUG_MODE
+      Serial.println("User Corrections:");
+      Serial.print("LS: ");
+      Serial.println(left_scale);
+      Serial.print("RS: ");
+      Serial.println(right_scale);
+      Serial.print("LI: ");
+      Serial.println(left_invert);
+      Serial.print("RI: ");
+      Serial.println(right_invert);
+      Serial.println(L1_b);
+      Serial.println(L2_b); 
+      Serial.println(L3_b);
+      #endif
+
        }
     #endif
   }
 
   void Skribot::Write_EEPROM_INT(byte addr,int value){
-  if(EEPROM.begin(64)){
       EEPROM.write(addr,value);
-      delay(10);
+      EEPROM.commit();
+      delay(100);
       EEPROM.write(addr+1,value>>8);
       EEPROM.commit();
-    }
   }
 
   int Skribot::Read_EEPROM_INT(byte addr){
-    int b3 = 0;
-    if(EEPROM.begin(64)){
-        byte b1 =  EEPROM.read(addr+1);
+        int b3 = 0;
+        int b1 =  EEPROM.read(addr+1);
+        Serial.println(b1);
         delay(10);
-        byte b2  = EEPROM.read(addr);
+        int b2  = EEPROM.read(addr);
+        Serial.println(b2);
       if(b1 == 255 && b2 == 255){
         b3 = 0;
       }else{
-        int b3 = b2 | (int(b1) << 8);
+        b3 = b2 | (int(b1) << 8);
       }
-    }
     return(b3);
   }
 
@@ -639,8 +656,6 @@ if(claw_closed && (millis() - claw_closed_time > 180000)){
                     LeftDCRotors[kk]->SetDirection(0);
                     LeftDCRotors[kk]->Move();
                   }
-          
-               
         break;
         
         case 'F':

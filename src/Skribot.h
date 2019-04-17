@@ -90,7 +90,7 @@
 #define EEPROM_BOARD_VERSION_ADDR 5
 #define EEPROM_SETTINGS_OVERRIDED_ADDR 6
 #define EEPROM_LEFT_INVERT_ADDR 7
-#define EEPROM_RIGHT_INVER_ADDR 8
+#define EEPROM_RIGHT_INVERT_ADDR 8
 #define EEPROM_L1_BORDER_ADDR 9                         //16 bit values stored in two 8 bit addreses(ADDR and ADDR+1)
 #define EEPROM_L2_BORDER_ADDR 11
 #define EEPROM_L3_BORDER_ADDR 13
@@ -220,7 +220,8 @@
        stausLEDused,
        high_power_usage,
        claw_closed,
-       config_mode;
+       config_mode,
+       user_config;
   long claw_closed_time;
   moduleType BLE_MODULE_TYPE;
   StatusLED *status;

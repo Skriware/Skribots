@@ -166,8 +166,10 @@ bool BLEModule::BLE_checkConnection(){
     case ESP32_BLE:
     #ifdef ESP_H
     	  // Create the BLE Device
-    
-  		 BLEDevice::init("Skri");
+    	
+    	 uint8_t* point = esp_bt_dev_get_address();
+    	 
+  		 BLEDevice::init("Skribot");
   
 
   		  Server = BLEDevice::createServer();
