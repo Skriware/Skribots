@@ -1,7 +1,7 @@
 #ifndef SKRIBOT_H
 #define SKRIBOT_H
 
-#define DEBUG_MODE
+//#define DEBUG_MODE
 
 #include "Arduino.h"
 #ifndef _VARIANT_BBC_MICROBIT_
@@ -233,7 +233,8 @@
        high_power_usage,
        claw_closed,
        config_mode,
-       user_config;
+       user_config,
+       Remote_block_used;
   long claw_closed_time;
   moduleType BLE_MODULE_TYPE;
   StatusLED *status;

@@ -15,6 +15,7 @@
     claw_closed = false;
     claw_closed_time = true;
     config_mode = false;
+    Remote_block_used = false;
     Configure_Connections(predef);
   }
   void Skribot::Configure_Connections(String predef){
