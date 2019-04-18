@@ -42,12 +42,6 @@ if(_speed == 0){
 	digitalWrite(_dir_pin_1,HIGH);
 }
 	#endif
-Serial.print("Dir:" );
-Serial.println(dir);
-Serial.print("Speed: ");
-Serial.println(_speed);
-Serial.print("PWM: ");
-Serial.println(abs(dir*255-_speed+1));
 }
 
 void Rotor::invert_rotor(bool inv){

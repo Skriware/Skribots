@@ -213,7 +213,7 @@ bool BLEModule::BLE_checkConnection(){
 										BLECharacteristic::PROPERTY_NOTIFY
 									);
 
-    	  TxCharacteristic->addDescriptor(new BLE2902());
+    	 TxCharacteristic->addDescriptor(new BLE2902());
 
     	  Service->start();
 
