@@ -755,16 +755,13 @@ if(claw_closed && (millis() - claw_closed_time > 180000)){
 
       } 
       if(Dir != 'S')high_power_usage = true;
-        
         if(ms > 0 ){
           wait_And_Check_BLE_Connection(ms,10);
           for(int kk = 0; kk < NLeftDCRotors ; kk++){
-                    LeftDCRotors[kk]->SetSpeed(DCSpeed);
                     LeftDCRotors[kk]->Stop();
                   }
           
            for(int kk = 0; kk < NRightDCRotors ; kk++){
-                    RightDCRotors[kk]->SetSpeed(DCSpeed);
                     RightDCRotors[kk]->Stop();
             }
             high_power_usage=false;

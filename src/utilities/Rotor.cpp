@@ -24,7 +24,7 @@ void Rotor::SetSpeed(int speed){
 		_speed = speed*speed_scale/100; 
 }
 void Rotor::Move(){
-byte dir = _dir;
+int dir = _dir;
 if(invert) dir = abs(dir-1);
 #ifndef _VARIANT_BBC_MICROBIT_ 
 	digitalWrite(_dir_pin,LOW);
@@ -42,6 +42,12 @@ if(_speed == 0){
 	digitalWrite(_dir_pin_1,HIGH);
 }
 	#endif
+Serial.print("Dir:" );
+Serial.println(dir);
+Serial.print("Speed: ");
+Serial.println(_speed);
+Serial.print("PWM: ");
+Serial.println(abs(dir*255-_speed+1));
 }
 
 void Rotor::invert_rotor(bool inv){
@@ -49,23 +55,17 @@ void Rotor::invert_rotor(bool inv){
 }
 
 void Rotor::Stop(){
-	
 	#ifndef _VARIANT_BBC_MICROBIT_ 
-	if(_dir){
-		digitalWrite(_dir_pin,_dir);
-		PWM_Write(_speed_pin,255);
-	}else{
-		digitalWrite(_dir_pin,_dir);
-		PWM_Write(_speed_pin,0);
-	}
+		digitalWrite(_dir_pin,LOW);
+		PWM_Write(_speed_pin,LOW);
 	#else
 		digitalWrite(_dir_pin_1,LOW);
 		digitalWrite(_dir_pin_2,LOW);	
 	#endif
 }
 
-void Rotor::SetDirection(int dir){
-	_dir = dir;
+void Rotor::SetDirection(int tm_dir){
+	_dir = tm_dir;
 }
 
 int Rotor::GetSpeed(){

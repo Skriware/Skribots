@@ -19,9 +19,7 @@
 	}
 
 	void SetNewPWMChannel(byte _PWMPin){
-
 		PWM_Channel newChannelToUse;
-
 		if(used_PWM_channels+1 > MAX_PWM_CHANNELS){
 			PWM_overload = true;
 		}else{
