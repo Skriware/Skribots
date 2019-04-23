@@ -1,5 +1,11 @@
 #include "Skribot.h"
 
+#ifdef ESP_H
+#define EEPROM_EMPTY 255
+#else
+#define EEPROM_EMPTY 0
+#endif
+
   Skribot::Skribot(String predef){
     NDistSensors    = 0;
     NLEDs           = 0;
@@ -65,11 +71,11 @@
     }
     #else
     if(predef == "SKRIBRAIN"){
-          AddDCRotor(SKRIBRAIN_MOTOR_L_DIR1_PIN,SKRIBRAIN_MOTOR_L_DIR2_PIN,"Left");
-          AddDCRotor(SKRIBRAIN_MOTOR_R_DIR1_PIN,SKRIBRAIN_MOTOR_R_DIR2_PIN,"Right");
+          AddDCRotor(SKRIBRAIN_MOTOR_L_DIR2_PIN,SKRIBRAIN_MOTOR_L_DIR1_PIN,"Left");
+          AddDCRotor(SKRIBRAIN_MOTOR_R_DIR2_PIN,SKRIBRAIN_MOTOR_R_DIR1_PIN,"Right");
           AddLED(SKRIBRAIN_LED_PIN_1,0);
           AddLED(SKRIBRAIN_LED_PIN_2,1);
-          AddDistSensor(SKRIBRAIN_ECHO_PIN_1,SKRIBRAIN_TRIG_PIN_1,1);   //adding Distance Sensors  and naming them "Left and Right";
+          AddDistSensor(SKRIBRAIN_ECHO_PIN_1,SKRIBRAIN_TRIG_PIN_1,1);   
           AddDistSensor(SKRIBRAIN_ECHO_PIN_2,SKRIBRAIN_TRIG_PIN_2,2);
           AddLineSensor(LINE_PIN_1, 1);
           AddLineSensor(LINE_PIN_2, 2);
@@ -99,7 +105,7 @@
        }
       #endif
        Board_type = EEPROM.read(EEPROM_BOARD_VERSION_ADDR);
-       if(Board_type == 255){                                   //No board Version defined
+       if(Board_type == EEPROM_EMPTY){                                   //No board Version defined
         EEPROM.write(EEPROM_BOARD_VERSION_ADDR,BOARD_VERSION);
         Board_type = BOARD_VERSION;                             //Asigning Board Version to the newest one.
         
@@ -115,7 +121,7 @@
        delay(10);                                              //EEPROM delay in order to avoid EEPROM ERRORS
        byte userChange = EEPROM.read(EEPROM_SETTINGS_OVERRIDED_ADDR);
        delay(10);
-       if(userChange == 255){
+       if(userChange == EEPROM_EMPTY){
          #ifdef DEBUG_MODE
           Serial.println("No user Settings in EEPROM Configuration");
           #endif
@@ -140,10 +146,10 @@
        delay(10);
 
        Set_Line_Sensor_Logic_Border(L1_b,L2_b,L3_b);
-       if(right_invert != 255)Invert_Right_Rotors(right_invert);
-       if(left_invert != 255)Invert_Left_Rotors(left_invert);
-       if(left_scale != 255)Scale_Left_Rotors(left_scale);
-       if(right_scale != 255)Scale_Right_Rotors(right_scale);
+       if(right_invert != EEPROM_EMPTY)Invert_Right_Rotors(right_invert);
+       if(left_invert != EEPROM_EMPTY)Invert_Left_Rotors(left_invert);
+       if(left_scale != EEPROM_EMPTY)Scale_Left_Rotors(left_scale);
+       if(right_scale != EEPROM_EMPTY)Scale_Right_Rotors(right_scale);
 
       #ifdef DEBUG_MODE
       Serial.println("User Corrections:");
@@ -183,7 +189,7 @@
         delay(10);
         int b2  = EEPROM.read(addr);
         Serial.println(b2);
-      if(b1 == 255 && b2 == 255){
+      if(b1 == EEPROM_EMPTY && b2 == EEPROM_EMPTY){
         b3 = 0;
       }else{
         b3 = b2 | (int(b1) << 8);
@@ -657,7 +663,7 @@ if(claw_closed && (millis() - claw_closed_time > 180000)){
       if (NLeftDCRotors  > 0 && NRightDCRotors  >0){
          switch(Dir){
         case 'B':
-                     for(int zz = 0; zz < NRightDCRotors ; zz++){
+                  for(int zz = 0; zz < NRightDCRotors ; zz++){
                     RightDCRotors[zz]->SetDirection(0);
                     RightDCRotors[zz]->Move();
                   }
@@ -670,9 +676,9 @@ if(claw_closed && (millis() - claw_closed_time > 180000)){
         
         case 'F':
                   
-                  for(int kk = 0; kk < NRightDCRotors ; kk++){
-                    RightDCRotors[kk]->SetDirection(1);
-                    RightDCRotors[kk]->Move();
+                  for(int zz = 0; zz < NRightDCRotors ; zz++){
+                    RightDCRotors[zz]->SetDirection(1);
+                    RightDCRotors[zz]->Move();
                   }
 
                   for(int kk = 0; kk < NLeftDCRotors ; kk++){
@@ -682,9 +688,9 @@ if(claw_closed && (millis() - claw_closed_time > 180000)){
         break;
 
         case 'L':
-                  for(int kk = 0; kk < NLeftDCRotors ; kk++){
-                    LeftDCRotors[kk]->SetDirection(1);
-                    LeftDCRotors[kk]->Move();
+                  for(int zz = 0; zz < NLeftDCRotors ; zz++){
+                    LeftDCRotors[zz]->SetDirection(1);
+                    LeftDCRotors[zz]->Move();
                   }
           
                   for(int kk = 0; kk < NRightDCRotors ; kk++){
@@ -694,9 +700,9 @@ if(claw_closed && (millis() - claw_closed_time > 180000)){
          break;
 
          case 'R':
-                  for(int kk = 0; kk < NLeftDCRotors ; kk++){
-                    LeftDCRotors[kk]->SetDirection(0);
-                    LeftDCRotors[kk]->Move();
+                  for(int zz = 0; zz < NLeftDCRotors ; zz++){
+                    LeftDCRotors[zz]->SetDirection(0);
+                    LeftDCRotors[zz]->Move();
                   }
           
                   for(int kk = 0; kk < NRightDCRotors ; kk++){
@@ -762,8 +768,8 @@ if(claw_closed && (millis() - claw_closed_time > 180000)){
                     LeftDCRotors[kk]->Stop();
                   }
           
-           for(int kk = 0; kk < NRightDCRotors ; kk++){
-                    RightDCRotors[kk]->Stop();
+           for(int k = 0; k < NRightDCRotors ; k++){
+                    RightDCRotors[k]->Stop();
             }
             high_power_usage=false;
       }
@@ -794,18 +800,28 @@ if(claw_closed && (millis() - claw_closed_time > 180000)){
         rightSpeed = 250-right;
         rightDir = 0;
       }
-
+                  if(right == 250){
+                    for(int kk = 0; kk < NRightDCRotors ; kk++){
+                    RightDCRotors[kk]->Stop();
+                    }
+                  }else{
                   for(int kk = 0; kk < NRightDCRotors ; kk++){
                     RightDCRotors[kk]->SetDirection(rightDir);
                     RightDCRotors[kk]->SetSpeed(rightSpeed);
                     RightDCRotors[kk]->Move();
                   }
+                  }
+                  if(left == 250){
+                    for(int kk = 0; kk < NLeftDCRotors ; kk++){
+                      LeftDCRotors[kk]->Stop();
+                    }
+                  }else{
                    for(int yy = 0; yy < NLeftDCRotors ; yy++){
                     LeftDCRotors[yy]->SetDirection(leftDir);
                     LeftDCRotors[yy]->SetSpeed(leftSpeed);
                     LeftDCRotors[yy]->Move();
                   }
-
+                  }
                   if (rightSpeed != 0 && leftSpeed != 0){
                     high_power_usage = true;
                   }else{
@@ -820,8 +836,8 @@ if(claw_closed && (millis() - claw_closed_time > 180000)){
                     
                   }
           
-      for(int kk = 0; kk < NRightDCRotors ; kk++){
-                    RightDCRotors[kk]->SetSpeed(DCSpeed);
+      for(int jj = 0; jj < NRightDCRotors ; jj++){
+                    RightDCRotors[jj]->SetSpeed(DCSpeed);
                     
             }
     }
