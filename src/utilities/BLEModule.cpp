@@ -11,8 +11,8 @@
 
 bool BLEModule::deviceConnected = false;
 char BLEModule::RXBLE_buffer[BLERXBUFFER_SIZE];
-byte BLEModule::RXBLE_buffer_iterator_end = 1;
-byte BLEModule::RXBLE_buffer_iterator_beg = 0;
+int BLEModule::RXBLE_buffer_iterator_end = 1;
+int BLEModule::RXBLE_buffer_iterator_beg = 0;
 #endif 
 
 
@@ -66,7 +66,7 @@ void BLEModule::BLE_write(char *msg){
     		#endif
     		break;
     	case ESP32_BLE:
-    	#ifdef ESP_H
+    	#ifdef ESP_H     	 
     		 TxCharacteristic->setValue(_tmp);
         	 TxCharacteristic->notify();
 			#endif
@@ -205,6 +205,8 @@ bool BLEModule::BLE_checkConnection(){
     	  RxCharacteristic = Service->createCharacteristic(
 											 CHARACTERISTIC_UUID_RX,
 											BLECharacteristic::PROPERTY_WRITE_NR);
+
+    	  RxCharacteristic->addDescriptor(new BLE2902());
 
     	  RxCharacteristic->setCallbacks(new MyCallbacks());
 
