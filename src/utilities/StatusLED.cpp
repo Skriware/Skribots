@@ -111,7 +111,7 @@ int StatusLED::CheckBateryStatus(){
 	#else
 	float mult = 0.005*3;
 	float Voltage = (float)analogRead(Battery_pin)*mult;
-	Serial.println(Voltage);
+	//Serial.println(Voltage);
 	#endif
 	if(Voltage > FULL_BateryLevel){
 		TurnOn(GREEN);
