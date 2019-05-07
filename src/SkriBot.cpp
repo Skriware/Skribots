@@ -134,9 +134,9 @@
        delay(10);                                              //EEPROM delay in order to avoid EEPROM ERRORS
        byte right_invert = EEPROM.read(EEPROM_RIGHT_INVERT_ADDR);
        delay(10);                                              //EEPROM delay in order to avoid EEPROM ERRORS
-       byte left_scale = EEPROM.read(EEPROM_RIGHT_SCALE_ADDR);
+       byte left_scale = EEPROM.read(EEPROM_LEFT_SCALE_ADDR);
        delay(10); 
-       byte right_scale = EEPROM.read(EEPROM_LEFT_SCALE_ADDR);
+       byte right_scale = EEPROM.read(EEPROM_RIGHT_SCALE_ADDR);
        delay(10);                                             //EEPROM delay in order to avoid EEPROM ERRORS
        int L1_b = Read_EEPROM_INT(EEPROM_L1_BORDER_ADDR);
        delay(10);                                              //EEPROM delay in order to avoid EEPROM ERRORS
