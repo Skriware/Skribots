@@ -27,7 +27,7 @@
 	  }
 	  #endif
 	  I2CHandler::~I2CHandler(){
-	  	i2c->end();
+	  	//i2c->end();
 	  	delete i2c;
 	  }
 
