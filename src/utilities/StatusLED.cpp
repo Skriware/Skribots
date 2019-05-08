@@ -1,5 +1,5 @@
 #include "StatusLED.h"
-#define STATUS_LED_INTENSIVITY 100
+#define STATUS_LED_INTENSIVITY 30
 #ifndef ESP_H
 StatusLED::StatusLED(byte R, byte G, byte B,byte batery){
 	 R_pin = R;
