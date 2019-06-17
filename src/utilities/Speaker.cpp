@@ -12,8 +12,6 @@ Speaker::Speaker(int _PIN,int _ID){
 void Speaker::PlaySound(int freq_Hz, long duration_ms, int pause_dur){
      PlaySound(freq_Hz);
      long Ntimes = duration_ms*1000/delayTime/2;
-     //delay(50);
-     //Serial.println("");
      for(long yy = 0; yy < Ntimes; yy++){
         digitalWrite(PIN,HIGH);
         delayMicroseconds(delayTime);

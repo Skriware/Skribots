@@ -40,7 +40,7 @@
 
 #ifndef ESP_H
 
-#define BOARD_VERSION 0
+#define BOARD_VERSION 1
 
 #define EDU_ROTOR_SPEED_PIN_R 6
 #define EDU_ROTOR_DIR_PIN_R 7
@@ -135,6 +135,9 @@
     void AddLineSensor(int Pin, int id);
     void AddDCRotor(int SpeedPin,int DirectionPin, String side);
     void AddLightSensor(int _pin,int id);
+    void AddSpeaker(int _pin,int id);
+    void AddI2CDevice(byte _SDA_PIN,byte _CLK_PIN,uint32_t freq = 100000);
+    void AddSPIDevice(uint8_t MOSI_PIN,uint8_t MISO,uint8_t CLK_PIN,uint8_t CS_PIN);
 
      #ifndef _VARIANT_BBC_MICROBIT_ 
     void AddClaw(int ClawPin,int Arm_Pin, byte id = 0);
@@ -142,15 +145,15 @@
     void AddLED(int Pin,String name,byte N_LED = 1);
     void AddLED(int Pin, int id, byte N_LED  = 1);
     #endif
+    bool EEPROM_EMPTY(int val);
     
+                                                                  //functions for element adding
+    void AddDistSensor(String SHIELD_SLOT);
+    void AddLED(String SHIELD_SLOT);
+    void AddLineSensor(String SHIELD_SLOT);
+    void AddDCRotor(String SHIELD_SLOT);
+    void AddClaw();                                               //functions for elements adding when using Skriware shields
     
-    #ifndef ESP_H                                                              //functions for element adding
-    void AddDistSensor(String EDU_SHIELD_SLOT);
-    void AddLED(String EDU_SHIELD_SLOT);
-    void AddLineSensor(String EDU_SHIELD_SLOT);
-    void AddDCRotor(String EDU_SHIELD_SLOT);
-    void AddClaw();                                               //functions for elements adding when using Skriware Edu shield
-    #endif
     void Configure_Connections(String predef="");
 
     void wait_And_Check_BLE_Connection(int ms,int interval);
@@ -238,8 +241,8 @@
   long claw_closed_time;
   moduleType BLE_MODULE_TYPE;
   StatusLED *status;
-  SPIHandler *SPIcomm;
-  I2CHandler *I2Ccomm;
+  SPIHandler *SPIcomm[2];
+  I2CHandler *I2Ccomm[2];
   byte Board_type = 0;
 
   #ifndef _VARIANT_BBC_MICROBIT_

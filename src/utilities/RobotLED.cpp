@@ -1,6 +1,7 @@
 #include<Arduino.h>
 #ifndef _VARIANT_BBC_MICROBIT_
 #include "RobotLED.h"
+#define LED_COMMAND_OFFSET 10
 
 	RobotLED::RobotLED(int pin,String _name,byte N_LED){
 		pixel = new Adafruit_NeoPixel(N_LED, pin, NEO_GRB + NEO_KHZ800);
@@ -19,32 +20,30 @@
     }
 
     void RobotLED::turnON(int R, int G, int B,byte N_LED){
-
+           pixel->clear();
+        delay(LED_COMMAND_OFFSET);
+          pixel->show(); 
+        delay(LED_COMMAND_OFFSET);
           if(N_LED == 0){
             for(int yy = 0; yy < nLED; yy++)pixel->setPixelColor(yy, pixel->Color(R,G,B));
           }else{ 
           pixel->setPixelColor(N_LED-1, pixel->Color(R,G,B)); 
           }
+        delay(LED_COMMAND_OFFSET);
           pixel->show(); 
-          delay(10);
+        delay(LED_COMMAND_OFFSET);
     }
 
     void RobotLED::turnOFF(byte N_LED){
-            if(N_LED == 0){
-                for(int yy = 0; yy < nLED; yy++)pixel->setPixelColor(yy, pixel->Color(0,0,0));
-            }else{
-            pixel->setPixelColor(0, pixel->Color(0,0,0)); 
-            }
-            pixel->show(); 
-            delay(10);
-
-             if(N_LED == 0){
-                for(int yy = 0; yy < nLED; yy++)pixel->setPixelColor(yy, pixel->Color(0,0,0));
-            }else{
-            pixel->setPixelColor(0, pixel->Color(0,0,0)); 
-            }
-            pixel->show(); 
-            delay(10);                              //do the cycle again to ensure that there was no buffer clerance problem
+        pixel->clear();
+        delay(LED_COMMAND_OFFSET);
+          pixel->show(); 
+        delay(LED_COMMAND_OFFSET);
+        pixel->clear();
+        delay(LED_COMMAND_OFFSET);
+          pixel->show(); 
+        delay(LED_COMMAND_OFFSET);
+                                          //do the cycle again to ensure that there was no buffer clerance problem
     }
 
 

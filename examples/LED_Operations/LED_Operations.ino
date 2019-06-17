@@ -29,7 +29,7 @@ void loop() {
 
     delay(2000);
 
-    robot.TurnLEDOn(255,255,0);       // Turn both LED on and set color to purple.
+    robot.TurnLEDOn(255,255,0);       // Turn both LED on and set color to yellow.
 
     delay(2000);
 

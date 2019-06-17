@@ -1,10 +1,11 @@
 #include "Skribot.h"
 
-#ifdef ESP_H
-#define EEPROM_EMPTY 255
-#else
-#define EEPROM_EMPTY 0
-#endif
+#define EEPROM_EMPTY_ESP32 255
+#define EEPROM_EMPTY_ARDUINO 0
+
+  bool Skribot::EEPROM_EMPTY(int val){
+    return(val == EEPROM_EMPTY_ESP32 || val == EEPROM_EMPTY_ARDUINO);
+  }
 
   Skribot::Skribot(String predef){
     NDistSensors    = 0;
@@ -14,6 +15,7 @@
     NLeftDCRotors   = 0;
     NRightDCRotors  = 0;
     NClaws          = 0;
+    BTmodule = NULL;
     using_BLE_Connection = false;
     program_End_Reported = false;
     stausLEDused = false;
@@ -23,6 +25,9 @@
     config_mode = false;
     Remote_block_used = false;
     Configure_Connections(predef);
+    #ifdef DEBUG_MODE
+    Serial.begin(115200);
+    #endif
   }
   void Skribot::Configure_Connections(String predef){
     #ifndef ESP_H
@@ -35,7 +40,7 @@
           #ifndef _VARIANT_BBC_MICROBIT_
           AddClaw(EDU_CLAW_PIN1,EDU_CLAW_PIN2);
           #if DISABLED(DEBUG_MODE)
-          AddLED(EDU_LED_DATA_PIN_1,1,5);
+          AddLED(EDU_LED_DATA_PIN_1,1);
           AddLED(EDU_LED_DATA_PIN,0);
           #endif
           #endif
@@ -73,8 +78,8 @@
     if(predef == "SKRIBRAIN"){
           AddDCRotor(SKRIBRAIN_MOTOR_L_DIR2_PIN,SKRIBRAIN_MOTOR_L_DIR1_PIN,"Left");
           AddDCRotor(SKRIBRAIN_MOTOR_R_DIR2_PIN,SKRIBRAIN_MOTOR_R_DIR1_PIN,"Right");
-          AddLED(SKRIBRAIN_LED_PIN_1,0);
           AddLED(SKRIBRAIN_LED_PIN_2,1);
+          AddLED(SKRIBRAIN_LED_PIN_1,0);
           AddDistSensor(SKRIBRAIN_ECHO_PIN_1,SKRIBRAIN_TRIG_PIN_1,1);   
           AddDistSensor(SKRIBRAIN_ECHO_PIN_2,SKRIBRAIN_TRIG_PIN_2,2);
           AddLineSensor(LINE_PIN_1, 1);
@@ -86,7 +91,6 @@
           stausLEDused = true;
         }
     #endif
-   ConfigureBoardEEPROM();
    SetSpeed(250);
    Stop();
   }
@@ -105,14 +109,12 @@
        }
       #endif
        Board_type = EEPROM.read(EEPROM_BOARD_VERSION_ADDR);
-       if(Board_type == EEPROM_EMPTY){                                   //No board Version defined
+       if(EEPROM_EMPTY(Board_type)){                                   //No board Version defined
         EEPROM.write(EEPROM_BOARD_VERSION_ADDR,BOARD_VERSION);
         Board_type = BOARD_VERSION;                             //Asigning Board Version to the newest one.
-        
          #ifdef ESP_H 
               EEPROM.commit(); 
          #endif 
-
         #ifdef DEBUG_MODE
           Serial.println("First time flash detected");
           #endif
@@ -121,7 +123,7 @@
        delay(10);                                              //EEPROM delay in order to avoid EEPROM ERRORS
        byte userChange = EEPROM.read(EEPROM_SETTINGS_OVERRIDED_ADDR);
        delay(10);
-       if(userChange == EEPROM_EMPTY){
+       if(EEPROM_EMPTY(userChange)){
          #ifdef DEBUG_MODE
           Serial.println("No user Settings in EEPROM Configuration");
           #endif
@@ -146,10 +148,10 @@
        delay(10);
 
        Set_Line_Sensor_Logic_Border(L1_b,L2_b,L3_b);
-       if(right_invert != EEPROM_EMPTY)Invert_Right_Rotors(right_invert);
-       if(left_invert != EEPROM_EMPTY)Invert_Left_Rotors(left_invert);
-       if(left_scale != EEPROM_EMPTY)Scale_Left_Rotors(left_scale);
-       if(right_scale != EEPROM_EMPTY)Scale_Right_Rotors(right_scale);
+       if(!EEPROM_EMPTY(right_invert))Invert_Right_Rotors(right_invert);
+       if(!EEPROM_EMPTY(left_invert))Invert_Left_Rotors(left_invert);
+       if(!EEPROM_EMPTY(left_scale))Scale_Left_Rotors(left_scale);
+       if(!EEPROM_EMPTY(right_scale))Scale_Right_Rotors(right_scale);
 
       #ifdef DEBUG_MODE
       Serial.println("User Corrections:");
@@ -166,6 +168,11 @@
       Serial.println(L3_b);
       #endif
 
+       }else{
+        #ifdef DEBUG_MODE
+        Serial.println("Unexpected user cofig value:");
+        Serial.println(userChange);
+        #endif
        }
    
   }
@@ -185,11 +192,9 @@
   int Skribot::Read_EEPROM_INT(byte addr){
         int b3 = 0;
         int b1 =  EEPROM.read(addr+1);
-        Serial.println(b1);
         delay(10);
         int b2  = EEPROM.read(addr);
-        Serial.println(b2);
-      if(b1 == EEPROM_EMPTY && b2 == EEPROM_EMPTY){
+      if(EEPROM_EMPTY(b1)&& EEPROM_EMPTY(b2)){
         b3 = 0;
       }else{
         b3 = b2 | (int(b1) << 8);
@@ -397,41 +402,79 @@ if(claw_closed && (millis() - claw_closed_time > 180000)){
   }
 
 
-#ifndef ESP_H && _VARIANT_BBC_MICROBIT_
+#ifndef _VARIANT_BBC_MICROBIT_
          // functions for EDUSHIELD_1
-    void Skribot::AddDistSensor(String EDU_SHIELD_SLOT){
-      if(EDU_SHIELD_SLOT == "D1"){
+    void Skribot::AddDistSensor(String SHIELD_SLOT){
+      #ifndef ESP_H 
+      if(SHIELD_SLOT == "D1"){
         AddDistSensor(EDU_ECHO_PIN_1,EDU_TRIG_PIN_1,"D1");  
-      }else if(EDU_SHIELD_SLOT == "D2"){
+      }else if(SHIELD_SLOT == "D2"){
         AddDistSensor(EDU_ECHO_PIN_2,EDU_TRIG_PIN_2,"D2");
       }
+      #else
+       if(SHIELD_SLOT == "D1"){
+        AddDistSensor(SKRIBRAIN_ECHO_PIN_1,SKRIBRAIN_TRIG_PIN_1,"D1");  
+      }else if(SHIELD_SLOT == "D2"){
+        AddDistSensor(SKRIBRAIN_ECHO_PIN_2,SKRIBRAIN_TRIG_PIN_2,"D2");
+      }
+      #endif
     }
-    void Skribot::AddLineSensor(String EDU_SHIELD_SLOT){
-       if(EDU_SHIELD_SLOT == "L1"){
+    void Skribot::AddLineSensor(String SHIELD_SLOT){
+      #ifndef ESP_H 
+       if(SHIELD_SLOT == "L1"){
         AddLineSensor(EDU_LINE_SENSOR_1,"L1");
-      }else if(EDU_SHIELD_SLOT == "L2"){
+      }else if(SHIELD_SLOT == "L2"){
         AddLineSensor(EDU_LINE_SENSOR_2,"L2");
-      }else if(EDU_SHIELD_SLOT == "L3" ){
+      }else if(SHIELD_SLOT == "L3" ){
         AddLineSensor(EDU_LINE_SENSOR_3,"L3");
       }
+      #else
+      if(SHIELD_SLOT == "L1"){
+        AddLineSensor(SKRIBRAIN_ANALOG_PIN_1,"L1");
+      }else if(SHIELD_SLOT == "L2"){
+        AddLineSensor(SKRIBRAIN_ANALOG_PIN_2,"L2");
+      }else if(SHIELD_SLOT == "L3" ){
+        AddLineSensor(SKRIBRAIN_ANALOG_PIN_3,"L3");
+      }
+      #endif
     }
-    void Skribot::AddDCRotor(String EDU_SHIELD_SLOT){
-      if(EDU_SHIELD_SLOT == "LEFT"){
+    void Skribot::AddDCRotor(String SHIELD_SLOT){
+      #ifndef ESP_H 
+      if(SHIELD_SLOT == "LEFT"){
         AddDCRotor(EDU_ROTOR_SPEED_PIN_L,EDU_ROTOR_DIR_PIN_L,"Left");          
-      }else if(EDU_SHIELD_SLOT == "RIGHT"){
+      }else if(SHIELD_SLOT == "RIGHT"){
         AddDCRotor(EDU_ROTOR_SPEED_PIN_R,EDU_ROTOR_DIR_PIN_R,"Right");
       }
+      #else
+       if(SHIELD_SLOT == "LEFT"){
+        AddDCRotor(SKRIBRAIN_MOTOR_L_DIR2_PIN,SKRIBRAIN_MOTOR_L_DIR1_PIN,"Left");          
+      }else if(SHIELD_SLOT == "RIGHT"){
+        AddDCRotor(SKRIBRAIN_MOTOR_R_DIR2_PIN,SKRIBRAIN_MOTOR_R_DIR1_PIN,"Right");
+      }
+      #endif
     }
-   void Skribot::AddLED(String EDU_SHIELD_SLOT){
-      if(EDU_SHIELD_SLOT == "LED1"){
+   void Skribot::AddLED(String SHIELD_SLOT){
+    #ifndef ESP_H 
+      if(SHIELD_SLOT == "LED1"){
         AddLED(EDU_LED_DATA_PIN_1,"LED1");
-      }else if(EDU_SHIELD_SLOT == "LED2"){
+      }else if(SHIELD_SLOT == "LED2"){
         AddLED(EDU_LED_DATA_PIN,"LED2");
       }
+      #else
+      if(SHIELD_SLOT == "LED1"){
+        AddLED(SKRIBRAIN_LED_PIN_1,"LED1");
+      }else if(SHIELD_SLOT == "LED2"){
+        AddLED(SKRIBRAIN_LED_PIN_2,"LED2");
+      }
+      #endif
     }
 
      void Skribot::AddClaw(){
+      #ifndef ESP_H 
         AddClaw(EDU_CLAW_PIN1,EDU_CLAW_PIN2);
+      #else
+        AddClaw(SKRIBRAIN_SERVO_PIN_1,SKRIBRAIN_SERVO_PIN_2);
+      #endif
     } 
 
 #endif
@@ -560,10 +603,9 @@ if(claw_closed && (millis() - claw_closed_time > 180000)){
                     if(_id == -69 || LEDs[zz]->GetID() == _id){
                       LEDs[zz]->turnON(R,G,B,N_LED);
                       if(_id != -69)break;
-                    }
-                  
+                    }                
       }
-      delay(10);
+   
       #endif
   }
 
@@ -687,7 +729,7 @@ if(claw_closed && (millis() - claw_closed_time > 180000)){
                   }
         break;
 
-        case 'L':
+        case 'R':
                   for(int zz = 0; zz < NLeftDCRotors ; zz++){
                     LeftDCRotors[zz]->SetDirection(1);
                     LeftDCRotors[zz]->Move();
@@ -699,7 +741,7 @@ if(claw_closed && (millis() - claw_closed_time > 180000)){
                   }
          break;
 
-         case 'R':
+         case 'L':
                   for(int zz = 0; zz < NLeftDCRotors ; zz++){
                     LeftDCRotors[zz]->SetDirection(0);
                     LeftDCRotors[zz]->Move();
