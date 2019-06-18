@@ -1,7 +1,7 @@
 #include<Arduino.h>
 #ifndef _VARIANT_BBC_MICROBIT_
 #include "RobotLED.h"
-#define LED_COMMAND_OFFSET 10
+#define LED_COMMAND_OFFSET 20
 
 	RobotLED::RobotLED(int pin,String _name,byte N_LED){
 		pixel = new Adafruit_NeoPixel(N_LED, pin, NEO_GRB + NEO_KHZ800);
@@ -20,10 +20,8 @@
     }
 
     void RobotLED::turnON(int R, int G, int B,byte N_LED){
-           pixel->clear();
-        delay(LED_COMMAND_OFFSET);
-          pixel->show(); 
-        delay(LED_COMMAND_OFFSET);
+         //pixel->clear();
+         //pixel->show(); 
           if(N_LED == 0){
             for(int yy = 0; yy < nLED; yy++)pixel->setPixelColor(yy, pixel->Color(R,G,B));
           }else{ 
@@ -31,6 +29,7 @@
           }
         delay(LED_COMMAND_OFFSET);
           pixel->show(); 
+          pixel->show();
         delay(LED_COMMAND_OFFSET);
     }
 
