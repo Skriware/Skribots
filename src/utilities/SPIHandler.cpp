@@ -3,7 +3,7 @@
 	uint8_t SPIHandler::used_spi_bus = 0;
 
 	#ifdef ESP_H
-	  SPIHandler::SPIHandler(byte MOSI_PIN,byte MISO,byte CLK_PIN,byte CS_PIN){
+	  SPIHandler::SPIHandler(byte MOSI_PIN,byte MISO,byte CLK_PIN,byte _CS_PIN){
 	  	if(used_spi_bus == 0){
 	  	_spi = new SPIClass(HSPI);
 	  	used_spi_bus++;
@@ -16,7 +16,8 @@
 	  		#endif
 	  		return;
 	  	}
-	  	_spi->begin(CLK_PIN,MISO_PIN,MOSI_PIN,CS_PIN);
+	  	_spi->begin(CLK_PIN,MISO_PIN,MOSI_PIN);
+	  	CS_PIN = _CS_PIN;
 	  	pinMode(CS_PIN,OUTPUT);
 	  	digitalWrite(CS_PIN,HIGH);
 	  }

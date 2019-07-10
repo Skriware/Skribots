@@ -654,8 +654,6 @@ if(claw_closed && (millis() - claw_closed_time > 180000)){
 
    int Skribot::ReadDistSensor(String name, int max){
      for(int zz = 0; zz < NDistSensors ; zz++){
-                    //Serial->print("Sensor:");
-                    //Serial->println(DistSensors[zz]->GetID());
                     if(DistSensors[zz]->GetName() == name){
                       return(DistSensors[zz]->ReadSensor(max));
                       break;

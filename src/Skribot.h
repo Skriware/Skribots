@@ -15,6 +15,8 @@
 #include <utilities/BLEModule.h>
 #include <utilities/SPIHandler.h>
 #include <utilities/I2CHandler.h>
+#include <utilities/MONO_LED_Matrix.h>
+#include <utilities/InterruptHandler.h>
 #endif
 #ifdef _VARIANT_BBC_MICROBIT_
 #include <utilities/Adafruit_Microbit.h>
@@ -144,6 +146,8 @@
     void AddScope(int EchoPin,int Trigg,int ServoPin,String Name);
     void AddLED(int Pin,String name,byte N_LED = 1);
     void AddLED(int Pin, int id, byte N_LED  = 1);
+    void Add_MonoLED_matrix(SPIHandler *spi);
+    void ConfigureSPIHandler(byte SPI_PORT);
     #endif
     bool EEPROM_EMPTY(int val);
     
@@ -251,6 +255,7 @@
   Scope *Scopes[3];
   RGB_LED_Matrix *RGB_Matrix[3];
   BLEModule *BTmodule;
+  MONO_LED_Matrix *LED_Matrixes[2];
   #endif
   byte NDistSensors,NLEDs,NLineSensors,NScopes,NLeftDCRotors,NRightDCRotors,NClaws,NLightSensors;           //counters
   int DCSpeed = 0;
