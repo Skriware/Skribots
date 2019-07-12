@@ -3,11 +3,26 @@
 #include "Arduino.h"
 #include "SPI.h"
 
+#define SPI_PORT_1 0
+#define SPI_PORT_2 1
+#define CUSTUM_SPI_PINS 2
+
+#define SPI_PORT_1_MOSI_PIN 15
+#define SPI_PORT_1_MISO_PIN 5
+#define SPI_PORT_1_CLK_PIN  33
+#define SPI_PORT_1_CS_PIN   25
+
+#define SPI_PORT_2_MOSI_PIN 2
+#define SPI_PORT_2_MISO_PIN 19
+#define SPI_PORT_2_CLK_PIN  27
+#define SPI_PORT_2_CS_PIN   26
+
 class SPIHandler
 {
 public:
 	  #ifdef ESP_H
 	  SPIHandler(uint8_t MOSI_PIN,uint8_t MISO,uint8_t CLK_PIN,uint8_t CS_PIN);
+	  SPIHandler(byte SPI_PORT);
 	  #else
 	  SPIHandler(uint8_t CS_PIN);
 	  #endif
@@ -21,6 +36,7 @@ public:
 
 	  uint8_t  SPITransfer(uint8_t *msg);
 	  uint32_t SPI_get_output(uint8_t ii);
+	  uint8_t get_SPIPORT();
 	  void SPI_end();
 	  static uint8_t used_spi_bus;
 private:
@@ -28,6 +44,7 @@ private:
 	uint8_t MOSI_PIN;
 	uint8_t MISO_PIN;
 	uint8_t CLK_PIN;
+	uint8_t SPI_PORT; 
 	#endif
 	uint8_t CS_PIN;
 	const uint8_t buffer_Size = 16;

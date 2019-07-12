@@ -47,6 +47,7 @@ class Mono_LED_Matrix
     void SetAnimation(int matrixN, animation_t animation, size_t size);
     void PlayAnimation(int matrixN);
     void StopAnimation(int matrixN);
+    byte getId();
 
   private:
     SPIHandler *spi;
@@ -55,7 +56,7 @@ class Mono_LED_Matrix
     int rotation;
     int intensity;
     uint8_t *buffer;
-
+    byte id;
     animation_t *animations;
     size_t *animationSizes;
     int *animationFrames;

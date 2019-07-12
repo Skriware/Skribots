@@ -403,7 +403,7 @@ if(claw_closed && (millis() - claw_closed_time > 180000)){
 
 
 #ifndef _VARIANT_BBC_MICROBIT_
-         // functions for EDUSHIELD_1
+      
     void Skribot::AddDistSensor(String SHIELD_SLOT){
       #ifndef ESP_H 
       if(SHIELD_SLOT == "D1"){
@@ -476,6 +476,32 @@ if(claw_closed && (millis() - claw_closed_time > 180000)){
         AddClaw(SKRIBRAIN_SERVO_PIN_1,SKRIBRAIN_SERVO_PIN_2);
       #endif
     } 
+
+    void Skribot::AddDistSensor(byte SHIELD_SLOT){
+    if(SHIELD_SLOT == D2_PORT){
+        AddDistSensor(SKRIBRAIN_ECHO_PIN_1,SKRIBRAIN_TRIG_PIN_1,D2_PORT);  
+    }else if(SHIELD_SLOT == D1_PORT){
+        AddDistSensor(SKRIBRAIN_ECHO_PIN_2,SKRIBRAIN_TRIG_PIN_2,D1_PORT);
+    }
+    }
+
+    void Skribot::ConfigureSPIHandler(byte SPI_PORT){
+      if(SPI_PORT <2)SPIcomm[SPI_PORT] = new SPIHandler(SPI_PORT);
+    }
+
+    void Skribot::Add_Mono_LED_matrix(byte SPI_PORT){
+      if(SPI_PORT <2){
+      ConfigureSPIHandler(SPI_PORT);
+      LED_Matrixes[SPI_PORT] = new Mono_LED_Matrix(SPIcomm[SPI_PORT]);
+    }
+    SPIcomm[SPI_PORT]->set_SPI_Settings(4000000, MSBFIRST, SPI_MODE0);
+    SPIcomm[SPI_PORT]->set_SPI_bit_format(16);
+    
+    LED_Matrixes[SPI_PORT]->Init();
+    LED_Matrixes[SPI_PORT]->SetIntensity(8);
+    LED_Matrixes[SPI_PORT]->Update();
+  }
+
 
 #endif
   #ifndef _VARIANT_BBC_MICROBIT_

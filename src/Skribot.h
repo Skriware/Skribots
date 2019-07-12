@@ -15,8 +15,7 @@
 #include <utilities/BLEModule.h>
 #include <utilities/SPIHandler.h>
 #include <utilities/I2CHandler.h>
-#include <utilities/MONO_LED_Matrix.h>
-#include <utilities/InterruptHandler.h>
+#include <utilities/Mono_LED_Matrix.h>
 #endif
 #ifdef _VARIANT_BBC_MICROBIT_
 #include <utilities/Adafruit_Microbit.h>
@@ -95,6 +94,9 @@
 #define SKRIBRAIN_ANALOG_PIN_3 34
 #define SKRIBRAIN_STATUS_LED_PIN 14
 
+#define D1_PORT 1
+#define D2_PORT 2
+
 #define LINE_PIN_1 SKRIBRAIN_ANALOG_PIN_1
 #define LINE_PIN_2 SKRIBRAIN_ANALOG_PIN_2
 #define LINE_PIN_3 SKRIBRAIN_ANALOG_PIN_3
@@ -133,6 +135,7 @@
   	Skribot(String predef = "");
   	void AddDistSensor(int EchoPin,int TrigPin,String Name);
     void AddDistSensor(int EchoPin,int TrigPin,int id);
+    void AddDistSensor(byte DIST_PORT);
     void AddLineSensor(int Pin, String Name); 
     void AddLineSensor(int Pin, int id);
     void AddDCRotor(int SpeedPin,int DirectionPin, String side);
@@ -146,7 +149,10 @@
     void AddScope(int EchoPin,int Trigg,int ServoPin,String Name);
     void AddLED(int Pin,String name,byte N_LED = 1);
     void AddLED(int Pin, int id, byte N_LED  = 1);
-    void Add_MonoLED_matrix(SPIHandler *spi);
+
+    void Add_Mono_LED_matrix(byte SPI_PORT);
+    void AddBuzzer(byte pin,byte id);
+    void AddButton(byte pin,byte id);
     void ConfigureSPIHandler(byte SPI_PORT);
     #endif
     bool EEPROM_EMPTY(int val);
@@ -211,7 +217,7 @@
     void SetScopeAngle(String id, int deg);  
     int  GetScopeDistance(String id);                                                         //Scope functions
     #endif
-
+                                              //BLE FUCKTIONS
     char BLE_read();                                                        
     void BLE_write(char *msg);
     bool BLE_checkConnection();
@@ -255,7 +261,8 @@
   Scope *Scopes[3];
   RGB_LED_Matrix *RGB_Matrix[3];
   BLEModule *BTmodule;
-  MONO_LED_Matrix *LED_Matrixes[2];
+  Mono_LED_Matrix *LED_Matrixes[2];
+ // Buzzer *buzzers[5];
   #endif
   byte NDistSensors,NLEDs,NLineSensors,NScopes,NLeftDCRotors,NRightDCRotors,NClaws,NLightSensors;           //counters
   int DCSpeed = 0;

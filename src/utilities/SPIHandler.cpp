@@ -21,6 +21,34 @@
 	  	pinMode(CS_PIN,OUTPUT);
 	  	digitalWrite(CS_PIN,HIGH);
 	  }
+
+	  SPIHandler::SPIHandler(byte _SPI_PORT){
+		if(used_spi_bus == 0){
+		  		_spi = new SPIClass(HSPI);
+		  		used_spi_bus++;
+	  		}else if(used_spi_bus == 1){
+		  		_spi = new SPIClass(VSPI);
+		  		used_spi_bus++;	
+	  		}else{
+		  		#ifdef DEBUG_MODE
+		  		Serial.println("No more free SPI bus!");
+		  		#endif
+	  		return;
+	  		}
+		if(_SPI_PORT == SPI_PORT_1){
+				SPI_PORT = _SPI_PORT;
+				_spi->begin(SPI_PORT_1_CLK_PIN,SPI_PORT_1_MISO_PIN,SPI_PORT_1_MOSI_PIN);
+				CS_PIN = SPI_PORT_1_CS_PIN;
+			}else if(SPI_PORT == SPI_PORT_2){
+				SPI_PORT = _SPI_PORT;
+				_spi->begin(SPI_PORT_2_CLK_PIN,SPI_PORT_2_MISO_PIN,SPI_PORT_2_MOSI_PIN);
+				CS_PIN = SPI_PORT_2_CS_PIN;
+			}else{
+				SPI_PORT = 2;
+			}  	
+			pinMode(CS_PIN,OUTPUT);
+	  		digitalWrite(CS_PIN,HIGH);
+	  }
 	#else
 	  SPIHandler::SPIHandler(byte _CS_PIN){
 	  	CS_PIN = _CS_PIN;

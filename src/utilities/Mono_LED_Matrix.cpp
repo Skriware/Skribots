@@ -16,10 +16,12 @@ Mono_LED_Matrix::Mono_LED_Matrix(
   animationFrames = (int *) calloc(matrixCount, sizeof(int));
   animationSizes = (size_t *) calloc(matrixCount, sizeof(size_t));
   animationStates = (bool *) calloc(matrixCount, sizeof(bool));
-
   
 }
 
+byte Mono_LED_Matrix::getId(){
+  return(id);
+}
 void Mono_LED_Matrix::SendCmd(uint8_t opcode, uint8_t data)
 {
   byte msg[] = {1,opcode,data};
