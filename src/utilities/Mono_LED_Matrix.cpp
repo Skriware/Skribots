@@ -88,7 +88,7 @@ void Mono_LED_Matrix::Update(void)
 
     if (marqueeDirection > 0)
     {
-      if (marqueePosition >= strlen(marqueeText) * 6 + 5)
+      if (marqueePosition >= strlen(marqueeText) * 7 - 1)
         marqueePosition = 0;
       else
         marqueePosition++;
@@ -96,7 +96,7 @@ void Mono_LED_Matrix::Update(void)
     else if (marqueeDirection < 0)
     {
       if (marqueePosition < 0)
-        marqueePosition = strlen(marqueeText) * 6 + 5;
+        marqueePosition = strlen(marqueeText) * 7 - 1;
       else
         marqueePosition--;
     }
