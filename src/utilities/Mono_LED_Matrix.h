@@ -49,7 +49,7 @@ class Mono_LED_Matrix
     void PlayAnimation(int matrixN);
     void StopAnimation(int matrixN);
 
-    void StartMarquee(const char *text, int direction);
+    void StartMarquee(const char *text, int direction=1);
     void StopMarquee(void);
 
     byte getId();
