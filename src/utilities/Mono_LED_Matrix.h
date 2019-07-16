@@ -7,6 +7,7 @@
 #include "SPIHandler.h"
 
 typedef uint8_t (*animation_t)[8];
+typedef uint8_t bmp_t[8];
 
 class Mono_LED_Matrix
 {
@@ -47,7 +48,9 @@ class Mono_LED_Matrix
     void SetAnimation(int matrixN, animation_t animation, size_t size);
     void PlayAnimation(int matrixN);
     void StopAnimation(int matrixN);
-    byte getId();
+
+    void StartMarquee(const char *text);
+    void StopMarquee(void);
 
   private:
     SPIHandler *spi;
@@ -57,15 +60,23 @@ class Mono_LED_Matrix
     int intensity;
     uint8_t *buffer;
     byte id;
+
     animation_t *animations;
     size_t *animationSizes;
     int *animationFrames;
     bool *animationStates;
 
+    bool marqueeState;
+    const char *marqueeText;
+    int marqueePosition = 0;
+
     void SendCmd(Opcode opcode, uint8_t data);
     void SendCmd(uint8_t opcode, uint8_t data);
     void ShutDown(void);
     void WakeUp(void);
+    static uint8_t reverseBitOrder(uint8_t b);
+    static void CombineBitmaps(
+      uint8_t *dst, uint8_t pos, uint8_t src1[8], uint8_t src2[8]);
 };
 
 #endif
