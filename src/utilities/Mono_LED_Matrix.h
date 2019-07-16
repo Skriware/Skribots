@@ -52,6 +52,8 @@ class Mono_LED_Matrix
     void StartMarquee(const char *text);
     void StopMarquee(void);
 
+    byte getId();
+
   private:
     SPIHandler *spi;
     int cs;
