@@ -16,6 +16,8 @@
     NRightDCRotors  = 0;
     NClaws          = 0;
     BTmodule = NULL;
+    SPIcomm[0] = NULL;
+    SPIcomm[1] = NULL;
     using_BLE_Connection = false;
     program_End_Reported = false;
     stausLEDused = false;
@@ -478,10 +480,10 @@ if(claw_closed && (millis() - claw_closed_time > 180000)){
     } 
 
     void Skribot::AddDistSensor(byte SHIELD_SLOT){
-    if(SHIELD_SLOT == D2_PORT){
-        AddDistSensor(SKRIBRAIN_ECHO_PIN_1,SKRIBRAIN_TRIG_PIN_1,D2_PORT);  
-    }else if(SHIELD_SLOT == D1_PORT){
-        AddDistSensor(SKRIBRAIN_ECHO_PIN_2,SKRIBRAIN_TRIG_PIN_2,D1_PORT);
+    if(SHIELD_SLOT == D1_PORT){
+        AddDistSensor(SKRIBRAIN_ECHO_PIN_1,SKRIBRAIN_TRIG_PIN_1,D1_PORT);  
+    }else if(SHIELD_SLOT == D2_PORT){
+        AddDistSensor(SKRIBRAIN_ECHO_PIN_2,SKRIBRAIN_TRIG_PIN_2,D2_PORT);
     }
     }
 
@@ -502,6 +504,13 @@ if(claw_closed && (millis() - claw_closed_time > 180000)){
     LED_Matrixes[SPI_PORT]->Update();
   }
 
+  void Skribot::AddBuzzer(byte BUZZER_PIN){
+   if(BUZZER_PIN == SERVO_1){
+      Buzzers[SERVO_1] = new Buzzer(SKRIBRAIN_SERVO_PIN_1);
+   }else if(BUZZER_PIN == SERVO_2){
+      Buzzers[SERVO_2] = new Buzzer(SKRIBRAIN_SERVO_PIN_2); 
+  }
+}
 
 #endif
   #ifndef _VARIANT_BBC_MICROBIT_
@@ -539,7 +548,6 @@ if(claw_closed && (millis() - claw_closed_time > 180000)){
   }
 
     
-
   int Skribot::GetScopeDistance(String name){
     for(int zz = 0; zz < NScopes ; zz++){
                     if(Scopes[zz]->GetName() == name){

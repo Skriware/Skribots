@@ -16,6 +16,7 @@
 #include <utilities/SPIHandler.h>
 #include <utilities/I2CHandler.h>
 #include <utilities/Mono_LED_Matrix.h>
+#include <utilities/Buzzer.h>
 #endif
 #ifdef _VARIANT_BBC_MICROBIT_
 #include <utilities/Adafruit_Microbit.h>
@@ -97,6 +98,9 @@
 #define D1_PORT 1
 #define D2_PORT 2
 
+#define SERVO_1 0
+#define SERVO_2 1
+
 #define LINE_PIN_1 SKRIBRAIN_ANALOG_PIN_1
 #define LINE_PIN_2 SKRIBRAIN_ANALOG_PIN_2
 #define LINE_PIN_3 SKRIBRAIN_ANALOG_PIN_3
@@ -136,6 +140,7 @@
   	void AddDistSensor(int EchoPin,int TrigPin,String Name);
     void AddDistSensor(int EchoPin,int TrigPin,int id);
     void AddDistSensor(byte DIST_PORT);
+
     void AddLineSensor(int Pin, String Name); 
     void AddLineSensor(int Pin, int id);
     void AddDCRotor(int SpeedPin,int DirectionPin, String side);
@@ -151,7 +156,7 @@
     void AddLED(int Pin, int id, byte N_LED  = 1);
 
     void Add_Mono_LED_matrix(byte SPI_PORT);
-    void AddBuzzer(byte pin,byte id);
+    void AddBuzzer(byte pin);
     void AddButton(byte pin,byte id);
     void ConfigureSPIHandler(byte SPI_PORT);
     #endif
@@ -262,7 +267,7 @@
   RGB_LED_Matrix *RGB_Matrix[3];
   BLEModule *BTmodule;
   Mono_LED_Matrix *LED_Matrixes[2];
- // Buzzer *buzzers[5];
+  Buzzer *Buzzers[5];
   #endif
   byte NDistSensors,NLEDs,NLineSensors,NScopes,NLeftDCRotors,NRightDCRotors,NClaws,NLightSensors;           //counters
   int DCSpeed = 0;

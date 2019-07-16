@@ -36,13 +36,17 @@
 	  		return;
 	  		}
 		if(_SPI_PORT == SPI_PORT_1){
+
 				SPI_PORT = _SPI_PORT;
 				_spi->begin(SPI_PORT_1_CLK_PIN,SPI_PORT_1_MISO_PIN,SPI_PORT_1_MOSI_PIN);
 				CS_PIN = SPI_PORT_1_CS_PIN;
-			}else if(SPI_PORT == SPI_PORT_2){
+
+			}else if(_SPI_PORT == SPI_PORT_2){
+
 				SPI_PORT = _SPI_PORT;
 				_spi->begin(SPI_PORT_2_CLK_PIN,SPI_PORT_2_MISO_PIN,SPI_PORT_2_MOSI_PIN);
 				CS_PIN = SPI_PORT_2_CS_PIN;
+
 			}else{
 				SPI_PORT = 2;
 			}  	

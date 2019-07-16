@@ -13,9 +13,9 @@
 #define SPI_PORT_1_CS_PIN   25
 
 #define SPI_PORT_2_MOSI_PIN 2
-#define SPI_PORT_2_MISO_PIN 19
-#define SPI_PORT_2_CLK_PIN  27
-#define SPI_PORT_2_CS_PIN   26
+#define SPI_PORT_2_MISO_PIN 5
+#define SPI_PORT_2_CLK_PIN  26
+#define SPI_PORT_2_CS_PIN   27
 
 class SPIHandler
 {
