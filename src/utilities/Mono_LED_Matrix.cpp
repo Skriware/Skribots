@@ -11,7 +11,9 @@ Mono_LED_Matrix::Mono_LED_Matrix(
   rotation(rotation),
   intensity(intensity),
   marqueeState(false),
-  marqueeText("")
+  marqueeText(""),
+  marqueePosition(0),
+  marqueeDirection(1)
 {
   buffer = (uint8_t *) calloc(8 * matrixCount, sizeof(uint8_t));
 
@@ -71,17 +73,33 @@ void Mono_LED_Matrix::Update(void)
   {
     // TODO:
     // Only matrix #0 for now
-    int c_pos = (marqueePosition/7) % strlen(marqueeText);
+    int c_pos = (marqueePosition/7);
 
     uint8_t bmp[8];
     uint8_t *src1 = Mono_LED_Matrix_font[marqueeText[c_pos] - ' '];
-    uint8_t *src2 = Mono_LED_Matrix_font[marqueeText[c_pos + 1] - ' '];
+    uint8_t *src2;
+    if (c_pos >= strlen(marqueeText) - 1)
+      src2 = Mono_LED_Matrix_font[marqueeText[0] - ' '];
+    else
+      src2 = Mono_LED_Matrix_font[marqueeText[c_pos + 1] - ' '];
     Mono_LED_Matrix::CombineBitmaps(bmp, marqueePosition%7, src1, src2);
 
     SetBitmap(0, bmp);
-    if (marqueePosition/7 >= strlen(marqueeText) - 1)
-      marqueePosition = 0;
-    marqueePosition++;
+
+    if (marqueeDirection > 0)
+    {
+      if (marqueePosition >= strlen(marqueeText) * 6 + 5)
+        marqueePosition = 0;
+      else
+        marqueePosition++;
+    }
+    else if (marqueeDirection < 0)
+    {
+      if (marqueePosition < 0)
+        marqueePosition = strlen(marqueeText) * 6 + 5;
+      else
+        marqueePosition--;
+    }
   }
   else
   {
@@ -224,11 +242,12 @@ uint8_t Mono_LED_Matrix::reverseBitOrder(uint8_t b)
   return o;
 }
 
-void Mono_LED_Matrix::StartMarquee(const char *text)
+void Mono_LED_Matrix::StartMarquee(const char *text, int direction)
 {
   marqueeText = text;
   marqueePosition = 0;
   marqueeState = true;
+  marqueeDirection = direction;
 }
 
 void Mono_LED_Matrix::StopMarquee(void)
