@@ -18,10 +18,11 @@
 			}
 	}
 
-	void SetNewPWMChannel(byte _PWMPin){
+	int SetNewPWMChannel(byte _PWMPin){
 		PWM_Channel newChannelToUse;
 		if(used_PWM_channels+1 > MAX_PWM_CHANNELS){
 			PWM_overload = true;
+			return -1;
 		}else{
 					newChannelToUse.pwmPin = _PWMPin;
 					newChannelToUse.pwmChannel = used_PWM_channels;
@@ -34,6 +35,7 @@
 				#ifdef _VARIANT_BBC_MICROBIT_ || ARDUINO_AVR_MEGA2560
 					pinMode(pwmPin,OUTPUT);
 				#endif
+			return used_PWM_channels - 1;
 		}
 
 	}

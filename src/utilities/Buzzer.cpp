@@ -1,25 +1,33 @@
 #include "Buzzer.h"
 
-Buzzer::Buzzer(int pin, int channel, int volume)
-  : pin(pin), channel(channel), volume(volume), tempo(1.0)
+Buzzer::Buzzer(int pin)
+  : pin(pin), volume(10), tempo(1.0)
 {
   #ifdef ESP_H
-  ledcSetup(channel, 2000, 8);
-  ledcAttachPin(pin, channel);
+    channel = SetNewPWMChannel(pin);
+    ledcSetup(channel, 2000, 8);
+    //ledcAttachPin(pin, channel);
+  #else
+    pinMode(pin, OUTPUT);
   #endif
 }
 
 void Buzzer::PlayNote(uint16_t frequency, int duration, bool blocking)
 {
-  #ifdef ESP_H
-  ledcWrite(channel, volume);
-  ledcWriteTone(channel, frequency);
-  if (blocking)
-  {
-    delay(duration);
-    ledcWriteTone(channel, 0);
-  }
-  #endif
+    #ifdef ESP_H
+      ledcWrite(channel, volume);
+      ledcWriteTone(channel, frequency);
+    #else
+      TimerFreeTone(pin, frequency, duration, volume);
+    #endif
+
+    #ifdef ESP_H
+    if (blocking)
+    {
+      delay(duration);
+        ledcWriteTone(channel, 0);
+    }
+    #endif
 }
 
 void Buzzer::PlayNote(uint16_t frequency)

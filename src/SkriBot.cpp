@@ -507,17 +507,19 @@ if(claw_closed && (millis() - claw_closed_time > 180000)){
     LED_Matrixes[SPI_PORT]->Update();
           #endif
   }
-#ifdef ESP_H 
   void Skribot::AddBuzzer(byte BUZZER_PIN){
           
-   if(BUZZER_PIN == SERVO_1){
-      Buzzers[SERVO_1] = new Buzzer(SKRIBRAIN_SERVO_PIN_1);
-   }else if(BUZZER_PIN == SERVO_2){
-      Buzzers[SERVO_2] = new Buzzer(SKRIBRAIN_SERVO_PIN_2); 
-  }
-          
+  #ifdef ESP_H 
+    if(BUZZER_PIN == SERVO_1){
+        Buzzers[SERVO_1] = new Buzzer(SKRIBRAIN_SERVO_PIN_1);
+    }else if(BUZZER_PIN == SERVO_2){
+        Buzzers[SERVO_2] = new Buzzer(SKRIBRAIN_SERVO_PIN_2); 
+    }
+  #else
+    Buzzers[0] = new Buzzer(13);
+  #endif
+
 }
-#endif
 
 #endif
   #ifndef _VARIANT_BBC_MICROBIT_

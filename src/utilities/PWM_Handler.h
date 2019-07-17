@@ -20,6 +20,6 @@
 		byte pwmChannel;
 	};
 	void PWM_Write(byte PWMPin,int value);
-	void SetNewPWMChannel(byte PWMPin);
+	int SetNewPWMChannel(byte PWMPin);
 	bool PWM_overloaded();
 #endif

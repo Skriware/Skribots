@@ -4,7 +4,10 @@
 // TODO:
 // - volume doesn't seem to work
 
-#include "Arduino.h"
+#include "PWM_Handler.h"
+#ifndef ESP_H
+  #include "./TimerFreeTone.h"
+#endif
 
 constexpr uint16_t A4_FREQ = 440;
 constexpr float HALF_STEP = 1.0594630943592953;
@@ -12,7 +15,7 @@ constexpr float HALF_STEP = 1.0594630943592953;
 class Buzzer
 {
   public:
-    Buzzer(int pin, int channel=0, int volume=10);
+    Buzzer(int pin);
     void SetVolume(int volume);
     void SetTempo(float tempo);
 
