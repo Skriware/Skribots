@@ -161,6 +161,7 @@
     void AddButton(byte pin,byte id);
     void ConfigureSPIHandler(byte SPI_PORT);
     bool EEPROM_EMPTY(int val);
+    #endif
     
                                                                   //functions for element adding
     void AddDistSensor(String SHIELD_SLOT);
