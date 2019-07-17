@@ -17,6 +17,7 @@
 #include <utilities/I2CHandler.h>
 #include <utilities/Mono_LED_Matrix.h>
 #include <utilities/Buzzer.h>
+
 #endif
 #ifdef _VARIANT_BBC_MICROBIT_
 #include <utilities/Adafruit_Microbit.h>
@@ -159,7 +160,6 @@
     void AddBuzzer(byte pin);
     void AddButton(byte pin,byte id);
     void ConfigureSPIHandler(byte SPI_PORT);
-    #endif
     bool EEPROM_EMPTY(int val);
     
                                                                   //functions for element adding

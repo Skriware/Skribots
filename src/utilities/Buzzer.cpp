@@ -3,20 +3,23 @@
 Buzzer::Buzzer(int pin, int channel, int volume)
   : pin(pin), channel(channel), volume(volume), tempo(1.0)
 {
+  #ifdef ESP_H
   ledcSetup(channel, 2000, 8);
   ledcAttachPin(pin, channel);
+  #endif
 }
 
 void Buzzer::PlayNote(uint16_t frequency, int duration, bool blocking)
 {
+  #ifdef ESP_H
   ledcWrite(channel, volume);
   ledcWriteTone(channel, frequency);
-
   if (blocking)
   {
     delay(duration);
     ledcWriteTone(channel, 0);
   }
+  #endif
 }
 
 void Buzzer::PlayNote(uint16_t frequency)
