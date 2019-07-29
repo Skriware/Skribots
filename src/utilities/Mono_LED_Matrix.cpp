@@ -34,7 +34,9 @@ byte Mono_LED_Matrix::getId()
 void Mono_LED_Matrix::SendCmd(uint8_t opcode, uint8_t data)
 {
   byte msg[] = {1,opcode,data};
-  spi->SPITransfer(msg);
+  if(spi != NULL){
+    spi->SPITransfer(msg);
+  }
 }
 
 void Mono_LED_Matrix::SendCmd(Opcode opcode, uint8_t data)

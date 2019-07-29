@@ -91,6 +91,20 @@
           BLE_Set_Module(ESP32_BLE); 
           status = new StatusLED(SKRIBRAIN_STATUS_LED_PIN,SKRIBRAIN_SERVO_PIN_3);
           stausLEDused = true;
+        }else if(predef == "SKRIBRAIN+LED_MATRIX"){ 
+          AddDCRotor(SKRIBRAIN_MOTOR_L_DIR2_PIN,SKRIBRAIN_MOTOR_L_DIR1_PIN,"Left");
+          AddDCRotor(SKRIBRAIN_MOTOR_R_DIR2_PIN,SKRIBRAIN_MOTOR_R_DIR1_PIN,"Right");
+          AddLED(SKRIBRAIN_LED_PIN_2,1);
+          AddDistSensor(SKRIBRAIN_ECHO_PIN_1,SKRIBRAIN_TRIG_PIN_1,1);   
+          AddDistSensor(SKRIBRAIN_ECHO_PIN_2,SKRIBRAIN_TRIG_PIN_2,2);
+          AddLineSensor(LINE_PIN_1, 1);
+          AddLineSensor(LINE_PIN_2, 2);
+          AddLineSensor(LINE_PIN_3, 3);
+          AddClaw(SKRIBRAIN_SERVO_PIN_1,SKRIBRAIN_SERVO_PIN_2);
+          BLE_Set_Module(ESP32_BLE); 
+          status = new StatusLED(SKRIBRAIN_STATUS_LED_PIN,SKRIBRAIN_SERVO_PIN_3);
+          stausLEDused = true;
+          Add_Mono_LED_matrix(SPI_PORT_2);
         }
     #endif
    SetSpeed(250);
@@ -490,22 +504,22 @@ if(claw_closed && (millis() - claw_closed_time > 180000)){
     }
 
     void Skribot::ConfigureSPIHandler(byte SPI_PORT){
-        #ifdef ESP_H 
-      if(SPI_PORT <2)SPIcomm[SPI_PORT] = new SPIHandler(SPI_PORT);
+    
     }
 
-    void Skribot::Add_Mono_LED_matrix(byte SPI_PORT){
-      if(SPI_PORT <2){
-      ConfigureSPIHandler(SPI_PORT);
+  void Skribot::Add_Mono_LED_matrix(byte SPI_PORT){
+    if(SPI_PORT <2){
+      SPIcomm[SPI_PORT] = new SPIHandler(SPI_PORT);
       LED_Matrixes[SPI_PORT] = new Mono_LED_Matrix(SPIcomm[SPI_PORT]);
     }
     SPIcomm[SPI_PORT]->set_SPI_Settings(4000000, MSBFIRST, SPI_MODE0);
     SPIcomm[SPI_PORT]->set_SPI_bit_format(16);
-    
+
     LED_Matrixes[SPI_PORT]->Init();
     LED_Matrixes[SPI_PORT]->SetIntensity(8);
     LED_Matrixes[SPI_PORT]->Update();
-          #endif
+
+         
   }
   void Skribot::AddBuzzer(byte BUZZER_PIN){
           
