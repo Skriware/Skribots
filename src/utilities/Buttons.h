@@ -12,7 +12,7 @@
         printf(
           "15 -- pressed:%s held:%s\n",
           buttonPressed(15) ? "true" : "false",
-          buttonHeld(15) ? "true" : "false"
+          buttonHeld(15, 500) ? "true" : "false"
         );
 
         buttonClearEvent(15);
@@ -71,11 +71,12 @@ void button ## p_ ## Handler(void) \
   if (millis() - button ## p_ ## LastTimeUp < buttonEventInterval) \
     return true; \
   break;
-//    && button ## p_ ## LastTimeUp - button ## p_ ## LastTimeDown < buttonHoldInterval)
 
 #define BUTTONS_BTN_HELD_CASE(p_) case p_: \
-  if (millis() - button ## p_ ## LastTimeUp < buttonEventInterval \
-    && button ## p_ ## LastTimeUp - button ## p_ ## LastTimeDown >= buttonHoldInterval) \
+  if ((button ## p_ ## LastTimeUp < button ## p_ ## LastTimeDown \
+      && millis() - button ## p_ ## LastTimeDown >= heldFor) \
+    || (button ## p_ ## LastTimeUp >= button ## p_ ## LastTimeDown \
+      && button ## p_ ## LastTimeUp - button ## p_ ## LastTimeDown >= heldFor)) \
     return true; \
   break;
 
@@ -98,6 +99,6 @@ bool buttonRead(int pin);
 bool buttonEventPending(int pin);
 void buttonClearEvent(int pin);
 bool buttonPressed(int pin);
-bool buttonHeld(int pin);
+bool buttonHeld(int pin, uint32_t heldFor);
 
 #endif

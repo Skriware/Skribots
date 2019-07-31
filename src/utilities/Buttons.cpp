@@ -76,7 +76,7 @@ bool buttonPressed(int pin)
   return false;
 }
 
-bool buttonHeld(int pin)
+bool buttonHeld(int pin, uint32_t heldFor)
 {
   switch (pin)
   {
