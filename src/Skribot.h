@@ -17,6 +17,7 @@
 #include <utilities/I2CHandler.h>
 #include <utilities/Mono_LED_Matrix.h>
 #include <utilities/Buzzer.h>
+#include <utilities/Buttons.h>
 
 #endif
 #ifdef _VARIANT_BBC_MICROBIT_
