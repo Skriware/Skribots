@@ -1,27 +1,3 @@
-/*
-  EXAMPLE:
-    void setup()
-    {
-      buttonEnable(15);
-    }
-
-    void loop()
-    {
-      if (buttonEventPending(15))
-      {
-        printf(
-          "15 -- pressed:%s held:%s\n",
-          buttonPressed(15) ? "true" : "false",
-          buttonHeld(15, 500) ? "true" : "false"
-        );
-
-        buttonClearEvent(15);
-      }
-
-      delay(50);
-    }
-*/
-
 #ifndef BUTTONS_H
 #define BUTTONS_H
 
@@ -68,21 +44,20 @@ void button ## p_ ## Handler(void) \
   break;
 
 #define BUTTONS_BTN_PRESSED_CASE(p_) case p_: \
-  if (millis() - button ## p_ ## LastTimeUp < buttonEventInterval) \
+  if (millis() - button ## p_ ## LastTimeUp < buttonPressInterval) \
     return true; \
   break;
 
 #define BUTTONS_BTN_HELD_CASE(p_) case p_: \
-  if ((button ## p_ ## LastTimeUp < button ## p_ ## LastTimeDown \
+  if (!digitalRead(p_) && ((button ## p_ ## LastTimeUp < button ## p_ ## LastTimeDown \
       && millis() - button ## p_ ## LastTimeDown >= heldFor) \
     || (button ## p_ ## LastTimeUp >= button ## p_ ## LastTimeDown \
-      && button ## p_ ## LastTimeUp - button ## p_ ## LastTimeDown >= heldFor)) \
+      && button ## p_ ## LastTimeUp - button ## p_ ## LastTimeDown >= heldFor))) \
     return true; \
   break;
 
-const uint32_t buttonPressInterval = 75;
-const uint32_t buttonHoldInterval = 500;
-const uint32_t buttonEventInterval = 50;
+static const uint32_t buttonPressInterval = 75;
+static const uint32_t buttonEventInterval = 50;
 
 BUTTONS_BTN_DECL(12);
 BUTTONS_BTN_DECL(13);
