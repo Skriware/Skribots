@@ -81,8 +81,8 @@ void button ## p_ ## Handler(void) \
   break;
 
 const uint32_t buttonPressInterval = 75;
-const uint32_t buttonHoldInterval = 500;
-const uint32_t buttonEventInterval = 50;
+const uint32_t buttonHoldInterval = 600;
+const uint32_t buttonEventInterval = 700;
 
 BUTTONS_BTN_DECL(12);
 BUTTONS_BTN_DECL(13);

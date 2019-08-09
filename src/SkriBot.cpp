@@ -725,7 +725,7 @@ if(claw_closed && (millis() - claw_closed_time > 180000)){
                       LineSensors[zz]->SetLogicBorder(L1_border);
                     }else if(LineSensors[zz]->GetSensorPin() == LINE_PIN_2 && L2_border != 0){
                       LineSensors[zz]->SetLogicBorder(L2_border);
-                    }else if(LineSensors[zz]->GetSensorPin() == 1 && LINE_PIN_3 != 0){
+                    }else if(LineSensors[zz]->GetSensorPin() == LINE_PIN_3 && L3_border != 0){
                       LineSensors[zz]->SetLogicBorder(L3_border);
                     }
       }
