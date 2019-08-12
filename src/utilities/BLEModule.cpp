@@ -175,6 +175,10 @@ bool BLEModule::BLE_checkConnection(){
     #ifdef ESP_H
     	  // Create the BLE Device
     	  nameFlag = EEPROM.read(EEPROM_FLAG_ADDR);
+    	  #ifdef DEBUG_MODE
+    	  Serial.print("Name Flag:");
+    	  Serial.println(nameFlag);
+    	  #endif
     	  delay(10);
     	  if(nameFlag != 1){
   		  BLEDevice::init("Skribot");
@@ -280,6 +284,8 @@ bool BLEModule::BLE_checkConnection(){
   		  			EEPROM.commit();
   		  			delay(10);
   		  		}
+  		  		Server->getAdvertising()->stop();
+  		  		delay(2000);
 			#endif
 
 				break;
