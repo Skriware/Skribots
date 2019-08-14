@@ -372,6 +372,7 @@ if(claw_closed && (millis() - claw_closed_time > 180000)){
   }
   void Skribot::BLE_changeName(char name[], bool userConncection){
     BTmodule->BLE_changeName(name);
+    ESP.restart();
   
   }
 
