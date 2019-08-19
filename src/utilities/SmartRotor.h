@@ -6,6 +6,9 @@
 class SmartRotor
 {
   private:
+    // Global SmartRotor instance for interrupts 
+    static SmartRotor *_sri;
+
     int speed;
     int direction;
 
@@ -16,6 +19,8 @@ class SmartRotor
     uint8_t m2pin2;
 
     // Encoder inputs
+    uint8_t m1enc1;
+    uint8_t m2enc1;
     uint8_t m1enc2;
     uint8_t m2enc2;
 
@@ -37,21 +42,13 @@ class SmartRotor
     uint32_t m1pulseTarget;
     uint32_t m2pulseTarget;
 
-    // Move until a certain number of pulses is reached
-    void moveByPulses(int m1pulses, int m2pulses); 
-
     void m1stop(void);
     void m2stop(void);
 
-    // generic encoder interrupt handler
-    void pulseISR(uint8_t enc1, uint8_t enc2, uint32_t *pulseCounter);
+    static void m1encISR(void);
+    static void m2encISR(void);
 
   public:
-    // Encoder input pins
-    // These are public because they are used for triggering the interrupts
-    uint8_t m1enc1;
-    uint8_t m2enc1;
-
     SmartRotor(
       uint8_t m1pin1,
       uint8_t m1pin2,
@@ -62,26 +59,20 @@ class SmartRotor
       uint8_t m2enc1,
       uint8_t m2enc2
     );
+    ~SmartRotor(void);
+
+    void begin(void);
 
     void setSpeed(int speed);
     void setDirection(int direction);
     void setPulsesPerTurn(int pulsesPerTurn);
 
     void move(void);
+    // Move until a certain number of pulses is reached
+    void moveByPulses(int m1pulses, int m2pulses); 
     void turn(bool clockwise);
     void turnByAngle(int angle);
     void stop(void);
-
-    // These two ISRs should be used in the following manner:
-    // 
-    // void m1encoderISR(void)
-    // {
-    //    smartmotor->m1pulseISR();
-    // }
-    // ...
-    // attachInterrupt(smartmotor->m1enc1, m1encoderISR, CHANGE);
-    void m1pulseISR(void);
-    void m2pulseISR(void);
 };
 
 #endif
