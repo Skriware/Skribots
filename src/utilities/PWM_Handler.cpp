@@ -33,7 +33,7 @@
 					ledcAttachPin(newChannelToUse.pwmPin, newChannelToUse.pwmChannel); 
 				#endif
 				#if defined(_VARIANT_BBC_MICROBIT_) || defined(ARDUINO_AVR_MEGA2560)
-					pinMode(pwmPin,OUTPUT);
+					pinMode(_PWMPin, OUTPUT);
 				#endif
 			return used_PWM_channels - 1;
 		}
