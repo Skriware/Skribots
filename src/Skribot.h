@@ -18,6 +18,7 @@
 #include <utilities/Mono_LED_Matrix.h>
 #include <utilities/Buzzer.h>
 #include <utilities/Buttons.h>
+#include <utilities/SmartRotor.h>
 
 #endif
 #ifdef _VARIANT_BBC_MICROBIT_
@@ -246,6 +247,7 @@
   Rotor *LeftDCRotors[3];
   Rotor *RightDCRotors[3];
   LightSensor *LightSensors[4];
+  SmartRotor *smartRotor;
   bool using_BLE_Connection,
        connection_Break_Reported,
        program_End_Reported,
