@@ -1,5 +1,7 @@
 #include "SmartRotor.h"
 
+SmartRotor *SmartRotor::_sri = nullptr;
+
 SmartRotor::SmartRotor(
   uint8_t m1pin1,
   uint8_t m1pin2,
@@ -30,46 +32,42 @@ SmartRotor::SmartRotor(
     speed(255),
     direction(1)
 {
-  pinMode(m1enc1, INPUT);
-  pinMode(m1enc2, INPUT);
-  pinMode(m2enc1, INPUT);
-  pinMode(m2enc2, INPUT);
-
-  SetNewPWMChannel(m1pin1);
-  SetNewPWMChannel(m1pin2);
-  SetNewPWMChannel(m2pin1);
-  SetNewPWMChannel(m2pin2);
-
-  PWM_Write(m1pin1, 0);
-  PWM_Write(m1pin2, 0);
-  PWM_Write(m2pin1, 0);
-  PWM_Write(m2pin2, 0);
+  SmartRotor::_sri = this;
 }
 
-// enc2 param is now unused
-// but may later be useful for detecting CW/CCW rotation
-void SmartRotor::pulseISR(uint8_t enc1, uint8_t enc2, uint32_t *pulseCounter)
+SmartRotor::~SmartRotor(void)
 {
-  if (digitalRead(enc1))
-    *pulseCounter++;
+  SmartRotor::_sri = nullptr;
 }
 
-void SmartRotor::m1pulseISR(void)
+void SmartRotor::m1encISR(void)
 {
-  if (digitalRead(m1enc1))
-    m1pulseCount++;
+  if (SmartRotor::_sri != nullptr)
+  {
+    if (digitalRead(SmartRotor::_sri->m1enc1))
+      SmartRotor::_sri->m1pulseCount++;
 
-  if (m1movesToTarget && m1pulseCount >= m1pulseTarget)
-    m1stop();
+    if (SmartRotor::_sri->m1movesToTarget &&
+      SmartRotor::_sri->m1pulseCount >= SmartRotor::_sri->m1pulseTarget)
+    {
+      SmartRotor::_sri->m1stop();
+    }
+  }
 }
 
-void SmartRotor::m2pulseISR(void)
+void SmartRotor::m2encISR(void)
 {
-  if (digitalRead(m2enc1))
-    m2pulseCount++;
+  if (SmartRotor::_sri != nullptr)
+  {
+    if (digitalRead(SmartRotor::_sri->m2enc1))
+      SmartRotor::_sri->m2pulseCount++;
 
-  if (m2movesToTarget && m2pulseCount >= m2pulseTarget)
-    m2stop();
+    if (SmartRotor::_sri->m2movesToTarget &&
+      SmartRotor::_sri->m2pulseCount >= SmartRotor::_sri->m2pulseTarget)
+    {
+      SmartRotor::_sri->m2stop();
+    }
+  }
 }
 
 void SmartRotor::m1stop(void)
@@ -171,4 +169,25 @@ void SmartRotor::setPulsesPerTurn(int pulsesPerTurn)
 {
   this->m1pulsesPerTurn = pulsesPerTurn;
   this->m2pulsesPerTurn = pulsesPerTurn;
+}
+
+void SmartRotor::begin(void)
+{
+  pinMode(m1enc1, INPUT);
+  pinMode(m1enc2, INPUT);
+  pinMode(m2enc1, INPUT);
+  pinMode(m2enc2, INPUT);
+
+  SetNewPWMChannel(m1pin1);
+  SetNewPWMChannel(m1pin2);
+  SetNewPWMChannel(m2pin1);
+  SetNewPWMChannel(m2pin2);
+
+  PWM_Write(m1pin1, 0);
+  PWM_Write(m1pin2, 0);
+  PWM_Write(m2pin1, 0);
+  PWM_Write(m2pin2, 0);
+
+  attachInterrupt(m1enc1, &SmartRotor::m1encISR, CHANGE);
+  attachInterrupt(m2enc1, &SmartRotor::m2encISR, CHANGE);
 }
