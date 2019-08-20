@@ -191,3 +191,8 @@ void SmartRotor::begin(void)
   attachInterrupt(m1enc1, &SmartRotor::m1encISR, CHANGE);
   attachInterrupt(m2enc1, &SmartRotor::m2encISR, CHANGE);
 }
+
+bool SmartRotor::isMoving(void)
+{
+  return m1movesToTarget || m2movesToTarget;
+}

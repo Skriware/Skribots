@@ -73,6 +73,7 @@ class SmartRotor
     void turn(bool clockwise);
     void turnByAngle(int angle);
     void stop(void);
+    bool isMoving(void);
 };
 
 #endif
