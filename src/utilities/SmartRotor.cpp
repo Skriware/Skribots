@@ -19,8 +19,9 @@ SmartRotor::SmartRotor(
     m1enc2(m1enc2),
     m2enc1(m2enc1),
     m2enc2(m2enc2),
-    m1pulsesPerTurn(6500),
-    m2pulsesPerTurn(6500),
+    m1pulsesPerTurn(9000),
+    m2pulsesPerTurn(9000),
+    pulsesPerMeter(9000),
     m1pulseCount(0),
     m2pulseCount(0),
     m1movesToTarget(false),
@@ -195,4 +196,14 @@ void SmartRotor::begin(void)
 bool SmartRotor::isMoving(void)
 {
   return m1movesToTarget || m2movesToTarget;
+}
+
+void SmartRotor::setPulsesPerMeter(int pulsesPerMeter)
+{
+  this->pulsesPerMeter = pulsesPerMeter;
+}
+
+void SmartRotor::moveByMeters(int meters)
+{
+  moveByPulses(pulsesPerMeter, pulsesPerMeter);
 }
