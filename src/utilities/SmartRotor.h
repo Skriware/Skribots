@@ -73,7 +73,7 @@ class SmartRotor
     void move(void);
     // Move until a certain number of pulses is reached
     void moveByPulses(int m1pulses, int m2pulses); 
-    void moveByMeters(int meters);
+    void moveByMeters(float meters);
     void turn(bool clockwise);
     void turnByAngle(int angle);
     void stop(void);
