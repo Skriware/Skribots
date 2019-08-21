@@ -121,6 +121,9 @@
              m1pin1, m1pin2, m2pin1, m2pin2,
              m1enc1, m1enc2, m2enc1, m2enc2
             );
+
+          smartRotor->setPulsesPerMeter(15050, 14000);
+          smartRotor->setPulsesPerTurn(8700, 8600);
           status = new StatusLED(SKRIBRAIN_STATUS_LED_PIN,SKRIBRAIN_SERVO_PIN_3);
           stausLEDused = true;
           smartRotor->begin();

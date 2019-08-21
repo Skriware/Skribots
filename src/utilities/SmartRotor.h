@@ -28,7 +28,8 @@ class SmartRotor
     int m1pulsesPerTurn;
     int m2pulsesPerTurn;
 
-    int pulsesPerMeter;
+    int m1pulsesPerMeter;
+    int m2pulsesPerMeter;
 
     // No. of pulses in whichever direction since the start of the program
     uint32_t m1pulseCount;
@@ -68,7 +69,9 @@ class SmartRotor
     void setSpeed(int speed);
     void setDirection(int direction);
     void setPulsesPerTurn(int pulsesPerTurn);
+    void setPulsesPerTurn(int m1pulsesPerTurn, int m2pulsesPerTurn);
     void setPulsesPerMeter(int pulsesPerMeter);
+    void setPulsesPerMeter(int m1PulsesPerMeter, int m2pulsesPerMeter);
 
     void move(void);
     // Move until a certain number of pulses is reached

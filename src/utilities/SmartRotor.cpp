@@ -21,7 +21,8 @@ SmartRotor::SmartRotor(
     m2enc2(m2enc2),
     m1pulsesPerTurn(9000),
     m2pulsesPerTurn(9000),
-    pulsesPerMeter(15050),
+    m1pulsesPerMeter(15050),
+    m2pulsesPerMeter(15050),
     m1pulseCount(0),
     m2pulseCount(0),
     m1movesToTarget(false),
@@ -166,12 +167,6 @@ void SmartRotor::turn(bool clockwise)
   }
 }
 
-void SmartRotor::setPulsesPerTurn(int pulsesPerTurn)
-{
-  this->m1pulsesPerTurn = pulsesPerTurn;
-  this->m2pulsesPerTurn = pulsesPerTurn;
-}
-
 void SmartRotor::begin(void)
 {
   pinMode(m1enc1, INPUT);
@@ -200,10 +195,39 @@ bool SmartRotor::isMoving(void)
 
 void SmartRotor::setPulsesPerMeter(int pulsesPerMeter)
 {
-  this->pulsesPerMeter = pulsesPerMeter;
+  m1pulsesPerMeter = pulsesPerMeter;
+  m2pulsesPerMeter = pulsesPerMeter;
+}
+
+// Set pulses per 1 meter for both motors
+// if value for a motor is <= 0, the value remains the same
+void SmartRotor::setPulsesPerMeter(int m1pulsesPerMeter, int m2pulsesPerMeter)
+{
+  if (m1pulsesPerMeter > 0)
+    this->m1pulsesPerMeter = m1pulsesPerMeter;
+
+  if (m2pulsesPerMeter > 0)
+    this->m2pulsesPerMeter = m2pulsesPerMeter;
+}
+
+void SmartRotor::setPulsesPerTurn(int pulsesPerTurn)
+{
+  m1pulsesPerTurn = pulsesPerTurn;
+  m2pulsesPerTurn = pulsesPerTurn;
+}
+
+// Set pulses per turn for both motors
+// if value for a motor is <= 0, the value remains the same
+void SmartRotor::setPulsesPerTurn(int m1pulsesPerTurn, int m2pulsesPerTurn)
+{
+  if (m1pulsesPerTurn > 0)
+    this->m1pulsesPerTurn = m1pulsesPerTurn;
+  
+  if (m2pulsesPerTurn > 0)
+    this->m2pulsesPerTurn = m2pulsesPerTurn;
 }
 
 void SmartRotor::moveByMeters(float meters)
 {
-  moveByPulses(pulsesPerMeter * meters, pulsesPerMeter * meters);
+  moveByPulses(m1pulsesPerMeter * meters, m2pulsesPerMeter * meters);
 }
