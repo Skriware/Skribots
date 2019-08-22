@@ -123,7 +123,7 @@
             );
 
           smartRotor->setPulsesPerMeter(15050, 14000);
-          smartRotor->setPulsesPerTurn(8700, 8600);
+          smartRotor->setPulsesPerTurn(8700, 8550);
           status = new StatusLED(SKRIBRAIN_STATUS_LED_PIN,SKRIBRAIN_SERVO_PIN_3);
           stausLEDused = true;
           smartRotor->begin();
