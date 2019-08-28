@@ -42,7 +42,7 @@ void Buzzer::PlayNote(const char *note)
 
 void Buzzer::PlayNoteAndWait(uint16_t note, int duration)
 {
-  PlayNote(note, 100, true);
+  PlayNote(note, duration, true);
 }
 
 void Buzzer::PlayNoteAndWait(const char *note, int duration)
