@@ -6,6 +6,9 @@
 class SmartRotor
 {
   private:
+  #ifdef DEBUG_MODE
+    public:
+  #endif
     // Global SmartRotor instance for interrupts 
     static SmartRotor *_sri;
 
@@ -25,8 +28,11 @@ class SmartRotor
     uint8_t m2enc2;
 
     // Pulses per 360 deg. turn of the robot
-    int m1pulsesPerTurn;
-    int m2pulsesPerTurn;
+    int pulsesPerLeftTurn;
+    int pulsesPerRightTurn;
+
+    int m1pulsesPerMeter;
+    int m2pulsesPerMeter;
 
     // No. of pulses in whichever direction since the start of the program
     uint32_t m1pulseCount;
@@ -66,13 +72,18 @@ class SmartRotor
     void setSpeed(int speed);
     void setDirection(int direction);
     void setPulsesPerTurn(int pulsesPerTurn);
+    void setPulsesPerTurn(int pulsesPerLeftTurn, int pulsesPerRightTurn);
+    void setPulsesPerMeter(int pulsesPerMeter);
+    void setPulsesPerMeter(int m1PulsesPerMeter, int m2pulsesPerMeter);
 
     void move(void);
     // Move until a certain number of pulses is reached
     void moveByPulses(int m1pulses, int m2pulses); 
+    void moveByMeters(float meters);
     void turn(bool clockwise);
     void turnByAngle(int angle);
     void stop(void);
+    bool isMoving(void);
 };
 
 #endif

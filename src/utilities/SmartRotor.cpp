@@ -19,8 +19,10 @@ SmartRotor::SmartRotor(
     m1enc2(m1enc2),
     m2enc1(m2enc1),
     m2enc2(m2enc2),
-    m1pulsesPerTurn(6500),
-    m2pulsesPerTurn(6500),
+    pulsesPerLeftTurn(9000),
+    pulsesPerRightTurn(9000),
+    m1pulsesPerMeter(15050),
+    m2pulsesPerMeter(15050),
     m1pulseCount(0),
     m2pulseCount(0),
     m1movesToTarget(false),
@@ -93,15 +95,17 @@ void SmartRotor::stop(void)
 void SmartRotor::turnByAngle(int angle)
 {
   bool cw = true;
+  int ppt = pulsesPerRightTurn;
   int a = angle;
   if (angle < 0)
   {
     cw = false;
+    ppt = pulsesPerLeftTurn;
     a = -a;
   }
-    
-  m1pulseTarget = m1pulseCount + (int) (m1pulsesPerTurn * ((double)a/360.0));
-  m2pulseTarget = m2pulseCount + (int) (m2pulsesPerTurn * ((double)a/360.0));
+
+  m1pulseTarget = m1pulseCount + (int) (ppt * ((double)a/360.0));
+  m2pulseTarget = m2pulseCount + (int) (ppt * ((double)a/360.0));
   m1movesToTarget = true;
   m2movesToTarget = true;
 
@@ -165,12 +169,6 @@ void SmartRotor::turn(bool clockwise)
   }
 }
 
-void SmartRotor::setPulsesPerTurn(int pulsesPerTurn)
-{
-  this->m1pulsesPerTurn = pulsesPerTurn;
-  this->m2pulsesPerTurn = pulsesPerTurn;
-}
-
 void SmartRotor::begin(void)
 {
   pinMode(m1enc1, INPUT);
@@ -190,4 +188,47 @@ void SmartRotor::begin(void)
 
   attachInterrupt(m1enc1, &SmartRotor::m1encISR, CHANGE);
   attachInterrupt(m2enc1, &SmartRotor::m2encISR, CHANGE);
+}
+
+bool SmartRotor::isMoving(void)
+{
+  return m1movesToTarget || m2movesToTarget;
+}
+
+void SmartRotor::setPulsesPerMeter(int pulsesPerMeter)
+{
+  m1pulsesPerMeter = pulsesPerMeter;
+  m2pulsesPerMeter = pulsesPerMeter;
+}
+
+// Set pulses per 1 meter for both motors
+// if value for a motor is < 0, the value remains unchanged
+void SmartRotor::setPulsesPerMeter(int m1pulsesPerMeter, int m2pulsesPerMeter)
+{
+  if (m1pulsesPerMeter >= 0)
+    this->m1pulsesPerMeter = m1pulsesPerMeter;
+
+  if (m2pulsesPerMeter >= 0)
+    this->m2pulsesPerMeter = m2pulsesPerMeter;
+}
+
+void SmartRotor::setPulsesPerTurn(int pulsesPerTurn)
+{
+  pulsesPerLeftTurn = pulsesPerTurn;
+  pulsesPerRightTurn = pulsesPerTurn;
+}
+ 
+// If value for a direction is < 0, the value remains unchanged
+void SmartRotor::setPulsesPerTurn(int pulsesPerLeftTurn, int pulsesPerRightTurn)
+{
+  if (pulsesPerLeftTurn >= 0)
+    this->pulsesPerLeftTurn = pulsesPerLeftTurn;
+  
+  if (pulsesPerRightTurn >= 0)
+    this->pulsesPerRightTurn = pulsesPerRightTurn;
+}
+
+void SmartRotor::moveByMeters(float meters)
+{
+  moveByPulses(m1pulsesPerMeter * meters, m2pulsesPerMeter * meters);
 }

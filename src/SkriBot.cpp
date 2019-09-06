@@ -105,6 +105,29 @@
           status = new StatusLED(SKRIBRAIN_STATUS_LED_PIN,SKRIBRAIN_SERVO_PIN_3);
           stausLEDused = true;
           Add_Mono_LED_matrix(SPI_PORT_2);
+        }else if(predef == "SMART_ROTOR_TEST"){
+          // motor driver PWM
+          const uint8_t m1pin1 = 12;
+          const uint8_t m1pin2 = 21;
+          const uint8_t m2pin1 = 22;
+          const uint8_t m2pin2 = 23;
+
+// motor encoder inputs
+        const uint8_t m1enc1 = 26;
+        const uint8_t m1enc2 = 27;
+        const uint8_t m2enc1 = 33;
+        const uint8_t m2enc2 = 25;
+          smartRotor = new SmartRotor(
+             m1pin1, m1pin2, m2pin1, m2pin2,
+             m1enc1, m1enc2, m2enc1, m2enc2
+            );
+
+          smartRotor->setPulsesPerMeter(15050, 14000);
+          smartRotor->setPulsesPerTurn(8700, 8550);
+          status = new StatusLED(SKRIBRAIN_STATUS_LED_PIN,SKRIBRAIN_SERVO_PIN_3);
+          stausLEDused = true;
+          smartRotor->begin();
+          BLE_Set_Module(ESP32_BLE); 
         }
     #endif
    SetSpeed(250);
