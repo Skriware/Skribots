@@ -65,6 +65,15 @@ class SmartRotor
       uint8_t m2enc1,
       uint8_t m2enc2
     );
+
+    SmartRotor(
+      uint8_t m1pin1,
+      uint8_t m1pin2,
+      uint8_t m2pin1,
+      uint8_t m2pin2,
+      uint8_t m1enc1,
+      uint8_t m2enc1);
+    
     ~SmartRotor(void);
 
     void begin(void);

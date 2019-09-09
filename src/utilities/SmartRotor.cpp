@@ -37,6 +37,17 @@ SmartRotor::SmartRotor(
   SmartRotor::_sri = this;
 }
 
+SmartRotor::SmartRotor(
+  uint8_t m1pin1,
+  uint8_t m1pin2,
+  uint8_t m2pin1,
+  uint8_t m2pin2,
+  uint8_t m1enc1,
+  uint8_t m2enc1) : SmartRotor::SmartRotor(
+    m1pin1, m1pin2, m2pin1, m2pin2, m1enc1, -1, m2enc1, -1)
+{
+}
+
 SmartRotor::~SmartRotor(void)
 {
   SmartRotor::_sri = nullptr;
@@ -172,9 +183,13 @@ void SmartRotor::turn(bool clockwise)
 void SmartRotor::begin(void)
 {
   pinMode(m1enc1, INPUT);
-  pinMode(m1enc2, INPUT);
   pinMode(m2enc1, INPUT);
-  pinMode(m2enc2, INPUT);
+
+  if (m1enc2 > 0)
+    pinMode(m1enc2, INPUT);
+  
+  if (m2enc2 > 0)
+    pinMode(m2enc2, INPUT);
 
   SetNewPWMChannel(m1pin1);
   SetNewPWMChannel(m1pin2);
