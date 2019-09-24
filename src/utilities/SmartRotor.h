@@ -3,6 +3,10 @@
 
 #include "PWM_Handler.h"
 
+
+/*
+  This class describes a set of two rotors with encoders
+*/
 class SmartRotor
 {
   private:
@@ -27,9 +31,13 @@ class SmartRotor
     uint8_t m1enc2;
     uint8_t m2enc2;
 
-    // Pulses per 360 deg. turn of the robot
+    // Pulses per 360 deg. turn of the whole robot
     int pulsesPerLeftTurn;
     int pulsesPerRightTurn;
+
+    // Pulses per single rotor wheel 360 deg. turn
+    int m1pulsesPerRevolution;
+    int m2pulsesPerRevolution;
 
     int m1pulsesPerMeter;
     int m2pulsesPerMeter;
@@ -83,7 +91,10 @@ class SmartRotor
     void setPulsesPerTurn(int pulsesPerTurn);
     void setPulsesPerTurn(int pulsesPerLeftTurn, int pulsesPerRightTurn);
     void setPulsesPerMeter(int pulsesPerMeter);
-    void setPulsesPerMeter(int m1PulsesPerMeter, int m2pulsesPerMeter);
+    void setPulsesPerMeter(int m1pulsesPerMeter, int m2pulsesPerMeter);
+    void setPulsesPerRevolution(int pulsesPerRevolution);
+    void setPulsesPerRevolution(
+      int m1pulsesPerRevolution, int m2pulsesPerRevolution);
 
     void move(void);
     // Move until a certain number of pulses is reached

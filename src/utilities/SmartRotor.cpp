@@ -23,6 +23,8 @@ SmartRotor::SmartRotor(
     pulsesPerRightTurn(9000),
     m1pulsesPerMeter(15050),
     m2pulsesPerMeter(15050),
+    m1pulsesPerRevolution(1000),
+    m2pulsesPerRevolution(1000),
     m1pulseCount(0),
     m2pulseCount(0),
     m1movesToTarget(false),
@@ -241,6 +243,21 @@ void SmartRotor::setPulsesPerTurn(int pulsesPerLeftTurn, int pulsesPerRightTurn)
   
   if (pulsesPerRightTurn >= 0)
     this->pulsesPerRightTurn = pulsesPerRightTurn;
+}
+
+void SmartRotor::setPulsesPerRevolution(int pulsesPerRevolution)
+{
+  m1pulsesPerRevolution = pulsesPerRevolution;
+  m2pulsesPerRevolution = pulsesPerRevolution;
+}
+
+void SmartRotor::setPulsesPerRevolution(
+  int m1pulsesPerRevolution, int m2PulsesPerRevolution)
+{
+  if (m1pulsesPerRevolution >= 0)
+    this->m1pulsesPerRevolution = m1pulsesPerRevolution;
+  if (m2pulsesPerRevolution >= 0)
+    this->m2pulsesPerRevolution = m2pulsesPerRevolution;
 }
 
 void SmartRotor::moveByMeters(float meters)
