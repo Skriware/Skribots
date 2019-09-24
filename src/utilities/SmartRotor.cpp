@@ -264,3 +264,11 @@ void SmartRotor::moveByMeters(float meters)
 {
   moveByPulses(m1pulsesPerMeter * meters, m2pulsesPerMeter * meters);
 }
+
+void SmartRotor::moveByRevolutions(float revolutions)
+{
+  moveByPulses(
+    m1pulsesPerRevolution * revolutions,
+    m1pulsesPerRevolution * revolutions
+  );
+}
