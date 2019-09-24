@@ -13,6 +13,12 @@ class SmartRotor
   #ifdef DEBUG_MODE
     public:
   #endif
+    enum class Which : uint8_t {
+      LEFT,
+      RIGHT,
+      BOTH
+    };
+    
     // Global SmartRotor instance for interrupts 
     static SmartRotor *_sri;
 
@@ -99,8 +105,8 @@ class SmartRotor
     void move(void);
     // Move until a certain number of pulses is reached
     void moveByPulses(int m1pulses, int m2pulses); 
-    void moveByMeters(float meters);
-    void moveByRevolutions(float revolutions);
+    void moveByMeters(float meters, Which rotor=Which::BOTH);
+    void moveByRevolutions(float revolutions, Which rotor=Which::BOTH);
     void turn(bool clockwise);
     void turnByAngle(int angle);
     void stop(void);

@@ -260,15 +260,37 @@ void SmartRotor::setPulsesPerRevolution(
     this->m2pulsesPerRevolution = m2pulsesPerRevolution;
 }
 
-void SmartRotor::moveByMeters(float meters)
+void SmartRotor::moveByMeters(float meters, SmartRotor::Which rotor)
 {
-  moveByPulses(m1pulsesPerMeter * meters, m2pulsesPerMeter * meters);
+  switch (rotor)
+  {
+    case SmartRotor::Which::LEFT:
+      moveByPulses(m1pulsesPerMeter * meters, -1);
+      break;
+    case SmartRotor::Which::RIGHT:
+      moveByPulses(-1, m2pulsesPerMeter * meters);
+      break;
+    case SmartRotor::Which::BOTH:
+      moveByPulses(m1pulsesPerMeter * meters, m2pulsesPerMeter * meters);
+      break;
+  }
 }
 
-void SmartRotor::moveByRevolutions(float revolutions)
+void SmartRotor::moveByRevolutions(float revolutions, SmartRotor::Which rotor)
 {
-  moveByPulses(
-    m1pulsesPerRevolution * revolutions,
-    m1pulsesPerRevolution * revolutions
-  );
+  switch (rotor)
+  {
+    case SmartRotor::Which::LEFT:
+      moveByPulses(m1pulsesPerRevolution * revolutions, -1);
+      break;
+    case SmartRotor::Which::RIGHT:
+      moveByPulses(-1, m1pulsesPerRevolution * revolutions);
+      break;
+    case SmartRotor::Which::BOTH:
+      moveByPulses(
+        m1pulsesPerRevolution * revolutions,
+        m1pulsesPerRevolution * revolutions
+      );
+      break;
+  }
 }
