@@ -13,11 +13,6 @@ class SmartRotor
   #ifdef DEBUG_MODE
     public:
   #endif
-    enum class Which : uint8_t {
-      LEFT,
-      RIGHT,
-      BOTH
-    };
     
     // Global SmartRotor instance for interrupts 
     static SmartRotor *_sri;
@@ -69,6 +64,12 @@ class SmartRotor
     static void m2encISR(void);
 
   public:
+    enum class Which : uint8_t {
+      LEFT,
+      RIGHT,
+      BOTH
+    };
+
     SmartRotor(
       uint8_t m1pin1,
       uint8_t m1pin2,
