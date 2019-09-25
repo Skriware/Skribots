@@ -105,7 +105,7 @@
           status = new StatusLED(SKRIBRAIN_STATUS_LED_PIN,SKRIBRAIN_SERVO_PIN_3);
           stausLEDused = true;
           Add_Mono_LED_matrix(SPI_PORT_2);
-        }else if(predef == "SMART_ROTOR_TEST"){
+        }else if(predef == "SKRIBRAIN_ARDUBLOCK"){
           // motor driver PWM
           const uint8_t m1pin1 = 12;
           const uint8_t m1pin2 = 21;
@@ -359,7 +359,7 @@ if(claw_closed && (millis() - claw_closed_time > 180000)){
     Serial.begin(9600);
     BTLESerial.setLocalName("SkriBotMini");
     BTLESerial.begin();
-    ledMatrix.begin();
+    ledMatrix.begin(2500;
     #endif
     using_BLE_Connection = true;
   }
