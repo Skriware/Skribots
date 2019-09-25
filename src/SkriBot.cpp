@@ -359,7 +359,7 @@ if(claw_closed && (millis() - claw_closed_time > 180000)){
     Serial.begin(9600);
     BTLESerial.setLocalName("SkriBotMini");
     BTLESerial.begin();
-    ledMatrix.begin(2500;
+    ledMatrix.begin(2500);
     #endif
     using_BLE_Connection = true;
   }
