@@ -294,3 +294,24 @@ void SmartRotor::moveByRevolutions(float revolutions, SmartRotor::Which rotor)
       break;
   }
 }
+
+void SmartRotor::turnByRevolutions(float revolutions)
+{
+  bool cw = true;
+
+  int revs = revolutions;
+
+  if (revolutions < 0)
+  {
+    cw = false;
+    revs = -revs;
+  }
+
+  m1pulseTarget = m1pulseCount + (int) (m1pulsesPerRevolution * revs);
+  m2pulseTarget = m2pulseCount + (int) (m2pulsesPerRevolution * revs);
+
+  m1movesToTarget = true;
+  m2movesToTarget = true;
+
+  turn(cw);
+}

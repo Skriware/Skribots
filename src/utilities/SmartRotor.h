@@ -110,6 +110,7 @@ class SmartRotor
     void moveByRevolutions(float revolutions, Which rotor=Which::BOTH);
     void turn(bool clockwise);
     void turnByAngle(int angle);
+    void turnByRevolutions(float revolutions);
     void stop(void);
     bool isMoving(void);
 };
