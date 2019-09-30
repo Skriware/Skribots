@@ -27,6 +27,8 @@ class Buzzer
     void PlayMelody(const uint16_t (*melody)[2], size_t size);
     void PlayMelody(const char **melody, size_t size);
 
+    void StopNote(void);
+
   private:
     int pin;
     int volume;
