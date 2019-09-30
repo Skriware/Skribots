@@ -26,6 +26,7 @@
     claw_closed_time = true;
     config_mode = false;
     Remote_block_used = false;
+    smartRotor = NULL;
     Configure_Connections(predef);
     #ifdef DEBUG_MODE
     Serial.begin(115200);
