@@ -36,6 +36,9 @@ SmartRotor::SmartRotor(
     speed(255),
     direction(1)
 {
+  if (SmartRotor::_sri != nullptr)
+    delete SmartRotor::_sri;
+
   SmartRotor::_sri = this;
 }
 
