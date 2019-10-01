@@ -128,6 +128,20 @@
           stausLEDused = true;
           smartRotor->begin();
           BLE_Set_Module(ESP32_BLE); 
+        }else if(predef == "SKRIBRAIN_BUZZER"){
+          AddDCRotor(SKRIBRAIN_MOTOR_L_DIR2_PIN,SKRIBRAIN_MOTOR_L_DIR1_PIN,"Left");
+          AddDCRotor(SKRIBRAIN_MOTOR_R_DIR2_PIN,SKRIBRAIN_MOTOR_R_DIR1_PIN,"Right");
+          AddLED(SKRIBRAIN_LED_PIN_2,0);
+          AddBuzzer(SERVO_2);
+          AddLED(SKRIBRAIN_LED_PIN_1,0);
+          AddDistSensor(SKRIBRAIN_ECHO_PIN_1,SKRIBRAIN_TRIG_PIN_1,1);   
+          AddDistSensor(SKRIBRAIN_ECHO_PIN_2,SKRIBRAIN_TRIG_PIN_2,2);
+          AddLineSensor(LINE_PIN_1, 1);
+          AddLineSensor(LINE_PIN_2, 2);
+          AddLineSensor(LINE_PIN_3, 3);
+          BLE_Set_Module(ESP32_BLE); 
+          status = new StatusLED(SKRIBRAIN_STATUS_LED_PIN,SKRIBRAIN_SERVO_PIN_3);
+          stausLEDused = true;
         }
     #endif
    SetSpeed(250);
@@ -352,17 +366,22 @@ if(claw_closed && (millis() - claw_closed_time > 180000)){
 
 
   void Skribot::BLE_Setup(){
-    #ifndef _VARIANT_BBC_MICROBIT_
     BTmodule = new BLEModule(BLE_MODULE_TYPE);
     BTmodule->BLE_Setup();
-    #else
+   /* #else
     Serial.begin(9600);
     BTLESerial.setLocalName("SkriBotMini");
     BTLESerial.begin();
+<<<<<<< HEAD
     ledMatrix.begin(2500);
     #endif
+=======
+    ledMatrix.begin(2500;
+    #endif*/
+>>>>>>> 102bc143f008d3e23f46ead3ff3d8a5ffaec688d
     using_BLE_Connection = true;
   }
+
    void Skribot::BLE_Set_Module(moduleType type){
           BLE_MODULE_TYPE = type;
    }
@@ -548,7 +567,6 @@ if(claw_closed && (millis() - claw_closed_time > 180000)){
          
   }
   void Skribot::AddBuzzer(byte BUZZER_PIN){
-          
   #ifdef ESP_H 
     if(BUZZER_PIN == SERVO_1){
         Buzzers[SERVO_1] = new Buzzer(SKRIBRAIN_SERVO_PIN_1);
@@ -558,7 +576,6 @@ if(claw_closed && (millis() - claw_closed_time > 180000)){
   #else
     Buzzers[0] = new Buzzer(13);
   #endif
-
 }
 
 #endif
