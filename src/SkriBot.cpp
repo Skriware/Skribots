@@ -128,6 +128,18 @@
           stausLEDused = true;
           smartRotor->begin();
           BLE_Set_Module(ESP32_BLE); 
+        }else if(predef = "SKRIBRAIN_B2C_TESTS"){
+          AddDCRotor(SKRIBRAIN_MOTOR_L_DIR2_PIN,SKRIBRAIN_MOTOR_L_DIR1_PIN,"Left");
+          AddDCRotor(SKRIBRAIN_MOTOR_R_DIR2_PIN,SKRIBRAIN_MOTOR_R_DIR1_PIN,"Right");
+          AddDistSensor(SKRIBRAIN_ECHO_PIN_1,SKRIBRAIN_TRIG_PIN_1,1);   
+          AddDistSensor(SKRIBRAIN_ECHO_PIN_2,SKRIBRAIN_TRIG_PIN_2,2);
+          AddClaw(SKRIBRAIN_SERVO_PIN_1,SKRIBRAIN_SERVO_PIN_2);
+          Add_Mono_LED_matrix(SPI_PORT_2);
+          Add_Mono_LED_matrix(SPI_PORT_1);
+          BLE_Set_Module(ESP32_BLE); 
+          status = new StatusLED(SKRIBRAIN_STATUS_LED_PIN,SKRIBRAIN_SERVO_PIN_3);
+          stausLEDused = true;
+
         }
     #endif
    SetSpeed(250);
