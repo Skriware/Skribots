@@ -17,7 +17,7 @@ Mono_LED_Matrix::Mono_LED_Matrix(
 {
   buffer = (uint8_t *) calloc(8 * matrixCount, sizeof(uint8_t));
 
-  animations = (uint8_t **) calloc(matrixCount, sizeof(uint8_t *));
+  animations = (uint8_t ***) calloc(matrixCount, sizeof(uint8_t **));
   animationFrames = (int *) calloc(matrixCount, sizeof(int));
   animationSizes = (size_t *) calloc(matrixCount, sizeof(size_t));
   animationStates = (bool *) calloc(matrixCount, sizeof(bool));
