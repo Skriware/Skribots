@@ -366,17 +366,12 @@ if(claw_closed && (millis() - claw_closed_time > 180000)){
   void Skribot::BLE_Setup(){
     BTmodule = new BLEModule(BLE_MODULE_TYPE);
     BTmodule->BLE_Setup();
-   /* #else
+    #else
     Serial.begin(9600);
     BTLESerial.setLocalName("SkriBotMini");
     BTLESerial.begin();
-<<<<<<< HEAD
     ledMatrix.begin(2500);
     #endif
-=======
-    ledMatrix.begin(2500;
-    #endif*/
->>>>>>> 102bc143f008d3e23f46ead3ff3d8a5ffaec688d
     using_BLE_Connection = true;
   }
 
