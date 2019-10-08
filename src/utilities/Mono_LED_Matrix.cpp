@@ -244,7 +244,7 @@ uint8_t Mono_LED_Matrix::reverseBitOrder(uint8_t b)
   return o;
 }
 
-void Mono_LED_Matrix::StartMarquee(const char *text, int direction)
+void Mono_LED_Matrix::StartMarquee(char *text, int direction)
 {
   marqueeText = text;
   marqueePosition = 0;
