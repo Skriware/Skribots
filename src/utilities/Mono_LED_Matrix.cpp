@@ -33,10 +33,10 @@ byte Mono_LED_Matrix::getId()
 
 void Mono_LED_Matrix::SendCmd(uint8_t opcode, uint8_t data)
 {
-  byte msg[] = { 1, opcode, data };
-
   if(spi != nullptr)
   {
+  byte msg[] = {1,opcode,data};
+  if(spi != NULL){
     spi->SPITransfer(msg);
   }
 }
@@ -171,16 +171,6 @@ void Mono_LED_Matrix::SetPixel(int matrixN, int x, int y, int val)
 
 void Mono_LED_Matrix::SetBitmap(int matrixN, uint8_t bmp[8])
 {
-  if (bmp == nullptr)
-  {
-    #ifdef DEBUG_MODE
-      Serial.println("Mono_LED_Matrix::SetBitmap: bmp is null");
-      this->StartMarquee("NULL");
-    #endif
-
-    return;
-  }
-
   int offset = matrixN * 8;
 
   if (rotation == 0)
@@ -226,16 +216,6 @@ void Mono_LED_Matrix::Invert(int matrixN)
 
 void Mono_LED_Matrix::SetAnimation(int matrixN, uint8_t (*animation)[8], size_t size)
 {
-  if (animation == nullptr)
-  {
-    #ifdef DEBUG_MODE
-      Serial.println("Mono_LED_Matrix::SetAnimation: animation is null");
-      this->StartMarquee("NULL");
-    #endif
-
-    return;
-  }
-
   animations[matrixN] = animation;
   animationSizes[matrixN] = size;
   animationFrames[matrixN] = 0;
@@ -268,9 +248,6 @@ uint8_t Mono_LED_Matrix::reverseBitOrder(uint8_t b)
 
 void Mono_LED_Matrix::StartMarquee(const char *text, int direction)
 {
-  if (strcmp("", text) == 0)
-    return;
-
   marqueeText = text;
   marqueePosition = 0;
   marqueeState = true;
