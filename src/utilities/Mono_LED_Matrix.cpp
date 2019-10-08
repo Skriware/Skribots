@@ -17,7 +17,7 @@ Mono_LED_Matrix::Mono_LED_Matrix(
 {
   buffer = (uint8_t *) calloc(8 * matrixCount, sizeof(uint8_t));
 
-  animations = (uint8_t **) calloc(matrixCount, sizeof(uint8_t *));
+  //animations = (uint8_t **) calloc(matrixCount, sizeof(uint8_t *));
   animationFrames = (int *) calloc(matrixCount, sizeof(int));
   animationSizes = (size_t *) calloc(matrixCount, sizeof(size_t));
   animationStates = (bool *) calloc(matrixCount, sizeof(bool));
@@ -33,8 +33,11 @@ byte Mono_LED_Matrix::getId()
 
 void Mono_LED_Matrix::SendCmd(uint8_t opcode, uint8_t data)
 {
-  byte msg[] = {1,opcode,data};
-  if(spi != NULL){
+
+  byte msg[] = { 1, opcode, data };
+
+  if(spi != nullptr)
+  {
     spi->SPITransfer(msg);
   }
 }
@@ -169,6 +172,16 @@ void Mono_LED_Matrix::SetPixel(int matrixN, int x, int y, int val)
 
 void Mono_LED_Matrix::SetBitmap(int matrixN, uint8_t *bmp)
 {
+  if (bmp == nullptr)
+  {
+    #ifdef DEBUG_MODE
+      Serial.println("Mono_LED_Matrix::SetBitmap: bmp is null");
+      this->StartMarquee("NULL");
+    #endif
+
+    return;
+  }
+
   int offset = matrixN * 8;
 
   if (rotation == 0)
@@ -214,6 +227,16 @@ void Mono_LED_Matrix::Invert(int matrixN)
 
 void Mono_LED_Matrix::SetAnimation(int matrixN, uint8_t **animation, size_t size)
 {
+  if (animation == nullptr)
+  {
+    #ifdef DEBUG_MODE
+      Serial.println("Mono_LED_Matrix::SetAnimation: animation is null");
+      this->StartMarquee("NULL");
+    #endif
+
+    return;
+  }
+
   animations[matrixN] = animation;
   animationSizes[matrixN] = size;
   animationFrames[matrixN] = 0;
@@ -246,6 +269,9 @@ uint8_t Mono_LED_Matrix::reverseBitOrder(uint8_t b)
 
 void Mono_LED_Matrix::StartMarquee(const char *text, int direction)
 {
+  if (strcmp("", text) == 0)
+    return;
+
   marqueeText = text;
   marqueePosition = 0;
   marqueeState = true;

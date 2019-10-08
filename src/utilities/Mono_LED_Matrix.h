@@ -6,6 +6,8 @@
 #include "Arduino.h"
 #include "SPIHandler.h"
 
+typedef uint8_t (*animation_t)[8];
+
 class Mono_LED_Matrix
 {
   public:
@@ -60,6 +62,7 @@ class Mono_LED_Matrix
     uint8_t *buffer;
     byte id;
 
+    animation_t *animations;
     size_t *animationSizes;
     int *animationFrames;
     bool *animationStates;
