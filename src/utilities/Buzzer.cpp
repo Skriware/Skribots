@@ -52,6 +52,15 @@ void Buzzer::PlayNoteAndWait(const char *note, int duration)
 
 void Buzzer::PlayMelody(const uint16_t (*melody)[2], size_t size)
 {
+  if (melody == nullptr)
+  {
+    #ifdef DEBUG_MODE
+      Serial.println("Buzzer::PlayMelody: null array");
+    #endif
+
+    return;
+  }
+
   for (size_t i = 0; i < size; i++)
   {
     int duration = (float) melody[i][1] / tempo;
@@ -112,6 +121,8 @@ int Buzzer::frequencyFromName(const char *name)
     case 'G': letter_offset = 10; break;
     case 'A': letter_offset = 12; break;
     case 'B': letter_offset = 14; break;
+    default: // If there's no valid letter present, return no sound
+      return 0;
   }
 
   char octave_number;
@@ -125,8 +136,14 @@ int Buzzer::frequencyFromName(const char *name)
       letter_offset--;
     octave_number = name[2];
   }
-  else
+  else if (strlen(name) == 2)
+  {
     octave_number = name[1];
+  }
+  else
+  {
+    return 0;
+  }
 
   octave_offset = 12 * (((int) octave_number - '0') - 5);
 
