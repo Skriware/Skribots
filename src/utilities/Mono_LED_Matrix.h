@@ -60,7 +60,7 @@ class Mono_LED_Matrix
     uint8_t *buffer;
     byte id;
 
-    animation_t *animations;
+    uint8_t ***animations;
     size_t *animationSizes;
     int *animationFrames;
     bool *animationStates;
