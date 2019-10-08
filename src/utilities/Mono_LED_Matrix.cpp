@@ -214,10 +214,77 @@ void Mono_LED_Matrix::Invert(int matrixN)
 
 void Mono_LED_Matrix::SetAnimation(int matrixN, uint8_t **animation, size_t size)
 {
+  if (animation == nullptr)
+  {
+    #ifdef DEBUG_MODE
+      Serial.println("Mono_LED_Matrix::SetAnimation: animation is null");
+      this->StartMarquee("NULL");
+    #endif
+
+    return;
+  }
+
   animations[matrixN] = animation;
   animationSizes[matrixN] = size;
   animationFrames[matrixN] = 0;
   animationStates[matrixN] = false;
+}
+
+size_t Mono_LED_Matrix::SetAnimation(int matrixN, uint8_t *animation, size_t size)
+{
+  if (animation == nullptr || size == 0)
+  {
+    #ifdef DEBUG_MODE
+      Serial.println("Mono_LED_Matrix::SetAnimation: animation is null");
+      this->StartMarquee("NULL");
+    #endif
+
+    return 0;
+  }
+
+  size_t frameCount = size / 8;
+  if (frameCount == 0)
+  {
+    #ifdef DEBUG_MODE
+      Serial.println(
+        "Mono_LED_Matrix::SetAnimation: event though animation is not null, "
+        "the animation frame count is less than 0"
+      );
+    #endif
+
+    return 0;
+  }
+
+  // Free an existing animation if any
+  if (animations[matrixN] != nullptr)
+  {
+    for (size_t i = 0; i < animationSizes[matrixN]; i++)
+    {
+      // Free frame #i
+      free(animations[matrixN][i]);
+    }
+
+    free(animations[matrixN]);
+  }
+
+  animations[matrixN] = (uint8_t **) calloc(frameCount, sizeof(uint8_t *));
+
+  // Copy the animation to 2-dim array frame by frame, line by line
+  for (size_t frame_idx = 0; frame_idx < frameCount; frame_idx++)
+  {
+    animations[matrixN][frame_idx] = (uint8_t *) calloc(8, sizeof(uint8_t));
+
+    for (int i = 0; i < 8; i++)
+    {
+      animations[matrixN][frame_idx][i] = animation[frame_idx*8 + i];
+    }
+  }
+
+  animationSizes[matrixN] = frameCount;
+  animationFrames[matrixN] = 0;
+  animationStates[matrixN] = false;
+
+  return frameCount;
 }
 
 void Mono_LED_Matrix::PlayAnimation(int matrixN)
