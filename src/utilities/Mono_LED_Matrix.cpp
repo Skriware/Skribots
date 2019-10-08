@@ -33,7 +33,10 @@ byte Mono_LED_Matrix::getId()
 
 void Mono_LED_Matrix::SendCmd(uint8_t opcode, uint8_t data)
 {
+<<<<<<< HEAD
 
+=======
+>>>>>>> parent of 1944b55... pointer fix
   byte msg[] = { 1, opcode, data };
 
   if(spi != nullptr)
