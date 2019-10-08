@@ -26,6 +26,7 @@
     claw_closed_time = true;
     config_mode = false;
     Remote_block_used = false;
+    smartRotor = NULL;
     Configure_Connections(predef);
     #ifdef DEBUG_MODE
     Serial.begin(115200);
@@ -133,7 +134,7 @@
           AddDCRotor(SKRIBRAIN_MOTOR_R_DIR2_PIN,SKRIBRAIN_MOTOR_R_DIR1_PIN,"Right");
           AddDistSensor(SKRIBRAIN_ECHO_PIN_1,SKRIBRAIN_TRIG_PIN_1,1);   
           AddDistSensor(SKRIBRAIN_ECHO_PIN_2,SKRIBRAIN_TRIG_PIN_2,2);
-          AddClaw(SKRIBRAIN_SERVO_PIN_1,SKRIBRAIN_SERVO_PIN_2);
+          AddBuzzer(SERVO_2);
           Add_Mono_LED_matrix(SPI_PORT_2);
           Add_Mono_LED_matrix(SPI_PORT_1);
           BLE_Set_Module(ESP32_BLE); 
