@@ -1,7 +1,7 @@
 #ifndef SKRIBOT_H
 #define SKRIBOT_H
 
-//#define DEBUG_MODE
+#define DEBUG_MODE
 
 #include "Arduino.h"
 #ifndef _VARIANT_BBC_MICROBIT_
@@ -177,10 +177,10 @@
     void wait_And_Check_BLE_Connection(int ms,int interval);
 
     void Move(char Direction,int ms);
-    void FaceLeft(int ms = 200);
-    void FaceRight(int ms = 200);
-    void TurnLeft(int ms = 200);
-    void TurnRight(int ms = 200);
+    void FaceLeft(int ms = -1);
+    void FaceRight(int ms = -1);
+    void TurnLeft(int ms = -1);
+    void TurnRight(int ms = -1);
     void MoveForward(int ms = -1);
     void MoveBack(int ms = -1);
     void RawRotorMove(int left,int right);
