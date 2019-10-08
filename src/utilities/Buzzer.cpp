@@ -50,6 +50,13 @@ void Buzzer::PlayNoteAndWait(const char *note, int duration)
   PlayNote(Buzzer::frequencyFromName(note), duration, true);
 }
 
+void Buzzer::StopNote(void)
+{
+  #ifdef ESP_H
+    ledcWriteTone(channel, 0);
+  #endif
+}
+
 void Buzzer::PlayMelody(const uint16_t (*melody)[2], size_t size)
 {
   if (melody == nullptr)
