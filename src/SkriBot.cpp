@@ -364,7 +364,6 @@ if(claw_closed && (millis() - claw_closed_time > 180000)){
 
 
   void Skribot::BLE_Setup(){
-    #ifndef _VARIANT_BBC_MICROBIT_
     BTmodule = new BLEModule(BLE_MODULE_TYPE);
     BTmodule->BLE_Setup();
     #else
@@ -375,6 +374,7 @@ if(claw_closed && (millis() - claw_closed_time > 180000)){
     #endif
     using_BLE_Connection = true;
   }
+
    void Skribot::BLE_Set_Module(moduleType type){
           BLE_MODULE_TYPE = type;
    }
@@ -560,7 +560,6 @@ if(claw_closed && (millis() - claw_closed_time > 180000)){
          
   }
   void Skribot::AddBuzzer(byte BUZZER_PIN){
-          
   #ifdef ESP_H 
     if(BUZZER_PIN == SERVO_1){
         Buzzers[SERVO_1] = new Buzzer(SKRIBRAIN_SERVO_PIN_1);
@@ -570,7 +569,6 @@ if(claw_closed && (millis() - claw_closed_time > 180000)){
   #else
     Buzzers[0] = new Buzzer(13);
   #endif
-
 }
 
 #endif

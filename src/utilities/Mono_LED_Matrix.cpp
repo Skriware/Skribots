@@ -17,7 +17,7 @@ Mono_LED_Matrix::Mono_LED_Matrix(
 {
   buffer = (uint8_t *) calloc(8 * matrixCount, sizeof(uint8_t));
 
-  animations = (animation_t *) calloc(matrixCount, sizeof(animation_t));
+  animations = (uint8_t **) calloc(matrixCount, sizeof(uint8_t *));
   animationFrames = (int *) calloc(matrixCount, sizeof(int));
   animationSizes = (size_t *) calloc(matrixCount, sizeof(size_t));
   animationStates = (bool *) calloc(matrixCount, sizeof(bool));
@@ -167,7 +167,7 @@ void Mono_LED_Matrix::SetPixel(int matrixN, int x, int y, int val)
   }
 }
 
-void Mono_LED_Matrix::SetBitmap(int matrixN, uint8_t bmp[8])
+void Mono_LED_Matrix::SetBitmap(int matrixN, uint8_t *bmp)
 {
   int offset = matrixN * 8;
 
@@ -212,7 +212,7 @@ void Mono_LED_Matrix::Invert(int matrixN)
     buffer[offset+i] = ~buffer[offset+i];
 }
 
-void Mono_LED_Matrix::SetAnimation(int matrixN, uint8_t (*animation)[8], size_t size)
+void Mono_LED_Matrix::SetAnimation(int matrixN, uint8_t **animation, size_t size)
 {
   animations[matrixN] = animation;
   animationSizes[matrixN] = size;
@@ -258,7 +258,7 @@ void Mono_LED_Matrix::StopMarquee(void)
 }
 
 void Mono_LED_Matrix::CombineBitmaps(
-  uint8_t *dst, uint8_t pos, uint8_t src1[8], uint8_t src2[8])
+  uint8_t *dst, uint8_t pos, uint8_t *src1, uint8_t *src2)
 {
   for (int i = 0; i < 8; i++)
   {
