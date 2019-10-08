@@ -6,9 +6,6 @@
 #include "Arduino.h"
 #include "SPIHandler.h"
 
-typedef uint8_t (*animation_t)[8];
-typedef uint8_t bmp_t[8];
-
 class Mono_LED_Matrix
 {
   public:
@@ -42,10 +39,10 @@ class Mono_LED_Matrix
     void Update(void);
 
     void SetPixel(int matrixN, int x, int y, int val);
-    void SetBitmap(int matrixN, uint8_t bmp[8]);
+    void SetBitmap(int matrixN, uint8_t *bmp);
     void Invert(int matrixN);
 
-    void SetAnimation(int matrixN, animation_t animation, size_t size);
+    void SetAnimation(int matrixN, uint8_t **animation, size_t size);
     void PlayAnimation(int matrixN);
     void StopAnimation(int matrixN);
 
@@ -79,7 +76,7 @@ class Mono_LED_Matrix
     void WakeUp(void);
     static uint8_t reverseBitOrder(uint8_t b);
     static void CombineBitmaps(
-      uint8_t *dst, uint8_t pos, uint8_t src1[8], uint8_t src2[8]);
+      uint8_t *dst, uint8_t pos, uint8_t *src1, uint8_t *src2);
 };
 
 
