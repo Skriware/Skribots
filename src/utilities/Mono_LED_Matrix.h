@@ -42,7 +42,13 @@ class Mono_LED_Matrix
     void SetBitmap(int matrixN, uint8_t *bmp);
     void Invert(int matrixN);
 
+    // animation: 2-dim array
     void SetAnimation(int matrixN, uint8_t **animation, size_t size);
+
+    // animation: flattened 1-dim array
+    // returns number of frames
+    size_t SetAnimation(int matrixN, uint8_t *animation, size_t size);
+
     void PlayAnimation(int matrixN);
     void StopAnimation(int matrixN);
 
