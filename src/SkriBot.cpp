@@ -364,6 +364,7 @@ if(claw_closed && (millis() - claw_closed_time > 180000)){
 
 
   void Skribot::BLE_Setup(){
+    #ifndef _VARIANT_BBC_MICROBIT_ 
     BTmodule = new BLEModule(BLE_MODULE_TYPE);
     BTmodule->BLE_Setup();
     #else
