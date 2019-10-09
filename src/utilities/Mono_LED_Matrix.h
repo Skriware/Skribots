@@ -43,7 +43,7 @@ class Mono_LED_Matrix
     void Invert(int matrixN);
 
     // animation: 2-dim array
-    void SetAnimation(int matrixN, uint8_t **animation, size_t size);
+    void SetAnimation(int matrixN, uint8_t (*animation)[8], size_t size);
 
     // animation: flattened 1-dim array
     // returns number of frames
