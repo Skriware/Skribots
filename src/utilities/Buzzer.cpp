@@ -84,7 +84,7 @@ void Buzzer::PlayMelody(const char **melody, size_t size)
     PlayNoteAndWait(melody[i], duration);
 }
 
-void PlayMelody(uint16_t *freqs, uint16_t *delays, size_t size)
+void Buzzer::PlayMelody(uint16_t *freqs, uint16_t *delays, size_t size)
 {
   if (freqs == nullptr || delays == nullptr)
   {
