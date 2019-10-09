@@ -224,7 +224,7 @@ void Mono_LED_Matrix::Invert(int matrixN)
     buffer[offset+i] = ~buffer[offset+i];
 }
 
-void Mono_LED_Matrix::SetAnimation(int matrixN, uint8_t **animation, size_t size)
+void Mono_LED_Matrix::SetAnimation(int matrixN, uint8_t (*animation)[8], size_t size)
 {
   if (animation == nullptr)
   {
@@ -236,7 +236,29 @@ void Mono_LED_Matrix::SetAnimation(int matrixN, uint8_t **animation, size_t size
     return;
   }
 
-  animations[matrixN] = animation;
+  // Free an existing animation if any
+  if (animations[matrixN] != nullptr)
+  {
+    for (size_t i = 0; i < animationSizes[matrixN]; i++)
+    {
+      // Free frame #i
+      free(animations[matrixN][i]);
+    }
+
+    free(animations[matrixN]);
+  }
+
+  animations[matrixN] = (uint8_t **) calloc(size, sizeof(uint8_t *));
+
+  for (size_t frame_idx = 0; frame_idx < size; frame_idx++)
+  {
+    animations[matrixN][frame_idx] = (uint8_t *) calloc(8, sizeof(uint8_t));
+    for (int i = 0; i < 8; i++)
+    {
+      animations[matrixN][frame_idx][i] = animation[frame_idx][i];
+    }
+  }
+
   animationSizes[matrixN] = size;
   animationFrames[matrixN] = 0;
   animationStates[matrixN] = false;
