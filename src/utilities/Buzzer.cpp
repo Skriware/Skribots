@@ -86,7 +86,7 @@ void Buzzer::PlayMelody(const char **melody, size_t size)
 
 void PlayMelody(uint16_t *freqs, uint16_t *delays, size_t size)
 {
-  if (freq == nullptr || delays == nullptr)
+  if (freqs == nullptr || delays == nullptr)
   {
     #ifdef DEBUG_MODE
       Serial.println("Buzzer::PlayMelody: null array");
