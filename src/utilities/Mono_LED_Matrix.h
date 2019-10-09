@@ -6,6 +6,8 @@
 #include "Arduino.h"
 #include "SPIHandler.h"
 
+typedef uint8_t (*animation_t)[8];
+
 class Mono_LED_Matrix
 {
   public:
@@ -84,6 +86,5 @@ class Mono_LED_Matrix
     static void CombineBitmaps(
       uint8_t *dst, uint8_t pos, uint8_t *src1, uint8_t *src2);
 };
-
 
 #endif
