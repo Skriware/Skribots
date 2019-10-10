@@ -13,10 +13,10 @@ enum color {RED = 0,GREEN = 1,BLUE = 2,YELLOW = 3,WHITE = 4,PURPLE = 5,OFF = 6};
 {
 public:
 	#ifndef ESP_H
-	StatusLED(byte R_pin,byte G_pin,byte B_pin,byte Battery_pin);
+	StatusLED(byte R_pin,byte G_pin,byte B_pin,byte Battery_pin,byte Board_V);
 	void TurnOn(color _color);
 	#else
-	StatusLED(byte LED_pin,byte Battery_pin);
+	StatusLED(byte LED_pin,byte Battery_pin,byte Board_V);
 	void TurnOn(color _color,byte nLED=1);
 	#endif
 	int CheckBateryStatus();
@@ -26,11 +26,13 @@ private:
 		byte R_pin;
 		byte G_pin;
 		byte B_pin;	
+		
 	#else
 		RobotLED *status = NULL;
 	#endif
 	byte Battery_pin;
 	color Current_color;
+	byte Board_V;
 };
 
 #endif

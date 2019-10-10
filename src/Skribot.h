@@ -78,7 +78,7 @@
 
 #else
 
-#define BOARD_VERSION 1
+#define BOARD_VERSION 2
 
 #define SKRIBRAIN_MOTOR_L_DIR1_PIN 12 
 #define SKRIBRAIN_MOTOR_L_DIR2_PIN 21
@@ -201,6 +201,7 @@
     int ReadLineSensor(int id);
                                                                                               // line sensor readout
     void ConfigureBoardEEPROM();
+    bool Check_Board_Version();
     int  Read_EEPROM_INT(byte addr);
     void Write_EEPROM_INT(byte addr,int val);
 

@@ -1,7 +1,7 @@
 #include "StatusLED.h"
 #define STATUS_LED_INTENSIVITY 30
 #ifndef ESP_H
-StatusLED::StatusLED(byte R, byte G, byte B,byte batery){
+StatusLED::StatusLED(byte R, byte G, byte B,byte batery,byte board){
 	 R_pin = R;
 	 G_pin = G;
 	 B_pin = B;	
@@ -11,6 +11,7 @@ StatusLED::StatusLED(byte R, byte G, byte B,byte batery){
 	 pinMode(B_pin,OUTPUT);
 	 Current_color = OFF;
 	 pinMode(Battery_pin,INPUT);
+	 Board_V = board;
 }
 void StatusLED::TurnOn(color _color){
 if(_color != Current_color){
@@ -57,11 +58,12 @@ if(_color != Current_color){
 }
 }
 #else
-StatusLED::StatusLED(byte LED_PIN,byte batery){
+StatusLED::StatusLED(byte LED_PIN,byte batery,byte V){
 	status = new RobotLED(LED_PIN,0, 2);
 	Current_color = OFF;
 	Battery_pin = batery;
 	pinMode(Battery_pin,INPUT);
+	Board_V = V;
 }
 void StatusLED::TurnOn(color _color,byte NLED){
 if(_color != Current_color){
@@ -98,20 +100,39 @@ int StatusLED::CheckBateryStatus(){
 	#ifdef ESP_H
 	float Voltage;
 	byte yy = 0;
+	if(Board_V == 1){
 	for(int ii = 0 ; ii <100;ii++){
 		if(digitalRead(Battery_pin) == HIGH){
 			yy++;
 		}	
 	}
+	
 	if(yy > 95){
 		Voltage = 12.0;
 	}else{
 		Voltage = 0.0;
 	}
+	}else if(Board_V == 2){
+	float mult = 0.005*3;
+	Voltage = (float)analogRead(Battery_pin)*mult;
+	//Serial.println(Voltage);
+	}
+
+	if(Voltage > FULL_BateryLevel){
+		TurnOn(GREEN);
+		return(0);	
+	}else if(Voltage > USED_BateryLevel){
+		TurnOn(YELLOW);
+		return(1);
+	}else{
+		TurnOn(RED);
+		return(2);
+	}
+	
 	#else
 	float mult = 0.005*3;
 	float Voltage = (float)analogRead(Battery_pin)*mult;
-	//Serial.println(Voltage);
+	Serial.println(Voltage);
 	#endif
 	if(Voltage > FULL_BateryLevel){
 		TurnOn(GREEN);

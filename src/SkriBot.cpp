@@ -27,6 +27,7 @@
     config_mode = false;
     Remote_block_used = false;
     smartRotor = NULL;
+    Board_type = BOARD_VERSION;
     Configure_Connections(predef);
     #ifdef DEBUG_MODE
     Serial.begin(115200);
@@ -79,6 +80,7 @@
     }
     #else
     if(predef == "SKRIBRAIN"){
+          Check_Board_Version();
           AddDCRotor(SKRIBRAIN_MOTOR_L_DIR2_PIN,SKRIBRAIN_MOTOR_L_DIR1_PIN,"Left");
           AddDCRotor(SKRIBRAIN_MOTOR_R_DIR2_PIN,SKRIBRAIN_MOTOR_R_DIR1_PIN,"Right");
           AddLED(SKRIBRAIN_LED_PIN_2,1);
@@ -88,9 +90,19 @@
           AddLineSensor(LINE_PIN_1, 1);
           AddLineSensor(LINE_PIN_2, 2);
           AddLineSensor(LINE_PIN_3, 3);
-          AddClaw(SKRIBRAIN_SERVO_PIN_1,SKRIBRAIN_SERVO_PIN_2);
           BLE_Set_Module(ESP32_BLE); 
-          status = new StatusLED(SKRIBRAIN_STATUS_LED_PIN,SKRIBRAIN_SERVO_PIN_3);
+          switch (Board_type){
+          case 1:
+            AddClaw(SKRIBRAIN_SERVO_PIN_1,SKRIBRAIN_SERVO_PIN_2);
+            status = new StatusLED(SKRIBRAIN_STATUS_LED_PIN,SKRIBRAIN_SERVO_PIN_3,1);
+          break;
+          case 2:
+            AddClaw(SKRIBRAIN_SERVO_PIN_1,SKRIBRAIN_SERVO_PIN_3);
+            status = new StatusLED(SKRIBRAIN_STATUS_LED_PIN,SKRIBRAIN_SERVO_PIN_2,2);
+          break;
+          default:
+          break;
+          }
           stausLEDused = true;
         }else if(predef == "SKRIBRAIN+LED_MATRIX"){ 
           AddDCRotor(SKRIBRAIN_MOTOR_L_DIR2_PIN,SKRIBRAIN_MOTOR_L_DIR1_PIN,"Left");
@@ -103,7 +115,7 @@
           AddLineSensor(LINE_PIN_3, 3);
           AddClaw(SKRIBRAIN_SERVO_PIN_1,SKRIBRAIN_SERVO_PIN_2);
           BLE_Set_Module(ESP32_BLE); 
-          status = new StatusLED(SKRIBRAIN_STATUS_LED_PIN,SKRIBRAIN_SERVO_PIN_3);
+          status = new StatusLED(SKRIBRAIN_STATUS_LED_PIN,SKRIBRAIN_SERVO_PIN_3,1);
           stausLEDused = true;
           Add_Mono_LED_matrix(SPI_PORT_2);
         }else if(predef == "SKRIBRAIN_ARDUBLOCK"){
@@ -125,7 +137,7 @@
 
           smartRotor->setPulsesPerMeter(15050, 15050);//(15050, 14000);
           smartRotor->setPulsesPerTurn(8700, 8550);
-          status = new StatusLED(SKRIBRAIN_STATUS_LED_PIN,SKRIBRAIN_SERVO_PIN_3);
+          status = new StatusLED(SKRIBRAIN_STATUS_LED_PIN,SKRIBRAIN_SERVO_PIN_3,1);
           stausLEDused = true;
           smartRotor->begin();
           BLE_Set_Module(ESP32_BLE); 
@@ -138,7 +150,7 @@
           Add_Mono_LED_matrix(SPI_PORT_2);
           Add_Mono_LED_matrix(SPI_PORT_1);
           BLE_Set_Module(ESP32_BLE); 
-          status = new StatusLED(SKRIBRAIN_STATUS_LED_PIN,SKRIBRAIN_SERVO_PIN_3);
+          status = new StatusLED(SKRIBRAIN_STATUS_LED_PIN,SKRIBRAIN_SERVO_PIN_3,1);
           stausLEDused = true;
 
         }
@@ -147,9 +159,8 @@
    Stop();
   }
 
-  void Skribot::ConfigureBoardEEPROM(){
-   
-      #ifdef DEBUG_MODE
+  bool Skribot::Check_Board_Version(){
+    #ifdef DEBUG_MODE
           Serial.println("Checking EEPROM...");
       #endif
        #ifdef ESP_H
@@ -157,7 +168,7 @@
           #ifdef DEBUG_MODE
           Serial.println("EEPROM init fail, aborting EEPROM check.");
           #endif
-          return;
+          return(false);
        }
       #endif
        Board_type = EEPROM.read(EEPROM_BOARD_VERSION_ADDR);
@@ -170,8 +181,23 @@
         #ifdef DEBUG_MODE
           Serial.println("First time flash detected");
           #endif
-        return;
-       }
+        return(false);
+      }else{
+        #ifdef DEBUG_MODE
+        Serial.print("BOARD VERSION:");
+        Serial.println(Board_type);
+        #endif
+        /*Board_type = 2;
+         EEPROM.write(EEPROM_BOARD_VERSION_ADDR,BOARD_VERSION);
+         #ifdef ESP_H 
+              EEPROM.commit(); 
+         #endif
+         */ 
+        return(true);
+      }
+  }
+
+  void Skribot::ConfigureBoardEEPROM(){
        delay(10);                                              //EEPROM delay in order to avoid EEPROM ERRORS
        byte userChange = EEPROM.read(EEPROM_SETTINGS_OVERRIDED_ADDR);
        delay(10);
@@ -566,7 +592,10 @@ if(claw_closed && (millis() - claw_closed_time > 180000)){
     if(BUZZER_PIN == SERVO_1){
         Buzzers[SERVO_1] = new Buzzer(SKRIBRAIN_SERVO_PIN_1);
     }else if(BUZZER_PIN == SERVO_2){
-        Buzzers[SERVO_2] = new Buzzer(SKRIBRAIN_SERVO_PIN_2); 
+        switch(Board_type){
+        case 1: Buzzers[SERVO_2] = new Buzzer(SKRIBRAIN_SERVO_PIN_2); break;
+        case 2: Buzzers[SERVO_2] = new Buzzer(SKRIBRAIN_SERVO_PIN_3); break;
+        }
     }
   #else
     Buzzers[0] = new Buzzer(13);
