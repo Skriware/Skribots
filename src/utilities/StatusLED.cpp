@@ -1,7 +1,7 @@
 #include "StatusLED.h"
 #define STATUS_LED_INTENSIVITY 30
 #ifndef ESP_H
-StatusLED::StatusLED(byte R, byte G, byte B,byte batery,byte board){
+StatusLED::StatusLED(byte R, byte G, byte B,byte batery){
 	 R_pin = R;
 	 G_pin = G;
 	 B_pin = B;	
@@ -11,7 +11,6 @@ StatusLED::StatusLED(byte R, byte G, byte B,byte batery,byte board){
 	 pinMode(B_pin,OUTPUT);
 	 Current_color = OFF;
 	 pinMode(Battery_pin,INPUT);
-	 Board_V = board;
 }
 void StatusLED::TurnOn(color _color){
 if(_color != Current_color){

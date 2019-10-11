@@ -75,6 +75,8 @@
 #define L1 A1
 #define L2 A2
 #define L3 A3
+#define D1_PORT 1
+#define D2_PORT 2
 
 #else
 
