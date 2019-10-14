@@ -187,11 +187,13 @@
         Serial.print("BOARD VERSION:");
         Serial.println(Board_type);
         #endif
-        Board_type = 2;
+        /*
+        Board_type = 2;                                         //FORCE BOARD TYPE
          EEPROM.write(EEPROM_BOARD_VERSION_ADDR,BOARD_VERSION);
          #ifdef ESP_H 
               EEPROM.commit(); 
          #endif
+         */
           
         return(true);
       }

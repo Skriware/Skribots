@@ -26,9 +26,10 @@ private:
 		byte R_pin;
 		byte G_pin;
 		byte B_pin;	
-		byte Board_V;	
+		
 	#else
 		RobotLED *status = NULL;
+		byte Board_V;	
 	#endif
 	byte Battery_pin;
 	color Current_color;
