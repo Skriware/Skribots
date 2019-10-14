@@ -26,7 +26,6 @@ private:
 		byte R_pin;
 		byte G_pin;
 		byte B_pin;	
-		
 	#else
 		RobotLED *status = NULL;
 		byte Board_V;	
