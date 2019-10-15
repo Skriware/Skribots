@@ -17,7 +17,7 @@ Mono_LED_Matrix::Mono_LED_Matrix(
 {
   buffer = (uint8_t *) calloc(8 * matrixCount, sizeof(uint8_t));
 
-  animations = (animation_t *) calloc(matrixCount, sizeof(animation_t));
+  animations = (uint8_t ***) calloc(matrixCount, sizeof(uint8_t **));
   animationFrames = (int *) calloc(matrixCount, sizeof(int));
   animationSizes = (size_t *) calloc(matrixCount, sizeof(size_t));
   animationStates = (bool *) calloc(matrixCount, sizeof(bool));
@@ -167,7 +167,7 @@ void Mono_LED_Matrix::SetPixel(int matrixN, int x, int y, int val)
   }
 }
 
-void Mono_LED_Matrix::SetBitmap(int matrixN, uint8_t bmp[8])
+void Mono_LED_Matrix::SetBitmap(int matrixN, uint8_t *bmp)
 {
   int offset = matrixN * 8;
 
@@ -214,10 +214,99 @@ void Mono_LED_Matrix::Invert(int matrixN)
 
 void Mono_LED_Matrix::SetAnimation(int matrixN, uint8_t (*animation)[8], size_t size)
 {
-  animations[matrixN] = animation;
+  if (animation == nullptr)
+  {
+    #ifdef DEBUG_MODE
+      Serial.println("Mono_LED_Matrix::SetAnimation: animation is null");
+      this->StartMarquee("NULL");
+    #endif
+
+    return;
+  }
+
+  // Free an existing animation if any
+  if (animations[matrixN] != nullptr)
+  {
+    for (size_t i = 0; i < animationSizes[matrixN]; i++)
+    {
+      // Free frame #i
+      free(animations[matrixN][i]);
+    }
+
+    free(animations[matrixN]);
+  }
+
+  animations[matrixN] = (uint8_t **) calloc(size, sizeof(uint8_t *));
+
+  for (size_t frame_idx = 0; frame_idx < size; frame_idx++)
+  {
+    animations[matrixN][frame_idx] = (uint8_t *) calloc(8, sizeof(uint8_t));
+    for (int i = 0; i < 8; i++)
+    {
+      animations[matrixN][frame_idx][i] = animation[frame_idx][i];
+    }
+  }
+
   animationSizes[matrixN] = size;
   animationFrames[matrixN] = 0;
   animationStates[matrixN] = false;
+}
+
+size_t Mono_LED_Matrix::SetAnimation(int matrixN, uint8_t *animation, size_t size)
+{
+  if (animation == nullptr || size == 0)
+  {
+    #ifdef DEBUG_MODE
+      Serial.println("Mono_LED_Matrix::SetAnimation: animation is null");
+      this->StartMarquee("NULL");
+    #endif
+
+    return 0;
+  }
+
+  size_t frameCount = size / 8;
+  if (frameCount == 0)
+  {
+    #ifdef DEBUG_MODE
+      Serial.println(
+        "Mono_LED_Matrix::SetAnimation: event though animation is not null, "
+        "the animation frame count is less than 0"
+      );
+    #endif
+
+    return 0;
+  }
+
+  // Free an existing animation if any
+  if (animations[matrixN] != nullptr)
+  {
+    for (size_t i = 0; i < animationSizes[matrixN]; i++)
+    {
+      // Free frame #i
+      free(animations[matrixN][i]);
+    }
+
+    free(animations[matrixN]);
+  }
+
+  animations[matrixN] = (uint8_t **) calloc(frameCount, sizeof(uint8_t *));
+
+  // Copy the animation to 2-dim array frame by frame, line by line
+  for (size_t frame_idx = 0; frame_idx < frameCount; frame_idx++)
+  {
+    animations[matrixN][frame_idx] = (uint8_t *) calloc(8, sizeof(uint8_t));
+
+    for (int i = 0; i < 8; i++)
+    {
+      animations[matrixN][frame_idx][i] = animation[frame_idx*8 + i];
+    }
+  }
+
+  animationSizes[matrixN] = frameCount;
+  animationFrames[matrixN] = 0;
+  animationStates[matrixN] = false;
+
+  return frameCount;
 }
 
 void Mono_LED_Matrix::PlayAnimation(int matrixN)
@@ -244,7 +333,7 @@ uint8_t Mono_LED_Matrix::reverseBitOrder(uint8_t b)
   return o;
 }
 
-void Mono_LED_Matrix::StartMarquee(const char *text, int direction)
+void Mono_LED_Matrix::StartMarquee(char *text, int direction)
 {
   marqueeText = text;
   marqueePosition = 0;
@@ -258,7 +347,7 @@ void Mono_LED_Matrix::StopMarquee(void)
 }
 
 void Mono_LED_Matrix::CombineBitmaps(
-  uint8_t *dst, uint8_t pos, uint8_t src1[8], uint8_t src2[8])
+  uint8_t *dst, uint8_t pos, uint8_t *src1, uint8_t *src2)
 {
   for (int i = 0; i < 8; i++)
   {

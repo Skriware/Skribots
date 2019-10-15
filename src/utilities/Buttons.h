@@ -68,6 +68,10 @@ BUTTONS_BTN_DECL(25);
 BUTTONS_BTN_DECL(26);
 BUTTONS_BTN_DECL(27);
 
+BUTTONS_BTN_DECL(34);
+BUTTONS_BTN_DECL(36);
+BUTTONS_BTN_DECL(39);
+
 void buttonEnable(int pin);
 void buttonDisable(int pin);
 bool buttonReadRaw(int pin);
