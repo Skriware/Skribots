@@ -26,6 +26,7 @@
     claw_closed_time = true;
     config_mode = false;
     Remote_block_used = false;
+    ignore_connection_break = false;
     smartRotor = NULL;
     Board_type = BOARD_VERSION;
     Configure_Connections(predef);
@@ -157,6 +158,13 @@
     #endif
    SetSpeed(250);
    Stop();
+  }
+  void Skribot::IgnoreCONBRK(){
+    ignore_connection_break = true;
+  }
+
+  void Skribot::CONBRK(){
+    ignore_connection_break = false;
   }
 
   bool Skribot::Check_Board_Version(){

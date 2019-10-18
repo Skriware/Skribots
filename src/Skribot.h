@@ -243,6 +243,8 @@
 
     void EnterConfigMode();
     void ExitConfigMode();
+    void IgnoreCONBRK();
+    void CONBRK();
 
  // private:
   DistSensor *DistSensors[5];
@@ -259,6 +261,7 @@
        claw_closed,
        config_mode,
        user_config,
+       ignore_connection_break,
        Remote_block_used;
   long claw_closed_time;
   moduleType BLE_MODULE_TYPE;
