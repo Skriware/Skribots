@@ -130,13 +130,56 @@ void SmartRotor::turnByAngle(int angle)
 
 void SmartRotor::moveByPulses(int m1pulses, int m2pulses)
 {
-  m1pulseTarget = m1pulseCount + m1pulses;
-  m2pulseTarget = m2pulseCount + m2pulses;
-
-  m1movesToTarget = true;
-  m2movesToTarget = true;
+  #ifdef DEBUG_MODE
+    printf(
+      "SmartRotor::moveByPulses\n"
+      "    m1pulses: %d\n"
+      "    m2pulses: %d\n",
+      m1pulses, m2pulses
+    );
+  #endif
 
   move();
+
+  if (m1pulses > -1)
+  {
+    m1pulseTarget = m1pulseCount + m1pulses;
+    m1movesToTarget = true;
+  }
+  else
+  {
+    m1movesToTarget = false;
+    m1stop();
+  }
+
+  if (m2pulses > -1)
+  {
+    m2pulseTarget = m2pulseCount + m2pulses;
+    m2movesToTarget = true;
+  }
+  else
+  {
+    m2movesToTarget = false;
+    m2stop();
+  }
+
+  #ifdef DEBUG_MODE
+    printf(
+      "    m1 -> target:  %s\n"
+      "    m1 pulseCount: %d\n"
+      "    m1 target:     %d\n"
+      "    m2 -> target:  %s\n"
+      "    m2 pulseCount: %d\n"
+      "    m2 target:     %d\n",
+      m1movesToTarget ? "true":"false",
+      m1pulseCount,
+      m1pulseTarget,
+
+      m2movesToTarget ? "true":"false",
+      m2pulseCount,
+      m2pulseTarget
+    );
+  #endif
 }
 
 void SmartRotor::setDirection(int direction)
