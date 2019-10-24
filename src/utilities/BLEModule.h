@@ -49,6 +49,7 @@ void incrementRXbuffIterator_beg();
 void incrementRXbuffIterator_end();
 byte substractBufforIterators();
 
+
 class MyServerCallbacks: public BLEServerCallbacks {
     void onConnect(BLEServer* pServer) {
       BLEModule::deviceConnected = true;

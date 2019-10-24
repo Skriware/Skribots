@@ -20,6 +20,7 @@
     SPIcomm[1] = NULL;
     using_BLE_Connection = false;
     program_End_Reported = false;
+    connection_Break_Reported = false;
     stausLEDused = false;
     high_power_usage = false;
     claw_closed = false;
@@ -1036,4 +1037,8 @@ if(claw_closed && (millis() - claw_closed_time > 180000)){
       if(config_mode){
         config_mode = false;
       }
+    }
+
+    void Skribot::BLE_Flush(){
+      while(BLE_dataAvailable())BLE_read();
     }

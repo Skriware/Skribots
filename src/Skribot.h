@@ -236,6 +236,7 @@
     void BLE_Setup();
     void BLE_reset();
     void BLE_Set_Module(moduleType type);
+    void BLE_Flush();
     void sendNameInfo();
     bool ProgramENDRepotred();
     int BaterryCheck();
