@@ -1076,3 +1076,7 @@ if(claw_closed && (millis() - claw_closed_time > 180000)){
         config_mode = false;
       }
     }
+
+    void Skribot::BLE_Flush(){
+      while(BLE_dataAvailable())BLE_read();
+    }

@@ -1,7 +1,7 @@
 #ifndef SKRIBOT_H
 #define SKRIBOT_H
 
-//#define DEBUG_MODE
+#define DEBUG_MODE
 
 #include "Arduino.h"
 #ifndef _VARIANT_BBC_MICROBIT_
@@ -237,6 +237,7 @@
     void BLE_Setup();
     void BLE_reset();
     void BLE_Set_Module(moduleType type);
+    void BLE_Flush();
     void sendNameInfo();
     bool ProgramENDRepotred();
     int BaterryCheck();
