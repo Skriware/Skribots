@@ -114,10 +114,8 @@
           const uint8_t m2pin2 = 23;
 
 // motor encoder inputs
-        const uint8_t m1enc1 = 26;
-        const uint8_t m1enc2 = 27;
-        const uint8_t m2enc1 = 33;
-        const uint8_t m2enc2 = 25;
+        const uint8_t m1enc1 = 35;
+        const uint8_t m2enc1 = 32;
           smartRotor = new SmartRotor(
              m1pin1, m1pin2, m2pin1, m2pin2,
              m1enc1, m2enc1 
@@ -125,13 +123,25 @@
 
           smartRotor->setPulsesPerMeter(15050, 15050);//(15050, 14000);
           smartRotor->setPulsesPerTurn(8700, 8550);
+          smartRotor->begin();
           status = new StatusLED(SKRIBRAIN_STATUS_LED_PIN,SKRIBRAIN_SERVO_PIN_3);
           stausLEDused = true;
-          smartRotor->begin();
           BLE_Set_Module(ESP32_BLE); 
         }else if(predef = "SKRIBRAIN_B2C_TESTS"){
-          AddDCRotor(SKRIBRAIN_MOTOR_L_DIR2_PIN,SKRIBRAIN_MOTOR_L_DIR1_PIN,"Left");
-          AddDCRotor(SKRIBRAIN_MOTOR_R_DIR2_PIN,SKRIBRAIN_MOTOR_R_DIR1_PIN,"Right");
+          const uint8_t m1pin1 = 12;
+          const uint8_t m1pin2 = 21;
+          const uint8_t m2pin1 = 22;
+          const uint8_t m2pin2 = 23;
+          const uint8_t m1enc1 = 35;
+          const uint8_t m2enc1 = 32;
+          smartRotor = new SmartRotor(
+             m1pin1, m1pin2, m2pin1, m2pin2,
+             m1enc1, m2enc1 
+            );
+
+          smartRotor->setPulsesPerMeter(15050, 15050);
+          smartRotor->setPulsesPerTurn(8700, 8550);
+          smartRotor->begin();
           AddDistSensor(SKRIBRAIN_ECHO_PIN_1,SKRIBRAIN_TRIG_PIN_1,1);   
           AddDistSensor(SKRIBRAIN_ECHO_PIN_2,SKRIBRAIN_TRIG_PIN_2,2);
           AddBuzzer(SERVO_2);
