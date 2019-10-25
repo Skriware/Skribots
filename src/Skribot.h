@@ -1,7 +1,8 @@
 #ifndef SKRIBOT_H
 #define SKRIBOT_H
 
-#define DEBUG_MODE
+//#define DEBUG_MODE
+#define DEBUG_MODE_1
 
 #include "Arduino.h"
 #ifndef _VARIANT_BBC_MICROBIT_
