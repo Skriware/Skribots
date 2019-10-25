@@ -128,7 +128,20 @@
           status = new StatusLED(SKRIBRAIN_STATUS_LED_PIN,SKRIBRAIN_SERVO_PIN_3);
           stausLEDused = true;
           BLE_Set_Module(ESP32_BLE); 
-        }else if(predef = "SKRIBRAIN_B2C_TESTS"){
+        }else if(predef == "SKRIBRAIN_B2C_TESTS"){
+          AddDCRotor(SKRIBRAIN_MOTOR_L_DIR2_PIN,SKRIBRAIN_MOTOR_L_DIR1_PIN,"Left");
+          AddDCRotor(SKRIBRAIN_MOTOR_R_DIR2_PIN,SKRIBRAIN_MOTOR_R_DIR1_PIN,"Right");
+          AddDistSensor(SKRIBRAIN_ECHO_PIN_1,SKRIBRAIN_TRIG_PIN_1,1);   
+          AddDistSensor(SKRIBRAIN_ECHO_PIN_2,SKRIBRAIN_TRIG_PIN_2,2);
+          AddBuzzer(SERVO_2);
+          Add_Mono_LED_matrix(SPI_PORT_2);
+          Add_Mono_LED_matrix(SPI_PORT_1);
+          BLE_Set_Module(ESP32_BLE); 
+          status = new StatusLED(SKRIBRAIN_STATUS_LED_PIN,SKRIBRAIN_SERVO_PIN_3);
+          stausLEDused = true;
+
+        } else if (predef == "SKRIBRAIN_B2C_TESTS_SMARTROTOR")
+        {
           const uint8_t m1pin1 = 12;
           const uint8_t m1pin2 = 21;
           const uint8_t m2pin1 = 22;
@@ -151,7 +164,6 @@
           BLE_Set_Module(ESP32_BLE); 
           status = new StatusLED(SKRIBRAIN_STATUS_LED_PIN,SKRIBRAIN_SERVO_PIN_3);
           stausLEDused = true;
-
         }
     #endif
    SetSpeed(250);
