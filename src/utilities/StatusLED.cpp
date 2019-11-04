@@ -124,6 +124,15 @@ int StatusLED::CheckBateryStatus(){
 		return(2);
 	}
 }
+byte StatusLED::ReadBatteryState(){
+	float Voltage = 100;
+	#ifdef ESP_H
+	float mult = 0.005*3;
+	Voltage = (float)analogRead(Battery_pin)*mult;
+	#endif
+	byte read = Voltage/12.0*100;
+	return(read);
+}
 void StatusLED::BLINK_OK(){
 	 TurnOn(OFF);
 	 delay(200);

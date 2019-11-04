@@ -1051,6 +1051,9 @@ if(claw_closed && (millis() - claw_closed_time > 180000)){
       }
       return(tmpStatus);
     }
+    byte Skribot::ReadBattery(){
+      return(status->ReadBatteryState());
+    }
 
     void Skribot::EnterConfigMode(){
       config_mode = true;

@@ -240,6 +240,7 @@
     void sendNameInfo();
     bool ProgramENDRepotred();
     int BaterryCheck();
+    byte ReadBattery();
 
     void EnterConfigMode();
     void ExitConfigMode();

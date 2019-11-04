@@ -20,6 +20,7 @@ public:
 	void TurnOn(color _color,byte nLED=1);
 	#endif
 	int CheckBateryStatus();
+	byte ReadBatteryState();
 	void BLINK_OK();
 private:
 	#ifndef ESP_H
