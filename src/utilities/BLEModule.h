@@ -63,6 +63,7 @@ class MyCallbacks: public BLECharacteristicCallbacks {
     void onWrite(BLECharacteristic *pCharacteristic) {
       char ascii;
       std::string rxValue = pCharacteristic->getValue();
+      //Serial.println(millis());
       if (rxValue.length() > 0) {
         for (int i = 0; i < rxValue.length(); i++){
           if(substractBufforIterators() < 1)break;

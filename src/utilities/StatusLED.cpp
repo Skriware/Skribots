@@ -145,18 +145,16 @@ int StatusLED::CheckBateryStatus(){
 	}
 }
 void StatusLED::BLINK_OK(){
+	 for(byte rr = 0;rr<2
+	  #ifdef ESP_H 
+	 	+Board_V
+	 #endif 
+	 	;rr++){
 	 TurnOn(OFF);
 	 delay(200);
-	 TurnOn(WHITE);
+	 TurnOn(GREEN);
 	 delay(200);
-	 TurnOn(OFF);
-	 delay(200);
-	 TurnOn(WHITE);
-	 delay(200);
-	 TurnOn(OFF);
-	 delay(200);
-	 TurnOn(WHITE);
-	 delay(200);
-	 TurnOn(OFF);
-	 delay(200);
+	}
+	
+
 }

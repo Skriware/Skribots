@@ -1,10 +1,18 @@
 #ifndef SKRIBOT_H
 #define SKRIBOT_H
 
+
+
+
 //#define DEBUG_MODE
 #define DEBUG_MODE_1
 
 #include "Arduino.h"
+#if defined(__AVR_ATmega2560__)
+#elif defined(ESP_H)
+#else
+#error "This library only supports Skriware boards: Skribot(ATmega2560) or Skribrain(ESP32). Please Change your Board setting."
+#endif
 #ifndef _VARIANT_BBC_MICROBIT_
 #include <EEPROM.h>
 #include <utilities/Claw.h>
