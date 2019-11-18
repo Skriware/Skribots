@@ -1,7 +1,7 @@
 #ifndef SKRIBOT_H
 #define SKRIBOT_H
 
-//#define DEBUG_MODE
+#define DEBUG_MODE
 #define DEBUG_MODE_1
 
 
@@ -105,6 +105,10 @@
 
 #define SERVO_1 0
 #define SERVO_2 1
+
+#define L1_PORT 1
+#define L2_PORT 2
+#define L3_PORT 3
 
 #define LINE_PIN_1 SKRIBRAIN_ANALOG_PIN_1
 #define LINE_PIN_2 SKRIBRAIN_ANALOG_PIN_2
@@ -245,12 +249,13 @@
     void EnterConfigMode();
     void ExitConfigMode();
 
+    void AddHardware(char *tag);
  // private:
-  DistSensor *DistSensors[5];
+  DistSensor *DistSensors[2];
   LineSensor *LineSensors[5];
-  Rotor *LeftDCRotors[3];
-  Rotor *RightDCRotors[3];
-  LightSensor *LightSensors[4];
+  Rotor *LeftDCRotors[2];
+  Rotor *RightDCRotors[2];
+  LightSensor *LightSensors[5];
   SmartRotor *smartRotor;
   bool using_BLE_Connection,
        connection_Break_Reported,
