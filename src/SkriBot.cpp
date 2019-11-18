@@ -164,6 +164,10 @@
           BLE_Set_Module(ESP32_BLE); 
           status = new StatusLED(SKRIBRAIN_STATUS_LED_PIN,SKRIBRAIN_SERVO_PIN_3);
           stausLEDused = true;
+        } else if(predef = "RAW_SKRIBRAIN"){
+          BLE_Set_Module(ESP32_BLE); 
+          status = new StatusLED(SKRIBRAIN_STATUS_LED_PIN,SKRIBRAIN_SERVO_PIN_3);
+          stausLEDused = true;
         }
     #endif
    SetSpeed(250);

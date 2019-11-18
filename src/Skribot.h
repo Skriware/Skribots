@@ -250,6 +250,7 @@
     void ExitConfigMode();
 
     void AddHardware(char *tag);
+    void ClearHardware();
  // private:
   DistSensor *DistSensors[2];
   LineSensor *LineSensors[5];
