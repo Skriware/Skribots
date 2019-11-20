@@ -252,11 +252,11 @@
     void AddHardware(char *tag);
     void ClearHardware();
  // private:
-  DistSensor *DistSensors[2];
-  LineSensor *LineSensors[5];
-  Rotor *LeftDCRotors[2];
-  Rotor *RightDCRotors[2];
-  LightSensor *LightSensors[5];
+  DistSensor *DistSensors[2] = {NULL};
+  LineSensor *LineSensors[5] = {NULL};
+  Rotor *LeftDCRotors[2] = {NULL};
+  Rotor *RightDCRotors[2] = {NULL};
+  LightSensor *LightSensors[5] = {NULL};
   SmartRotor *smartRotor;
   bool using_BLE_Connection,
        connection_Break_Reported,
@@ -275,12 +275,12 @@
   byte Board_type = 0;
 
   #ifndef _VARIANT_BBC_MICROBIT_
-  RobotLED *LEDs[5];
-  Claw *Claws[2];
-  Scope *Scopes[3];
-  RGB_LED_Matrix *RGB_Matrix[3];
+  RobotLED *LEDs[5] = {NULL};
+  Claw *Claws[2] = {NULL};
+  Scope *Scopes[3] = {NULL};
+  RGB_LED_Matrix *RGB_Matrix[3] = {NULL};
   BLEModule *BTmodule;
-  Mono_LED_Matrix *LED_Matrixes[2];
+  Mono_LED_Matrix *LED_Matrixes[2] = {NULL};
   Buzzer *Buzzers[5];
   #endif
   byte NDistSensors,NLEDs,NLineSensors,NScopes,NLeftDCRotors,NRightDCRotors,NClaws,NLightSensors;           //counters

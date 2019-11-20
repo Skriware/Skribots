@@ -1,9 +1,9 @@
 #include "Skribot.h"
-
+#define DEBUG_MODE_H
 void Skribot::AddHardware(char *tag){
 	switch(tag[0]){
 		case 'M':
-		#ifdef DEBUG_MODE
+		#ifdef DEBUG_MODE_H
 			Serial.println("MATRIX");
 		#endif
 			switch(tag[1]){
@@ -18,7 +18,7 @@ void Skribot::AddHardware(char *tag){
 			}
 		break;
 		case 'P':
-		#ifdef DEBUG_MODE
+		#ifdef DEBUG_MODE_H
 			Serial.println("BUTTON");
 		#endif
 			switch(tag[1]){
@@ -42,8 +42,9 @@ void Skribot::AddHardware(char *tag){
 			}
 		break;
 		case 'R':
-		#ifdef DEBUG_MODE
+		#ifdef DEBUG_MODE_H
 			Serial.println("MOTOR");
+			Serial.println(tag[1]);
 		#endif
 			switch(tag[1]){
 				case '1':
@@ -57,7 +58,7 @@ void Skribot::AddHardware(char *tag){
 			}
 		break;
 		case 'D':
-		#ifdef DEBUG_MODE
+		#ifdef DEBUG_MODE_H
 			Serial.println("DISTANCE");
 		#endif
 			switch(tag[1]){
@@ -72,7 +73,7 @@ void Skribot::AddHardware(char *tag){
 				}
 		break;
 		case 'B':
-		#ifdef DEBUG_MODE
+		#ifdef DEBUG_MODE_H
 			Serial.println("BUZZER");
 		#endif
 			switch(tag[1]){
@@ -101,6 +102,9 @@ void Skribot::AddHardware(char *tag){
 }
 
 void Skribot::ClearHardware(){
+	#ifdef DEBUG_MODE_H
+		Serial.println("CLEAR HDW");
+	#endif
 	for(byte tt = 0; tt < 2; tt++){
 		delete DistSensors[tt];
 		delete LED_Matrixes[tt];

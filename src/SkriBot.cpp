@@ -28,6 +28,15 @@
     config_mode = false;
     Remote_block_used = false;
     smartRotor = NULL;
+    for(byte tt = 0; tt < 2; tt++){
+      DistSensors[tt]=NULL;
+      LED_Matrixes[tt]=NULL;
+      LeftDCRotors[tt]=NULL;
+      RightDCRotors[tt]=NULL;
+    }
+    for(byte rr = 0;rr<5;rr++){
+      Buzzers[rr]=NULL;
+    }
     Configure_Connections(predef);
     #ifdef DEBUG_MODE
     Serial.begin(115200);
