@@ -106,16 +106,31 @@ void Skribot::ClearHardware(){
 		Serial.println("CLEAR HDW");
 	#endif
 	for(byte tt = 0; tt < 2; tt++){
+		Serial.print("A");
 		delete DistSensors[tt];
+		Serial.print("B");
 		delete LED_Matrixes[tt];
+		Serial.print("C");
 		delete LeftDCRotors[tt];
+		Serial.print("D");
 		delete RightDCRotors[tt];
+		Serial.print("E");
 	}
 	for(byte rr = 0;rr<5;rr++){
 		delete Buzzers[rr];
 	}
+	for(byte tt = 0; tt < 2; tt++){
+      DistSensors[tt]=NULL;
+      LED_Matrixes[tt]=NULL;
+      LeftDCRotors[tt]=NULL;
+      RightDCRotors[tt]=NULL;
+    }
+    for(byte rr = 0;rr<5;rr++){
+      Buzzers[rr]=NULL;
+    }
 	NDistSensors = 0;
 	NLeftDCRotors = 0;
 	NRightDCRotors = 0;
+	clearPWM();
 
 }

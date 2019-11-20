@@ -22,4 +22,5 @@
 	void PWM_Write(byte PWMPin,int value);
 	int SetNewPWMChannel(byte PWMPin);
 	bool PWM_overloaded();
+	void clearPWM();
 #endif

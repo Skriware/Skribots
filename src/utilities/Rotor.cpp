@@ -23,7 +23,6 @@ void Rotor::SetSpeed(int speed){
 		_speed = speed_scale*speed/100; 
 }
 void Rotor::Move(){
-	Serial.println("MOVING!!!");
 #ifndef _VARIANT_BBC_MICROBIT_ 
 		PWM_Write(_dir_pin,0);
 		PWM_Write(_speed_pin,0);	

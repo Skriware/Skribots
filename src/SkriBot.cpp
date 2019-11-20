@@ -38,9 +38,9 @@
       Buzzers[rr]=NULL;
     }
     Configure_Connections(predef);
-    #ifdef DEBUG_MODE
+    //#ifdef DEBUG_MODE
     Serial.begin(115200);
-    #endif
+    //#endif
   }
   void Skribot::Configure_Connections(String predef){
     #ifndef ESP_H

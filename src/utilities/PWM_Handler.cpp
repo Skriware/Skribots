@@ -44,6 +44,14 @@
 		return(PWM_overload);
 	}
 
+	void clearPWM(){
+		for(byte tt = 0; tt < used_PWM_channels;tt++){
+			ledcDetachPin(PWM_Channels[tt].pwmPin);
+		}
+		used_PWM_channels = 0;
+
+	}
+
 
 
 
