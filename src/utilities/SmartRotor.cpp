@@ -1,157 +1,83 @@
 #include "SmartRotor.h"
 
-SmartRotor *SmartRotor::_sri = nullptr;
+// A hash map of instances of SmartRotor
+std::unordered_map<uint8_t, SmartRotor *> SmartRotor::_sri = {};
 
-SmartRotor::SmartRotor(
-  uint8_t m1pin1,
-  uint8_t m1pin2,
-  uint8_t m2pin1,
-  uint8_t m2pin2,
-  uint8_t m1enc1,
-  uint8_t m1enc2,
-  uint8_t m2enc1,
-  uint8_t m2enc2) :
-    m1pin1(m1pin1),
-    m1pin2(m1pin2),
-    m2pin1(m2pin1),
-    m2pin2(m2pin2),
-    m1enc1(m1enc1),
-    m1enc2(m1enc2),
-    m2enc1(m2enc1),
-    m2enc2(m2enc2),
-    pulsesPerLeftTurn(9000),
-    pulsesPerRightTurn(9000),
-    m1pulsesPerMeter(15050),
-    m2pulsesPerMeter(15050),
-    m1pulsesPerRevolution(2500),
-    m2pulsesPerRevolution(2500),
-    m1pulseCount(0),
-    m2pulseCount(0),
-    m1movesToTarget(false),
-    m2movesToTarget(false),
-    m1startingPulses(0),
-    m2startingPulses(0),
-    m1pulseTarget(0),
-    m2pulseTarget(0),
-    speed(255),
-    direction(1)
+// A hash map of possible ISRs for encoder pins
+std::unordered_map<uint8_t, void (*)()> SmartRotor::_sri_isr = {
+  {32, SmartRotor::encISR<32>},
+  {35, SmartRotor::encISR<35>},
+};
+
+bool SmartRotor::isRegisteredInstance(uint8_t enc_)
 {
-  if (SmartRotor::_sri != nullptr)
-    delete SmartRotor::_sri;
-
-  SmartRotor::_sri = this;
+  return SmartRotor::_sri.find(enc_) != SmartRotor::_sri.end();
 }
 
 SmartRotor::SmartRotor(
-  uint8_t m1pin1,
-  uint8_t m1pin2,
-  uint8_t m2pin1,
-  uint8_t m2pin2,
-  uint8_t m1enc1,
-  uint8_t m2enc1) : SmartRotor::SmartRotor(
-    m1pin1, m1pin2, m2pin1, m2pin2, m1enc1, -1, m2enc1, -1)
+  uint8_t pin1,
+  uint8_t pin2,
+  uint8_t enc) :
+    pin1(pin1),
+    pin2(pin2),
+    enc(enc),
+    pulsesPerMeter(15050),
+    pulsesPerRevolution(2500),
+    pulseCount(0),
+    movesToTarget(false),
+    startingPulses(0),
+    pulseTarget(0),
+    speed(255),
+    direction(1)
 {
+  if (SmartRotor::isRegisteredInstance(enc))
+    delete SmartRotor::_sri[enc];
+
+  SmartRotor::_sri[enc] = this;
 }
 
 SmartRotor::~SmartRotor(void)
 {
-  SmartRotor::_sri = nullptr;
+  if (SmartRotor::isRegisteredInstance(enc))
+    SmartRotor::_sri.erase(enc);
 }
 
-void SmartRotor::m1encISR(void)
+template <uint8_t enc_>
+void SmartRotor::encISR(void)
 {
-  if (SmartRotor::_sri != nullptr)
+  if (SmartRotor::isRegisteredInstance(enc_))
   {
-    if (digitalRead(SmartRotor::_sri->m1enc1))
-      SmartRotor::_sri->m1pulseCount++;
+    if (digitalRead(SmartRotor::_sri[enc_]->enc))
+      SmartRotor::_sri[enc_]->pulseCount++;
 
-    if (SmartRotor::_sri->m1movesToTarget &&
-      SmartRotor::_sri->m1pulseCount >= SmartRotor::_sri->m1pulseTarget)
+    if (SmartRotor::_sri[enc_]->movesToTarget &&
+      SmartRotor::_sri[enc_]->pulseCount >= SmartRotor::_sri[enc_]->pulseTarget)
     {
-      SmartRotor::_sri->m1stop();
+      SmartRotor::_sri[enc_]->stop();
     }
   }
-}
-
-void SmartRotor::m2encISR(void)
-{
-  if (SmartRotor::_sri != nullptr)
-  {
-    if (digitalRead(SmartRotor::_sri->m2enc1))
-      SmartRotor::_sri->m2pulseCount++;
-
-    if (SmartRotor::_sri->m2movesToTarget &&
-      SmartRotor::_sri->m2pulseCount >= SmartRotor::_sri->m2pulseTarget)
-    {
-      SmartRotor::_sri->m2stop();
-    }
-  }
-}
-
-void SmartRotor::m1stop(void)
-{
-  PWM_Write(m1pin1, 255);
-  PWM_Write(m1pin2, 255);
-  m1movesToTarget = false;
-}
-
-void SmartRotor::m2stop(void)
-{
-  PWM_Write(m2pin1, 255);
-  PWM_Write(m2pin2, 255);
-  m2movesToTarget = false;
 }
 
 void SmartRotor::stop(void)
 {
-  m1stop();
-  m2stop();
+  PWM_Write(pin1, 255);
+  PWM_Write(pin2, 255);
+  movesToTarget = false;
 }
 
-void SmartRotor::turnByAngle(int angle)
-{
-  bool cw = true;
-  int ppt = pulsesPerRightTurn;
-  int a = angle;
-  if (angle < 0)
-  {
-    cw = false;
-    ppt = pulsesPerLeftTurn;
-    a = -a;
-  }
-
-  m1pulseTarget = m1pulseCount + (int) (ppt * ((double)a/360.0));
-  m2pulseTarget = m2pulseCount + (int) (ppt * ((double)a/360.0));
-  m1movesToTarget = true;
-  m2movesToTarget = true;
-
-  turn(cw);
-}
-
-void SmartRotor::moveByPulses(int m1pulses, int m2pulses)
+void SmartRotor::moveByPulses(int pulses)
 {
   move();
 
-  if (m1pulses > -1)
+  if (pulses > -1)
   {
-    m1pulseTarget = m1pulseCount + m1pulses;
-    m1movesToTarget = true;
+    pulseTarget = pulseCount + pulses;
+    movesToTarget = true;
   }
   else
   {
-    m1movesToTarget = false;
-    m1stop();
-  }
-
-  if (m2pulses > -1)
-  {
-    m2pulseTarget = m2pulseCount + m2pulses;
-    m2movesToTarget = true;
-  }
-  else
-  {
-    m2movesToTarget = false;
-    m2stop();
+    movesToTarget = false;
+    stop();
   }
 }
 
@@ -169,168 +95,50 @@ void SmartRotor::move(void)
 {
   if (direction == 1)
   {
-    PWM_Write(m1pin1, speed);
-    PWM_Write(m1pin2, 0);
-    PWM_Write(m2pin1, 0);
-    PWM_Write(m2pin2, speed);
+    PWM_Write(pin1, speed);
+    PWM_Write(pin2, 0);
   }
   else
   {
-    PWM_Write(m1pin1, 0);
-    PWM_Write(m1pin2, speed);
-    PWM_Write(m2pin1, speed);
-    PWM_Write(m2pin2, 0);
-  }
-}
-
-void SmartRotor::turn(bool clockwise)
-{
-  if (clockwise)
-  {
-    PWM_Write(m1pin1, speed);
-    PWM_Write(m1pin2, 0);
-    PWM_Write(m2pin1, speed);
-    PWM_Write(m2pin2, 0);
-  }
-  else
-  {
-    PWM_Write(m1pin1, 0);
-    PWM_Write(m1pin2, speed);
-    PWM_Write(m2pin1, 0);
-    PWM_Write(m2pin2, speed);
+    PWM_Write(pin1, 0);
+    PWM_Write(pin2, speed);
   }
 }
 
 void SmartRotor::begin(void)
 {
-  pinMode(m1enc1, INPUT);
-  pinMode(m2enc1, INPUT);
+  pinMode(enc, INPUT);
 
-  if (m1enc2 > 0)
-    pinMode(m1enc2, INPUT);
-  
-  if (m2enc2 > 0)
-    pinMode(m2enc2, INPUT);
+  SetNewPWMChannel(pin1);
+  SetNewPWMChannel(pin2);
 
-  SetNewPWMChannel(m1pin1);
-  SetNewPWMChannel(m1pin2);
-  SetNewPWMChannel(m2pin1);
-  SetNewPWMChannel(m2pin2);
+  PWM_Write(pin1, 0);
+  PWM_Write(pin2, 0);
 
-  PWM_Write(m1pin1, 0);
-  PWM_Write(m1pin2, 0);
-  PWM_Write(m2pin1, 0);
-  PWM_Write(m2pin2, 0);
-
-  attachInterrupt(m1enc1, &SmartRotor::m1encISR, CHANGE);
-  attachInterrupt(m2enc1, &SmartRotor::m2encISR, CHANGE);
+  attachInterrupt(enc, SmartRotor::_sri_isr[enc], CHANGE);
 }
 
 bool SmartRotor::isMoving(void)
 {
-  return m1movesToTarget || m2movesToTarget;
+  return movesToTarget;
 }
 
 void SmartRotor::setPulsesPerMeter(int pulsesPerMeter)
 {
-  m1pulsesPerMeter = pulsesPerMeter;
-  m2pulsesPerMeter = pulsesPerMeter;
-}
-
-// Set pulses per 1 meter for both motors
-// if value for a motor is < 0, the value remains unchanged
-void SmartRotor::setPulsesPerMeter(int m1pulsesPerMeter, int m2pulsesPerMeter)
-{
-  if (m1pulsesPerMeter >= 0)
-    this->m1pulsesPerMeter = m1pulsesPerMeter;
-
-  if (m2pulsesPerMeter >= 0)
-    this->m2pulsesPerMeter = m2pulsesPerMeter;
-}
-
-void SmartRotor::setPulsesPerTurn(int pulsesPerTurn)
-{
-  pulsesPerLeftTurn = pulsesPerTurn;
-  pulsesPerRightTurn = pulsesPerTurn;
-}
- 
-// If value for a direction is < 0, the value remains unchanged
-void SmartRotor::setPulsesPerTurn(int pulsesPerLeftTurn, int pulsesPerRightTurn)
-{
-  if (pulsesPerLeftTurn >= 0)
-    this->pulsesPerLeftTurn = pulsesPerLeftTurn;
-  
-  if (pulsesPerRightTurn >= 0)
-    this->pulsesPerRightTurn = pulsesPerRightTurn;
+  this->pulsesPerMeter = pulsesPerMeter;
 }
 
 void SmartRotor::setPulsesPerRevolution(int pulsesPerRevolution)
 {
-  m1pulsesPerRevolution = pulsesPerRevolution;
-  m2pulsesPerRevolution = pulsesPerRevolution;
+  this->pulsesPerRevolution = pulsesPerRevolution;
 }
 
-void SmartRotor::setPulsesPerRevolution(
-  int m1pulsesPerRevolution, int m2PulsesPerRevolution)
+void SmartRotor::moveByMeters(float meters)
 {
-  if (m1pulsesPerRevolution >= 0)
-    this->m1pulsesPerRevolution = m1pulsesPerRevolution;
-  if (m2pulsesPerRevolution >= 0)
-    this->m2pulsesPerRevolution = m2pulsesPerRevolution;
+  moveByPulses(pulsesPerMeter * meters);
 }
 
-void SmartRotor::moveByMeters(float meters, SmartRotor::Which rotor)
+void SmartRotor::moveByRevolutions(float revolutions)
 {
-  switch (rotor)
-  {
-    case SmartRotor::Which::LEFT:
-      moveByPulses(m1pulsesPerMeter * meters, -1);
-      break;
-    case SmartRotor::Which::RIGHT:
-      moveByPulses(-1, m2pulsesPerMeter * meters);
-      break;
-    case SmartRotor::Which::BOTH:
-      moveByPulses(m1pulsesPerMeter * meters, m2pulsesPerMeter * meters);
-      break;
-  }
-}
-
-void SmartRotor::moveByRevolutions(float revolutions, SmartRotor::Which rotor)
-{
-  switch (rotor)
-  {
-    case SmartRotor::Which::LEFT:
-      moveByPulses(m1pulsesPerRevolution * revolutions, -1);
-      break;
-    case SmartRotor::Which::RIGHT:
-      moveByPulses(-1, m1pulsesPerRevolution * revolutions);
-      break;
-    case SmartRotor::Which::BOTH:
-      moveByPulses(
-        m1pulsesPerRevolution * revolutions,
-        m1pulsesPerRevolution * revolutions
-      );
-      break;
-  }
-}
-
-void SmartRotor::turnByRevolutions(float revolutions)
-{
-  bool cw = true;
-
-  int revs = revolutions;
-
-  if (revolutions < 0)
-  {
-    cw = false;
-    revs = -revs;
-  }
-
-  m1pulseTarget = m1pulseCount + (int) (m1pulsesPerRevolution * revs);
-  m2pulseTarget = m2pulseCount + (int) (m2pulsesPerRevolution * revs);
-
-  m1movesToTarget = true;
-  m2movesToTarget = true;
-
-  turn(cw);
+  moveByPulses(pulsesPerRevolution * revolutions);
 }
