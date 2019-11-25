@@ -26,9 +26,6 @@ class SmartRotor
     // Encoder inputs
     uint8_t enc;
 
-    int pulsesPerRevolution;
-    int pulsesPerMeter;
-
     // No. of pulses in whichever direction since the start of the program
     uint32_t pulseCount;
 
@@ -39,16 +36,19 @@ class SmartRotor
     uint32_t startingPulses;
     uint32_t pulseTarget;
 
-    template <int enc_>
+    template <uint8_t enc_>
     static void encISR(void);
 
     // checks if the hashmap of instances contains this instance
-    static bool isRegisteredInstance(int enc_);
+    static bool isRegisteredInstance(uint8_t enc_);
 
   public:
     // Global SmartRotor instances for interrupts 
     static std::unordered_map<uint8_t, SmartRotor *> _sri;
     static std::unordered_map<uint8_t, void (*)()> _sri_isr;
+
+    int pulsesPerRevolution;
+    int pulsesPerMeter;
 
     SmartRotor(
       uint8_t pin1,

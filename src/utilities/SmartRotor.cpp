@@ -9,7 +9,7 @@ std::unordered_map<uint8_t, void (*)()> SmartRotor::_sri_isr = {
   {35, SmartRotor::encISR<35>},
 };
 
-bool SmartRotor::isRegisteredInstance(int enc_)
+bool SmartRotor::isRegisteredInstance(uint8_t enc_)
 {
   return SmartRotor::_sri.find(enc_) != SmartRotor::_sri.end();
 }
@@ -42,7 +42,7 @@ SmartRotor::~SmartRotor(void)
     SmartRotor::_sri.erase(enc);
 }
 
-template <int enc_>
+template <uint8_t enc_>
 void SmartRotor::encISR(void)
 {
   if (SmartRotor::isRegisteredInstance(enc_))
