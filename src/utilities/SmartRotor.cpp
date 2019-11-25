@@ -135,7 +135,6 @@ void SmartRotor::setPulsesPerRevolution(int pulsesPerRevolution)
 
 void SmartRotor::moveByMeters(float meters)
 {
-  printf("%d %d %d\n", enc, meters, (int)((float) pulsesPerMeter * meters));
   moveByPulses(pulsesPerMeter * meters);
 }
 
