@@ -131,14 +131,14 @@ void SmartRotorSystem::moveByMeters(float meters, SmartRotorSystem::Which rotor)
   switch (rotor)
   {
     case Which::LEFT:
-      left->moveByRevolutions(meters);
+      left->moveByMeters(meters);
       break;
     case Which::RIGHT:
-      right->moveByRevolutions(meters);
+      right->moveByMeters(meters);
       break;
     case Which::BOTH:
-      left->moveByRevolutions(meters);
-      right->moveByRevolutions(meters);
+      left->moveByMeters(meters);
+      right->moveByMeters(meters);
       break;
   }
 }
