@@ -117,21 +117,8 @@
           stausLEDused = true;
           Add_Mono_LED_matrix(SPI_PORT_2);
         }else if(predef == "SKRIBRAIN_ARDUBLOCK"){
-          // motor driver PWM
-          const uint8_t m1pin1 = 12;
-          const uint8_t m1pin2 = 21;
-          const uint8_t m2pin1 = 22;
-          const uint8_t m2pin2 = 23;
-
-// motor encoder inputs
-        const uint8_t m1enc1 = 35;
-        const uint8_t m2enc1 = 32;
-          smartRotor = new SmartRotor(
-             m1pin1, m1pin2, m2pin1, m2pin2,
-             m1enc1, m2enc1 
-            );
-
-          smartRotor->setPulsesPerMeter(15050, 15050);//(15050, 14000);
+          smartRotor = new SmartRotorSystem(12, 21, 35, 23, 22, 32);
+          smartRotor->setPulsesPerMeter(15050, 15050);
           smartRotor->setPulsesPerTurn(8700, 8550);
           smartRotor->begin();
           status = new StatusLED(SKRIBRAIN_STATUS_LED_PIN,SKRIBRAIN_SERVO_PIN_3);
@@ -151,17 +138,7 @@
 
         } else if (predef == "SKRIBRAIN_B2C_TESTS_SMARTROTOR")
         {
-          const uint8_t m1pin1 = 12;
-          const uint8_t m1pin2 = 21;
-          const uint8_t m2pin1 = 22;
-          const uint8_t m2pin2 = 23;
-          const uint8_t m1enc1 = 35;
-          const uint8_t m2enc1 = 32;
-          smartRotor = new SmartRotor(
-             m1pin1, m1pin2, m2pin1, m2pin2,
-             m1enc1, m2enc1 
-            );
-
+          smartRotor = new SmartRotorSystem(12, 21, 35, 23, 22, 32);
           smartRotor->setPulsesPerMeter(15050, 15050);
           smartRotor->setPulsesPerTurn(8700, 8550);
           smartRotor->begin();

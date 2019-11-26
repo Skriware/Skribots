@@ -1,7 +1,7 @@
 #ifndef SMART_ROTOR_H
 #define SMART_ROTOR_H
 
-#include <unordered_map>
+#include <map>
 
 #include "PWM_Handler.h"
 
@@ -44,8 +44,8 @@ class SmartRotor
 
   public:
     // Global SmartRotor instances for interrupts 
-    static std::unordered_map<uint8_t, SmartRotor *> _sri;
-    static std::unordered_map<uint8_t, void (*)()> _sri_isr;
+    static std::map<uint8_t, SmartRotor *> _sri;
+    static std::map<uint8_t, void (*)()> _sri_isr;
 
     int pulsesPerRevolution;
     int pulsesPerMeter;

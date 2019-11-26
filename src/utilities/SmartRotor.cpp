@@ -1,10 +1,10 @@
 #include "SmartRotor.h"
 
 // A hash map of instances of SmartRotor
-std::unordered_map<uint8_t, SmartRotor *> SmartRotor::_sri = {};
+std::map<uint8_t, SmartRotor *> SmartRotor::_sri = {};
 
 // A hash map of possible ISRs for encoder pins
-std::unordered_map<uint8_t, void (*)()> SmartRotor::_sri_isr = {
+std::map<uint8_t, void (*)()> SmartRotor::_sri_isr = {
   {32, SmartRotor::encISR<32>},
   {35, SmartRotor::encISR<35>},
 };
