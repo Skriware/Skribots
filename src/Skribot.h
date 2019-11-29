@@ -84,8 +84,10 @@
 
 #define SKRIBRAIN_MOTOR_L_DIR1_PIN 12 
 #define SKRIBRAIN_MOTOR_L_DIR2_PIN 21
+#define SKRIBRAIN_MOTOR_L_ENC_PIN 35
 #define SKRIBRAIN_MOTOR_R_DIR1_PIN 23
 #define SKRIBRAIN_MOTOR_R_DIR2_PIN 22
+#define SKRIBRAIN_MOTOR_R_ENC_PIN 32
 #define SKRIBRAIN_ECHO_PIN_1 5
 #define SKRIBRAIN_ECHO_PIN_2 19
 #define SKRIBRAIN_TRIG_PIN_1 17
@@ -257,7 +259,9 @@
   Rotor *LeftDCRotors[2] = {NULL};
   Rotor *RightDCRotors[2] = {NULL};
   LightSensor *LightSensors[5] = {NULL};
-  SmartRotorSystem *smartRotor;
+  SmartRotor *leftSmartRotor = nullptr;
+  SmartRotor *rightSmartRotor = nullptr;
+  SmartRotorSystem *smartRotor = nullptr;
   bool using_BLE_Connection,
        connection_Break_Reported,
        program_End_Reported,

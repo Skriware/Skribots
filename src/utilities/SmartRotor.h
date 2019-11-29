@@ -36,13 +36,13 @@ class SmartRotor
     uint32_t startingPulses;
     uint32_t pulseTarget;
 
-    template <uint8_t enc_>
-    static void encISR(void);
-
+  public:
     // checks if the hashmap of instances contains this instance
     static bool isRegisteredInstance(uint8_t enc_);
 
-  public:
+    template <uint8_t enc_>
+    static void encISR(void);
+
     // Global SmartRotor instances for interrupts 
     static std::map<uint8_t, SmartRotor *> _sri;
     static std::map<uint8_t, void (*)()> _sri_isr;

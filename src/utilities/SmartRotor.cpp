@@ -39,7 +39,25 @@ SmartRotor::SmartRotor(
 SmartRotor::~SmartRotor(void)
 {
   if (SmartRotor::isRegisteredInstance(enc))
+  {
+    detachInterrupt(enc);
     SmartRotor::_sri.erase(enc);
+  }
+}
+
+void SmartRotor::begin(void)
+{
+  pinMode(enc, INPUT);
+
+  if (!PWM_defined(pin1))
+    SetNewPWMChannel(pin1);
+  if (!PWM_defined(pin2))
+    SetNewPWMChannel(pin2);
+
+  PWM_Write(pin1, 0);
+  PWM_Write(pin2, 0);
+
+  attachInterrupt(enc, SmartRotor::_sri_isr[enc], CHANGE);
 }
 
 template <uint8_t enc_>
@@ -103,19 +121,6 @@ void SmartRotor::move(void)
     PWM_Write(pin1, 0);
     PWM_Write(pin2, speed);
   }
-}
-
-void SmartRotor::begin(void)
-{
-  pinMode(enc, INPUT);
-
-  SetNewPWMChannel(pin1);
-  SetNewPWMChannel(pin2);
-
-  PWM_Write(pin1, 0);
-  PWM_Write(pin2, 0);
-
-  attachInterrupt(enc, SmartRotor::_sri_isr[enc], CHANGE);
 }
 
 bool SmartRotor::isMoving(void)

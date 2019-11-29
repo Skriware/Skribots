@@ -15,12 +15,13 @@
 #endif
 
 
-	struct PWM_Channel{
-		byte pwmPin;
-		byte pwmChannel;
-	};
-	void PWM_Write(byte PWMPin,int value);
-	int SetNewPWMChannel(byte PWMPin);
-	bool PWM_overloaded();
-	void clearPWM();
+  struct PWM_Channel{
+    byte pwmPin;
+    byte pwmChannel;
+  };
+  void PWM_Write(byte PWMPin,int value);
+  int SetNewPWMChannel(byte PWMPin);
+  bool PWM_overloaded();
+  void clearPWM();
+  bool PWM_defined(byte pin);
 #endif

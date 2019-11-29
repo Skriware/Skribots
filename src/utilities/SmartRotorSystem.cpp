@@ -3,14 +3,12 @@
 
 SmartRotorSystem::SmartRotorSystem(void)
 {
-  direction = 1;
 }
 
 SmartRotorSystem::SmartRotorSystem(SmartRotor *left, SmartRotor *right)
 {
   this->left = left;
   this->right = right;
-  SmartRotorSystem();
 }
 
 SmartRotorSystem::SmartRotorSystem(
@@ -20,7 +18,12 @@ SmartRotorSystem::SmartRotorSystem(
 {
   left = new SmartRotor(leftPin1, leftPin2, leftEnc);
   right = new SmartRotor(rightPin1, rightPin2, rightEnc);
-  SmartRotorSystem();
+}
+
+SmartRotorSystem::~SmartRotorSystem(void)
+{
+  delete left;
+  delete right;
 }
 
 void SmartRotorSystem::setTurnDirections(bool cw)
@@ -51,11 +54,17 @@ void SmartRotorSystem::setNormalDirections(void)
   }
 }
 
-void SmartRotorSystem::begin(void)
+void SmartRotorSystem::begin(bool recursive)
 {
   setPulsesPerTurn(9000);
-  left->begin();
-  right->begin();
+  setDirection(1);
+  setSpeed(255);
+
+  if (recursive)
+  {
+    left->begin();
+    right->begin();
+  }
 }
 
 void SmartRotorSystem::setSpeed(int speed)
@@ -84,7 +93,6 @@ void SmartRotorSystem::setPulsesPerMeter(int leftPulsesPerMeter, int rightPulses
 {
   left->pulsesPerMeter = leftPulsesPerMeter;
   right->pulsesPerMeter = rightPulsesPerMeter;
-
 }
 
 void SmartRotorSystem::setPulsesPerMeter(int pulsesPerMeter)
@@ -122,12 +130,14 @@ void SmartRotorSystem::move(void)
 
 void SmartRotorSystem::moveByPulses(int leftPulses, int rightPulses)
 {
+  setNormalDirections();
   left->moveByPulses(leftPulses);
   right->moveByPulses(rightPulses);
 }
 
 void SmartRotorSystem::moveByMeters(float meters, SmartRotorSystem::Which rotor)
 {
+  setNormalDirections();
   switch (rotor)
   {
     case Which::LEFT:
@@ -146,6 +156,7 @@ void SmartRotorSystem::moveByMeters(float meters, SmartRotorSystem::Which rotor)
 void SmartRotorSystem::moveByRevolutions(
   float revolutions, SmartRotorSystem::Which rotor)
 {
+  setNormalDirections();
   switch (rotor)
   {
     case Which::LEFT:

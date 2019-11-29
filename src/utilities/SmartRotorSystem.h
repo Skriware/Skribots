@@ -29,8 +29,9 @@ class SmartRotorSystem
       uint8_t leftPin1, uint8_t leftPin2, uint8_t leftEnc,
       uint8_t rightPin1, uint8_t rightPin2, uint8_t rightEnc
     );
+    ~SmartRotorSystem(void);
 
-    void begin(void);
+    void begin(bool recursive=false);
 
     void setSpeed(int speed);
     void setDirection(int direction);
