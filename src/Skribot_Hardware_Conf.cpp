@@ -125,15 +125,10 @@ void Skribot::AddHardware(char *tag){
 void Skribot::ClearHardware(){
   DEBUG_PRINT("CLEAR HDW");
   for(byte tt = 0; tt < 2; tt++){
-    Serial.print("A");
     delete DistSensors[tt];
-    Serial.print("B");
     delete LED_Matrixes[tt];
-    Serial.print("C");
     delete LeftDCRotors[tt];
-    Serial.print("D");
     delete RightDCRotors[tt];
-    Serial.print("E");
   }
 
   if (smartRotor != nullptr)
