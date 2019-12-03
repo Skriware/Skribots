@@ -151,7 +151,7 @@
   class Skribot
  {
   public:
-  	Skribot(String predef = "");
+  	Skribot(String predef = " ");
   	void AddDistSensor(int EchoPin,int TrigPin,String Name);
     void AddDistSensor(int EchoPin,int TrigPin,int id);
     void AddDistSensor(byte DIST_PORT);

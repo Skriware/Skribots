@@ -29,7 +29,7 @@
     ignore_connection_break = false;
     smartRotor = NULL;
     Board_type = BOARD_VERSION;
-    Configure_Connections(predef);
+    if(predef != " ")Configure_Connections(predef);
     #ifdef DEBUG_MODE
     Serial.begin(115200);
     #endif
@@ -743,6 +743,7 @@ if(claw_closed && (millis() - claw_closed_time > 180000)){
     for(int zz = 0; zz < NLEDs ; zz++){
                     if(_id == -69 || LEDs[zz]->GetID() == _id){
                       LEDs[zz]->turnON(R,G,B,N_LED);
+                      Serial.println(LEDs[zz]->GetID());
                       if(_id != -69)break;
                     }                
       }
