@@ -170,6 +170,12 @@ void Skribot::ClearHardware(){
   NLeftDCRotors = 0;
   NRightDCRotors = 0;
   clearPWM();
+
+  for (int i = 0; i < 2; i++)
+  {
+    delete SPIcomm[i];
+    SPIcomm[i] = nullptr;
+  }
 }
 
 #undef DEBUG_PRINT
