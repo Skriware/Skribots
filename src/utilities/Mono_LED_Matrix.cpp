@@ -400,3 +400,8 @@ void Mono_LED_Matrix::CombineBitmaps(
     dst[i] |= src2[i] >> (7-pos);
   }
 }
+
+void Mono_LED_Matrix::SetChar(int matrixN, char c)
+{
+  SetBitmap(matrixN, Mono_LED_Matrix_font[c - ' ']);
+}
