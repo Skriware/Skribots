@@ -33,6 +33,7 @@ class Mono_LED_Matrix
       int matrixCount=1,
       int rotation=0,
       int intensity=8);
+    ~Mono_LED_Matrix(void);
     void Init(void);
     void SetRotation(int rotation);
     void SetIntensity(uint8_t intensity);

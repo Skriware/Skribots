@@ -26,6 +26,33 @@ Mono_LED_Matrix::Mono_LED_Matrix(
   digitalWrite(cs, HIGH);
 }
 
+Mono_LED_Matrix::~Mono_LED_Matrix(void)
+{
+  for (int matrixN = 0; matrixN < matrixCount; matrixN++)
+  {
+    if (animations[matrixN] != nullptr)
+    {
+      for (size_t i = 0; i < animationSizes[matrixN]; i++)
+      {
+        free(animations[matrixN][i]);
+        animations[matrixN][i] = nullptr;
+      }
+      free(animations[matrixN]);
+      animations[matrixN] = nullptr;
+    }
+  }
+  animations = nullptr;
+
+  free(animationFrames);
+  animationFrames = nullptr;
+
+  free(animationSizes);
+  animationSizes = nullptr;
+
+  free(animationStates);
+  animationStates = nullptr;
+}
+
 byte Mono_LED_Matrix::getId()
 {
   return id;
