@@ -33,6 +33,7 @@ class Mono_LED_Matrix
       int matrixCount=1,
       int rotation=0,
       int intensity=8);
+    ~Mono_LED_Matrix(void);
     void Init(void);
     void SetRotation(int rotation);
     void SetIntensity(uint8_t intensity);
@@ -42,6 +43,7 @@ class Mono_LED_Matrix
 
     void SetPixel(int matrixN, int x, int y, int val);
     void SetBitmap(int matrixN, uint8_t *bmp);
+    void SetChar(int matrixN, char c);
     void Invert(int matrixN);
 
     // animation: 2-dim array
