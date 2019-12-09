@@ -61,7 +61,7 @@
 	  SPIHandler::~SPIHandler(){
 	  	_spi->end();
 	  	delete _spi;
-	  	delete output;
+	  	_spi = NULL;
 	  	used_spi_bus--;
 	  }
 	  void SPIHandler::set_SPI_Settings(uint32_t clock, uint8_t bitOrder, uint8_t dataMode){
