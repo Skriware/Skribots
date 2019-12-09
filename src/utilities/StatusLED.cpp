@@ -1,5 +1,6 @@
 #include "StatusLED.h"
 #define STATUS_LED_INTENSIVITY 30
+//#define RANDOM_BATTERY_READ
 #ifndef ESP_H
 StatusLED::StatusLED(byte R, byte G, byte B,byte batery){
 	 R_pin = R;
@@ -127,10 +128,13 @@ int StatusLED::CheckBateryStatus(){
 byte StatusLED::ReadBatteryState(){
 	float Voltage = 100;
 	#ifdef ESP_H
-	float mult = 0.005*3;
+	float mult = 0.015;
 	Voltage = (float)analogRead(Battery_pin)*mult;
 	#endif
 	byte read = Voltage/12.0*100;
+	#ifdef RANDOM_BATTERY_READ
+	read = millis()%100;
+	#endif
 	return(read);
 }
 void StatusLED::BLINK_OK(){

@@ -1,6 +1,6 @@
 #include "Skribot.h"
-#define DEBUG_MODE_H
-
+//#define DEBUG_MODE_H
+#define SMART_ROTOR
 #ifdef DEBUG_MODE_H
   #define DEBUG_PRINT(msg) Serial.println(msg)
 #else
@@ -45,6 +45,7 @@ void Skribot::AddHardware(char *tag){
       }
     break;
     case 'R':
+    #ifdef SMART_ROTOR
       DEBUG_PRINT("MOTOR");
       DEBUG_PRINT(tag[1]);
       switch(tag[1])
@@ -83,6 +84,18 @@ void Skribot::AddHardware(char *tag){
         smartRotor->begin();
       } else {
       }
+    #else
+        switch(tag[1]){
+          case '1':
+              AddDCRotor(SKRIBRAIN_MOTOR_L_DIR2_PIN,SKRIBRAIN_MOTOR_L_DIR1_PIN,"Left");
+          break;
+          case '2':
+              AddDCRotor(SKRIBRAIN_MOTOR_R_DIR2_PIN,SKRIBRAIN_MOTOR_R_DIR1_PIN,"Right");
+          break;
+          default:
+          break;
+          }
+    #endif
       break;
     case 'D':
       DEBUG_PRINT("DISTANCE");
