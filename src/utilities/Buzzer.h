@@ -16,6 +16,7 @@ class Buzzer
 {
   public:
     Buzzer(int pin);
+    ~Buzzer(void);
     void SetVolume(int volume);
     void SetTempo(float tempo);
 
@@ -23,10 +24,14 @@ class Buzzer
     void PlayNote(const char *note);
     void PlayNoteAndWait(uint16_t note, int duration);
     void PlayNoteAndWait(const char *note, int duration);
+    uint16_t PlayNextNote(void);
 
     void PlayMelody(const uint16_t (*melody)[2], size_t size);
     void PlayMelody(const char **melody, size_t size);
     void PlayMelody(uint16_t *freqs, uint16_t *delays, size_t size);
+
+    void SetMelody(uint16_t *freqs, uint16_t *delays, size_t size);
+    void DeleteCurrentMelody(void);
 
     void StopNote(void);
 
@@ -35,6 +40,10 @@ class Buzzer
     int volume;
     float tempo;
     int channel;
+    uint16_t *currentMelody;
+    uint16_t *currentDelays;
+    size_t currentMelodySize;
+    int currentNote;
 
     void PlayNote(uint16_t frequency, int duration, bool blocking=false);
     static int frequencyFromName(const char *name);

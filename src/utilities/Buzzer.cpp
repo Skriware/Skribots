@@ -1,7 +1,13 @@
 #include "Buzzer.h"
 
 Buzzer::Buzzer(int pin)
-  : pin(pin), volume(10), tempo(1.0)
+  : pin(pin),
+    volume(10),
+    tempo(1.0),
+    currentMelody(nullptr),
+    currentDelays(nullptr),
+    currentMelodySize(0),
+    currentNote(0)
 {
   #ifdef ESP_H
     channel = SetNewPWMChannel(pin);
@@ -10,6 +16,11 @@ Buzzer::Buzzer(int pin)
   #else
     pinMode(pin, OUTPUT);
   #endif
+}
+
+Buzzer::~Buzzer(void)
+{
+  DeleteCurrentMelody();
 }
 
 void Buzzer::PlayNote(uint16_t frequency, int duration, bool blocking)
@@ -48,6 +59,23 @@ void Buzzer::PlayNoteAndWait(uint16_t note, int duration)
 void Buzzer::PlayNoteAndWait(const char *note, int duration)
 {
   PlayNote(Buzzer::frequencyFromName(note), duration, true);
+}
+
+uint16_t Buzzer::PlayNextNote(void)
+{
+  if (currentMelody == nullptr || currentDelays == nullptr)
+  {
+    #ifdef DEBUG_MODE
+      Serial.println("Buzzer::PlayNextNote: Melody is null.");
+    #endif
+
+    return 0;
+  }
+
+  int idx = currentNote % currentMelodySize;
+  PlayNote(currentMelody[idx]);
+  currentNote++;
+  return currentDelays[idx];
 }
 
 void Buzzer::StopNote(void)
@@ -109,6 +137,31 @@ void Buzzer::SetVolume(int volume)
 void Buzzer::SetTempo(float tempo)
 {
   this->tempo = tempo;
+}
+
+void Buzzer::SetMelody(uint16_t *freqs, uint16_t *delays, size_t size)
+{
+  DeleteCurrentMelody();
+
+  currentMelody = new uint16_t[size];
+  currentDelays = new uint16_t[size];
+  currentMelodySize = size;
+
+  for (int i = 0; i < size; i++)
+    currentMelody[i] = freqs[i];
+
+  for (int i = 0; i < size; i++)
+    currentDelays[i] = delays[i];
+}
+
+void Buzzer::DeleteCurrentMelody(void)
+{
+  delete [] currentMelody;
+  delete [] currentDelays;
+  currentMelody = nullptr;
+  currentDelays = nullptr;
+  currentNote = 0;
+  currentMelodySize = 0;
 }
 
 int Buzzer::frequencyFromName(const char *name)
