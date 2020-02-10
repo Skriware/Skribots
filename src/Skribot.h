@@ -234,6 +234,8 @@
     void BLE_Setup();
     void BLE_reset();
     void BLE_Set_Module(moduleType type);
+    void BLE_Flush();
+    void BLE_Flush_Line();
     void sendNameInfo();
     bool ProgramENDRepotred();
     int BaterryCheck();
@@ -256,7 +258,9 @@
        claw_closed,
        config_mode,
        user_config,
-       Remote_block_used;
+       ignore_connection_break,
+       Remote_block_used,
+       program_Override_Reported;
   long claw_closed_time;
   moduleType BLE_MODULE_TYPE;
   StatusLED *status;

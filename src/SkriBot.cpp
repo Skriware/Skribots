@@ -26,6 +26,8 @@
     claw_closed_time = true;
     config_mode = false;
     Remote_block_used = false;
+    ignore_connection_break = false;
+    program_Override_Reported = false;
     smartRotor = NULL;
     Configure_Connections(predef);
     #ifdef DEBUG_MODE
@@ -146,10 +148,22 @@
    SetSpeed(250);
    Stop();
   }
+  void Skribot::IgnoreCONBRK(){
+    #ifdef DEBUG_MODE
+      Serial.println("Ignoring conbreak!");
+    #endif
+    ignore_connection_break = true;
+  }
 
-  void Skribot::ConfigureBoardEEPROM(){
-   
-      #ifdef DEBUG_MODE
+  void Skribot::CONBRK(){
+    #ifdef DEBUG_MODE
+      Serial.println("Respecting conbreak!");
+    #endif
+    ignore_connection_break = false;
+  }
+
+  bool Skribot::Check_Board_Version(){
+    #ifdef DEBUG_MODE
           Serial.println("Checking EEPROM...");
       #endif
        #ifdef ESP_H
@@ -302,7 +316,8 @@ if(claw_closed && (millis() - claw_closed_time > 180000)){
       delay(200);
       #endif
     }
-  
+    if(ignore_connection_break)return(true);
+    
     return(connection);
   }
   int Skribot::BLE_dataAvailable(){
@@ -1035,5 +1050,21 @@ if(claw_closed && (millis() - claw_closed_time > 180000)){
     void Skribot::ExitConfigMode(){
       if(config_mode){
         config_mode = false;
+      }
+    }
+
+    void Skribot::BLE_Flush(){
+      while(BLE_dataAvailable())BLE_read();
+    }
+
+    void Skribot::BLE_Flush_Line(){
+      while(true){
+        if(BLE_dataAvailable()){
+          char tmp = BLE_read();
+          Serial.print(tmp);
+          if(tmp == '\n')break;
+        }else{
+          break;
+        }
       }
     }
