@@ -204,6 +204,9 @@
     int  Read_EEPROM_INT(byte addr);
     void Write_EEPROM_INT(byte addr,int val);
 
+    bool Check_Board_Version();
+    void CONBRK();
+    void IgnoreCONBRK();
 
 
     void CloseClaw(byte id = 0);

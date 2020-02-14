@@ -171,7 +171,7 @@
           #ifdef DEBUG_MODE
           Serial.println("EEPROM init fail, aborting EEPROM check.");
           #endif
-          return;
+          return(false);
        }
       #endif
        Board_type = EEPROM.read(EEPROM_BOARD_VERSION_ADDR);
@@ -184,7 +184,7 @@
         #ifdef DEBUG_MODE
           Serial.println("First time flash detected");
           #endif
-        return;
+        return(false);
        }
        delay(10);                                              //EEPROM delay in order to avoid EEPROM ERRORS
        byte userChange = EEPROM.read(EEPROM_SETTINGS_OVERRIDED_ADDR);
@@ -194,7 +194,7 @@
           Serial.println("No user Settings in EEPROM Configuration");
           #endif
           user_config = false;
-        return;                                                                         //No user change done aborting the process;
+        return(false);                                                                         //No user change done aborting the process;
        }else if(userChange == 1){
        user_config = true;
        delay(10);                                              //EEPROM delay in order to avoid EEPROM ERRORS
@@ -240,6 +240,7 @@
         Serial.println(userChange);
         #endif
        }
+       return(true);
    
   }
 
