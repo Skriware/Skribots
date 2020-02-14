@@ -743,7 +743,6 @@ if(claw_closed && (millis() - claw_closed_time > 180000)){
     for(int zz = 0; zz < NLEDs ; zz++){
                     if(_id == -69 || LEDs[zz]->GetID() == _id){
                       LEDs[zz]->turnON(R,G,B,N_LED);
-                      Serial.println(LEDs[zz]->GetID());
                       if(_id != -69)break;
                     }                
       }
