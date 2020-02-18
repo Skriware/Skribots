@@ -221,7 +221,7 @@
       }
   }
 
-  void Skribot::ConfigureBoardEEPROM(){
+  bool Skribot::ConfigureBoardEEPROM(){
        delay(10);                                              //EEPROM delay in order to avoid EEPROM ERRORS
        byte userChange = EEPROM.read(EEPROM_SETTINGS_OVERRIDED_ADDR);
        delay(10);

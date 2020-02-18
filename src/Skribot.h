@@ -5,8 +5,8 @@
 //#define FORCE_BOARD_VERSION_1
 //#define FORCE_BOARD_VERSION_2
 
-#define DEBUG_MODE
-#define DEBUG_MODE_1
+//#define DEBUG_MODE
+//#define DEBUG_MODE_1
 
 #include "Arduino.h"
 #if defined(__AVR_ATmega2560__)
@@ -212,12 +212,11 @@
     int ReadLineSensor(String name);
     int ReadLineSensor(int id);
                                                                                               // line sensor readout
-    void ConfigureBoardEEPROM();
+    bool ConfigureBoardEEPROM();
     bool Check_Board_Version();
     int  Read_EEPROM_INT(byte addr);
     void Write_EEPROM_INT(byte addr,int val);
 
-    bool Check_Board_Version();
     void CONBRK();
     void IgnoreCONBRK();
 
@@ -258,8 +257,6 @@
 
     void EnterConfigMode();
     void ExitConfigMode();
-    void IgnoreCONBRK();
-    void CONBRK();
 
  // private:
   DistSensor *DistSensors[5];
