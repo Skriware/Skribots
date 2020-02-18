@@ -27,6 +27,7 @@
     config_mode = false;
     Remote_block_used = false;
     ignore_connection_break = false;
+    program_Override_Reported = false;
     smartRotor = NULL;
     Board_type = BOARD_VERSION;
     if(predef != " ")Configure_Connections(predef);
@@ -160,10 +161,16 @@
    Stop();
   }
   void Skribot::IgnoreCONBRK(){
+    #ifdef DEBUG_MODE
+      Serial.println("Ignoring conbreak!");
+    #endif
     ignore_connection_break = true;
   }
 
   void Skribot::CONBRK(){
+    #ifdef DEBUG_MODE
+      Serial.println("Respecting conbreak!");
+    #endif
     ignore_connection_break = false;
   }
 
@@ -223,7 +230,7 @@
           Serial.println("No user Settings in EEPROM Configuration");
           #endif
           user_config = false;
-        return;                                                                         //No user change done aborting the process;
+        return(false);                                                                         //No user change done aborting the process;
        }else if(userChange == 1){
        user_config = true;
        delay(10);                                              //EEPROM delay in order to avoid EEPROM ERRORS
@@ -269,6 +276,7 @@
         Serial.println(userChange);
         #endif
        }
+       return(true);
    
   }
 
@@ -345,7 +353,8 @@ if(claw_closed && (millis() - claw_closed_time > 180000)){
       delay(200);
       #endif
     }
-  
+    if(ignore_connection_break)return(true);
+    
     return(connection);
   }
   int Skribot::BLE_dataAvailable(){
@@ -1086,4 +1095,16 @@ if(claw_closed && (millis() - claw_closed_time > 180000)){
 
     void Skribot::BLE_Flush(){
       while(BLE_dataAvailable())BLE_read();
+    }
+
+    void Skribot::BLE_Flush_Line(){
+      while(true){
+        if(BLE_dataAvailable()){
+          char tmp = BLE_read();
+          Serial.print(tmp);
+          if(tmp == '\n')break;
+        }else{
+          break;
+        }
+      }
     }
