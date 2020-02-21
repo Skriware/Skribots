@@ -997,7 +997,7 @@ if(claw_closed && (millis() - claw_closed_time > 180000)){
                   }else{
                   for(int kk = 0; kk < NRightDCRotors ; kk++){
                     RightDCRotors[kk]->SetDirection(rightDir);
-                    RightDCRotors[kk]->SetSpeed(rightSpeed);
+                    RightDCRotors[kk]->SetSpeed(200*rightSpeed/250);
                     RightDCRotors[kk]->Move();
                   }
                   }
@@ -1008,7 +1008,7 @@ if(claw_closed && (millis() - claw_closed_time > 180000)){
                   }else{
                    for(int yy = 0; yy < NLeftDCRotors ; yy++){
                     LeftDCRotors[yy]->SetDirection(leftDir);
-                    LeftDCRotors[yy]->SetSpeed(leftSpeed);
+                    LeftDCRotors[yy]->SetSpeed(200*leftSpeed/250);
                     LeftDCRotors[yy]->Move();
                   }
                   }
