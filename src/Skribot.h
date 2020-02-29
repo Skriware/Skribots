@@ -146,7 +146,8 @@
 #define SKRIBOT_MINI_SHILELD_IR_OUT 9
 #endif
 
-
+  #define LEFT 0
+  #define RIGHT 1
 
   class Skribot
  {
@@ -231,7 +232,7 @@
     void TurnLEDOff(String name,byte N_LED =1); 
     void TurnLEDOn(int R,int G, int B,int _id = -69,byte N_LED = 1);
     void TurnLEDOff(int _id = -69,byte N_LED = 1);                                                            // LED functions
-
+    void SetLEDColor(int color_id);
     int  LightSensor_Raw(int id);
     bool LightSensor_Dark(int id);
     bool LightSensor_Bright(int id);

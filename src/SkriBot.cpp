@@ -965,8 +965,7 @@ if(claw_closed && (millis() - claw_closed_time > 180000)){
       }
     }
   }
-    #define LEFT 0
-    #define RIGHT 1
+
   void Skribot::Set_Motor_Movment(byte motor_id, byte dir, byte speed,byte time){
 
           switch(motor_id){
@@ -989,7 +988,7 @@ if(claw_closed && (millis() - claw_closed_time > 180000)){
           }
 
           if(time > 0 ){
-          wait_And_Check_BLE_Connection(ms,10);
+          wait_And_Check_BLE_Connection(time,10);
           for(int kk = 0; kk < NLeftDCRotors ; kk++){
                     LeftDCRotors[kk]->Stop();
                   }
@@ -1141,4 +1140,29 @@ if(claw_closed && (millis() - claw_closed_time > 180000)){
           break;
         }
       }
+    }
+
+    void Skribot::SetLEDColor(int color_id){
+      switch(color_id){
+            case 0: 
+                TurnLEDOn(255,0,0);
+            break;
+            case 1 : 
+                TurnLEDOn(0,0,255);
+            break;
+             case 2 : 
+                TurnLEDOn(0,255,0);
+            break;
+             case 4 : 
+                TurnLEDOn(255,0,255);
+            break;
+             case 5 : 
+                TurnLEDOn(255,255,255);
+            break;
+            case 3: 
+                TurnLEDOn(184, 255, 3);
+            break;
+            default:
+            break;
+          }
     }
