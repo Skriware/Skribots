@@ -957,7 +957,41 @@ if(claw_closed && (millis() - claw_closed_time > 180000)){
       }
     }
   }
+    #define LEFT 0
+    #define RIGHT 1
+  void Skribot::Set_Motor_Movment(byte motor_id, byte dir, byte speed,byte time){
 
+          switch(motor_id){
+           
+            case LEFT:
+                  for(int kk = 0; kk < NLeftDCRotors ; kk++){
+                    LeftDCRotors[kk]->SetDirection(dir);
+                    LeftDCRotors[kk]->SetSpeed(speed);
+                    LeftDCRotors[kk]->Move();
+                  }
+            break;
+            
+            case RIGHT:
+                  for(int kk = 0; kk < NRightDCRotors ; kk++){
+                    RightDCRotors[kk]->SetDirection(dir);
+                    RightDCRotors[kk]->SetSpeed(speed);
+                    RightDCRotors[kk]->Move();
+                  }
+            break;
+          }
+
+          if(time > 0 ){
+          wait_And_Check_BLE_Connection(ms,10);
+          for(int kk = 0; kk < NLeftDCRotors ; kk++){
+                    LeftDCRotors[kk]->Stop();
+                  }
+          
+           for(int k = 0; k < NRightDCRotors ; k++){
+                    RightDCRotors[k]->Stop();
+            }
+            high_power_usage=false;
+      }
+  }
   void Skribot::RawRotorMove(int left, int right){
       byte leftDir,leftSpeed,rightDir,rightSpeed;
       
