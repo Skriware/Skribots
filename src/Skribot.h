@@ -213,11 +213,13 @@
     int ReadLineSensor(String name);
     int ReadLineSensor(int id);
                                                                                               // line sensor readout
-    void ConfigureBoardEEPROM();
+    bool ConfigureBoardEEPROM();
     bool Check_Board_Version();
     int  Read_EEPROM_INT(byte addr);
     void Write_EEPROM_INT(byte addr,int val);
 
+    void CONBRK();
+    void IgnoreCONBRK();
 
 
     void CloseClaw(byte id = 0);
@@ -249,14 +251,13 @@
     void BLE_reset();
     void BLE_Set_Module(moduleType type);
     void BLE_Flush();
+    void BLE_Flush_Line();
     void sendNameInfo();
     bool ProgramENDRepotred();
     int BaterryCheck();
 
     void EnterConfigMode();
     void ExitConfigMode();
-    void IgnoreCONBRK();
-    void CONBRK();
 
  // private:
   DistSensor *DistSensors[5];
@@ -274,7 +275,8 @@
        config_mode,
        user_config,
        ignore_connection_break,
-       Remote_block_used;
+       Remote_block_used,
+       program_Override_Reported;
   long claw_closed_time;
   moduleType BLE_MODULE_TYPE;
   StatusLED *status;
