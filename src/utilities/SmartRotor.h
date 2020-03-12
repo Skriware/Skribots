@@ -1,8 +1,6 @@
 #ifndef SMART_ROTOR_H
 #define SMART_ROTOR_H
 
-#include <map>
-
 #include "PWM_Handler.h"
 
 
@@ -36,16 +34,12 @@ class SmartRotor
     uint32_t startingPulses;
     uint32_t pulseTarget;
 
+    static SmartRotor *sri32;
+    static SmartRotor *sri35;
+
   public:
-    // checks if the hashmap of instances contains this instance
-    static bool isRegisteredInstance(uint8_t enc_);
-
-    template <uint8_t enc_>
-    static void encISR(void);
-
-    // Global SmartRotor instances for interrupts 
-    static std::map<uint8_t, SmartRotor *> _sri;
-    static std::map<uint8_t, void (*)()> _sri_isr;
+    static void encISR32(void);
+    static void encISR35(void);
 
     int pulsesPerRevolution;
     int pulsesPerMeter;

@@ -1,18 +1,8 @@
 #include "SmartRotor.h"
 
-// A hash map of instances of SmartRotor
-std::map<uint8_t, SmartRotor *> SmartRotor::_sri = {};
 
-// A hash map of possible ISRs for encoder pins
-std::map<uint8_t, void (*)()> SmartRotor::_sri_isr = {
-  {32, SmartRotor::encISR<32>},
-  {35, SmartRotor::encISR<35>},
-};
-
-bool SmartRotor::isRegisteredInstance(uint8_t enc_)
-{
-  return SmartRotor::_sri.find(enc_) != SmartRotor::_sri.end();
-}
+SmartRotor *SmartRotor::sri32 = nullptr;
+SmartRotor *SmartRotor::sri35 = nullptr;
 
 SmartRotor::SmartRotor(
   uint8_t pin1,
@@ -30,18 +20,27 @@ SmartRotor::SmartRotor(
     speed(255),
     direction(1)
 {
-  if (SmartRotor::isRegisteredInstance(enc))
-    delete SmartRotor::_sri[enc];
-
-  SmartRotor::_sri[enc] = this;
+  if (enc == 32)
+  {
+    SmartRotor::sri32 = this;
+  }
+  else if (enc == 35)
+  {
+    SmartRotor::sri35 = this;
+  }
 }
 
 SmartRotor::~SmartRotor(void)
 {
-  if (SmartRotor::isRegisteredInstance(enc))
+  if (enc == 32)
   {
     detachInterrupt(enc);
-    SmartRotor::_sri.erase(enc);
+    SmartRotor::sri32 = nullptr;
+  }
+  else if (enc == 35)
+  {
+    detachInterrupt(enc);
+    SmartRotor::sri32 = nullptr;
   }
 }
 
@@ -57,23 +56,26 @@ void SmartRotor::begin(void)
   PWM_Write(pin1, 0);
   PWM_Write(pin2, 0);
 
-  attachInterrupt(enc, SmartRotor::_sri_isr[enc], CHANGE);
+  // Capture the rising edge because
+  // this gives us ~25 us more for handling the interrupt
+  if (enc == 32)
+  {
+    attachInterrupt(enc, SmartRotor::encISR32, RISING);
+  }
+  else if (enc == 35)
+  {
+    attachInterrupt(enc, SmartRotor::encISR35, RISING);
+  }
 }
 
-template <uint8_t enc_>
-void SmartRotor::encISR(void)
+void SmartRotor::encISR32(void)
 {
-  if (SmartRotor::isRegisteredInstance(enc_))
-  {
-    if (digitalRead(SmartRotor::_sri[enc_]->enc))
-      SmartRotor::_sri[enc_]->pulseCount++;
+  SmartRotor::sri32->pulseCount++;
+}
 
-    if (SmartRotor::_sri[enc_]->movesToTarget &&
-      SmartRotor::_sri[enc_]->pulseCount >= SmartRotor::_sri[enc_]->pulseTarget)
-    {
-      SmartRotor::_sri[enc_]->stop();
-    }
-  }
+void SmartRotor::encISR35(void)
+{
+  SmartRotor::sri35->pulseCount++;
 }
 
 void SmartRotor::stop(void)
@@ -125,6 +127,9 @@ void SmartRotor::move(void)
 
 bool SmartRotor::isMoving(void)
 {
+  if (movesToTarget && pulseCount >= pulseTarget)
+    stop();
+
   return movesToTarget;
 }
 
