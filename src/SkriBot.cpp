@@ -321,6 +321,7 @@
   #ifdef _VARIANT_BBC_MICROBIT_
     BTLESerial.println(msg);
   #else 
+    Serial.println("Sending!");
     BTmodule->BLE_write(msg);
   #endif
   }
@@ -581,7 +582,17 @@ if(claw_closed && (millis() - claw_closed_time > 180000)){
       #ifndef ESP_H 
         AddClaw(EDU_CLAW_PIN1,EDU_CLAW_PIN2);
       #else
-        AddClaw(SKRIBRAIN_SERVO_PIN_1,SKRIBRAIN_SERVO_PIN_2);
+      Check_Board_Version();
+       switch (Board_type){
+          case 1:
+            AddClaw(SKRIBRAIN_SERVO_PIN_1,SKRIBRAIN_SERVO_PIN_2);
+          break;
+          case 2:
+            AddClaw(SKRIBRAIN_SERVO_PIN_1,SKRIBRAIN_SERVO_PIN_3);
+          break;
+          default:
+          break;
+          }
       #endif
     } 
 
