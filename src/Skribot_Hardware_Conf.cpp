@@ -1,6 +1,6 @@
 #include "Skribot.h"
-//#define DEBUG_MODE_H
-#define SMART_ROTOR
+#define DEBUG_MODE_H
+//#define SMART_ROTOR
 #ifdef DEBUG_MODE_H
   #define DEBUG_PRINT(msg) Serial.println(msg)
 #else
@@ -161,11 +161,11 @@ void Skribot::AddHardware(char *tag){
 void Skribot::ClearHardware(){
   DEBUG_PRINT("CLEAR HDW");
   for(byte tt = 0; tt < 2; tt++){
-    delete DistSensors[tt];
-    delete LED_Matrixes[tt];
-    delete LeftDCRotors[tt];
-    delete RightDCRotors[tt];
-    delete LineSensors[tt];
+    if (DistSensors[tt] !=NULL)delete DistSensors[tt];
+    if (LED_Matrixes[tt] !=NULL)delete LED_Matrixes[tt];
+    if (LeftDCRotors[tt] !=NULL)delete LeftDCRotors[tt];
+    if (RightDCRotors[tt] !=NULL)delete RightDCRotors[tt];
+    if (LineSensors[tt] !=NULL)delete LineSensors[tt];
   }
 
 
@@ -200,6 +200,7 @@ void Skribot::ClearHardware(){
       LED_Matrixes[tt]=NULL;
       LeftDCRotors[tt]=NULL;
       RightDCRotors[tt]=NULL;
+      LineSensors[tt]=NULL;
     }
     for(byte rr = 0;rr<5;rr++){
       Buzzers[rr]=NULL;
@@ -207,6 +208,7 @@ void Skribot::ClearHardware(){
   NDistSensors = 0;
   NLeftDCRotors = 0;
   NRightDCRotors = 0;
+  NLineSensors = 0;
   clearPWM();
 
   for (int i = 0; i < 2; i++)
@@ -214,6 +216,7 @@ void Skribot::ClearHardware(){
     delete SPIcomm[i];
     SPIcomm[i] = nullptr;
   }
+  Serial.println("DELETED");
 }
 
 #undef DEBUG_PRINT
