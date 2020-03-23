@@ -27,12 +27,15 @@ void Skribot::AddHardware(char *tag){
       switch(tag[1]){
         case '1':
           pinMode(SKRIBRAIN_ANALOG_PIN_1,INPUT);
+          AddLineSensor(LINE_PIN_1, 1);
         break;
         case '2':
           pinMode(SKRIBRAIN_ANALOG_PIN_2,INPUT);
+          AddLineSensor(LINE_PIN_2, 2);
         break;
         case '3':
           pinMode(SKRIBRAIN_ANALOG_PIN_3,INPUT);
+          AddLineSensor(LINE_PIN_3, 3);
         break;
         case '4':
           pinMode(SKRIBRAIN_ANALOG_PIN_3,INPUT);
@@ -132,6 +135,26 @@ void Skribot::AddHardware(char *tag){
         break;	
       }
     break;
+    case 'C':
+      switch(tag[1]){
+        case '0':
+          AddClaw();
+        break;
+      }
+    break;
+    case 'L':
+    switch(tag[1]){
+      case '1':
+        AddLineSensor("L1");
+      break;
+      case '2':
+        AddLineSensor("L2");
+      break;
+      case '3':
+        AddLineSensor("L3");
+      break;
+    }
+    break;
   }
 }
 
@@ -142,7 +165,9 @@ void Skribot::ClearHardware(){
     delete LED_Matrixes[tt];
     delete LeftDCRotors[tt];
     delete RightDCRotors[tt];
+    delete LineSensors[tt];
   }
+
 
   if (smartRotor != nullptr)
   {
