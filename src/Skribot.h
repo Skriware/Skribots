@@ -1,8 +1,8 @@
 #ifndef SKRIBOT_H
 #define SKRIBOT_H
 
-#define FORCE_BOARD_VERSION
-#define FORCE_BOARD_VERSION_1
+//#define FORCE_BOARD_VERSION
+//#define FORCE_BOARD_VERSION_1
 //#define FORCE_BOARD_VERSION_2
 
 #define DEBUG_MODE
