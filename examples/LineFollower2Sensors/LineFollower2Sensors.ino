@@ -9,7 +9,8 @@
  *    - this sensor needs to be placed on the left side of the robot.
  * Line sensor plugged to the L2 slot on Skriware EDU shield
  *    - this sensor needs to be placed on the right side of the robot. 
- * Two rotors plugged through the Skriware EDU Shield, LEFT and RIGHT rotors are plugged to the rotors connections.
+ * Two rotors plugged through the Skriware EDU Shield,
+ * LEFT and RIGHT rotors are plugged to the rotors connections.
  * 
  * IMPORTANT!!!
  * Timings for turns are example values.
