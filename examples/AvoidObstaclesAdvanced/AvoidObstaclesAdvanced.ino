@@ -26,18 +26,18 @@
 
 #include <Skribot.h>
 
-Skribot robot;                       // defining our hero
-int LeftSensor, RightSensor;         // variables to keep measurements form detectors. 
-int lastRightSensor, lastLeftSensor; // variables to keep measurements from previous algorithm step.
+Skribot robot;                       // Define our hero.
+int LeftSensor, RightSensor;         // Variables to keep measurements form detectors.
+int lastRightSensor, lastLeftSensor; // Variables to keep measurements from previous algorithm step.
 
 void setup() {
-  // add the rotors to the robot for movement
+  // Add the rotors to the robot for movement.
   robot.AddDCRotor("LEFT");
   robot.AddDCRotor("RIGHT");
 
-  robot.SetSpeed(250); // set maximum speed
+  robot.SetSpeed(250); // Set the maximum speed.
 
-  // add distance sensors at slots D1 and D2 on Skriware EDU shield
+  // Add distance sensors at slots D1 and D2 on Skriware EDU shield.
   robot.AddDistSensor("D1");
   robot.AddDistSensor("D2");
 }
@@ -48,10 +48,10 @@ void loop() {
   LeftSensor = robot.ReadDistSensor("D1");
   RightSensor = robot.ReadDistSensor("D2");       
 
-  // check the previous readout
+  // Check the previous readout.
   if (LeftSensor > RightSensor) { 
     if (RightSensor > lastRightSensor) {
-      robot.FaceRight(300); // Turning Right  
+      robot.FaceRight(300); // Turn right.
     } else {
       // We turned Left and now we are turning Right again?!
       // We are probably in the corner! Let's escape!
@@ -61,7 +61,7 @@ void loop() {
 
   if (RightSensor > LeftSensor) {
     if (LeftSensor > lastLeftSensor) {
-      robot.FaceLeft(300); // Turning Left
+      robot.FaceLeft(300); // Turn left.
     } else {
       // We turned Right and now we are turning Left again?!
       // We are probably in the corner! Let's escape!
@@ -72,7 +72,7 @@ void loop() {
     robot.MoveForward(); // Move Forward if there are no obstacles in the way.
   }
 
-  // Remember last readouts
+  // Remember last readouts.
   lastRightSensor = RightSensor;
   lastLeftSensor = LeftSensor;
 }
