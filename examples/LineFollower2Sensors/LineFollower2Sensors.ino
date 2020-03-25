@@ -1,44 +1,47 @@
-#include <Skribot.h>
-/*
- * In this example we present basic algorithm for line followe with two line sensors. Robot will go forward if both don't see the line and lurn if one will. 
+/* In this example we present the basic algorithm for the line follower
+ * with two line sensors. The robot will go forward if both sensors don't see
+ * any line or turn if any of them do.
  * We want our robot to keep line between sensors.
  * 
- * Connections for robot:
+ * Connections for the robot:
  * 
- * Line sensor plugged to L1 slot on Skriware EDU shield -this sensor needs to be placed on the left side of the robot.
- * Line sensor plugged to L2 slot on Skriware EDU shield -this sensor needs to be placed on the right side of the robot. 
- * Two rotors plugged by Skriware EDU Shield, LEFT and RIGHT rotors are plugged to the rotors connections.
+ * Line sensor plugged to the L1 slot on Skriware EDU shield
+ *    - this sensor needs to be placed on the left side of the robot.
+ * Line sensor plugged to the L2 slot on Skriware EDU shield
+ *    - this sensor needs to be placed on the right side of the robot. 
+ * Two rotors plugged through the Skriware EDU Shield, LEFT and RIGHT rotors are plugged to the rotors connections.
  * 
  * IMPORTANT!!!
- * Timmings for turns are set for example values, when building own robot you should do some tests to set good working turning times.
+ * Timings for turns are example values.
+ * When building own robot you should
+ * do some tests to set the good and working turning times.
  */
+
+#include <Skribot.h>
+
 Skribot robot;
-bool LEFTSens, RIGHTSens;                 // variables to keep sensor measurements.
+bool LEFTSens, RIGHTSens; // Variables to keep the sensor measurements.
                         
 void setup() {
-  robot.AddLineSensor("L1");         //Adding line sensor
-  robot.AddLineSensor("L2");       
+  robot.AddLineSensor("L1"); // Add the line sensor.
+  robot.AddLineSensor("L2");
   
-  robot.AddDCRotor("LEFT");        //adding rotors for movement
+  // Add the rotors for movement.
+  robot.AddDCRotor("LEFT");
   robot.AddDCRotor("RIGHT");
-  robot.SetSpeed(250);
+
+  robot.SetSpeed(250); // Set the maximum speed.
 }
 
 void loop() {
-  LEFTSens   = robot.ReadLineSensor("L1");   //Reading from first sensor
-  RIGHTSens  = robot.ReadLineSensor("L2");
+  LEFTSens  = robot.ReadLineSensor("L1"); // Reading from the first sensor.
+  RIGHTSens = robot.ReadLineSensor("L2"); // Reading from the second sensor.
   
-  if(!LEFTSens && !RIGHTSens){           //Chcecking if both sensor are detecting the line below it.
-    
-    robot.MoveForward();                 // Going Forward
-                      
-  }else if(LEFTSens){                                 
-    
-    robot.TurnLeft(200);                 //Turning Left 
-    
-  }else if(RIGHTSens){                   //Reading from second sensor
-    
-    robot.TurnRight(200);                //Turning Right
+  if (!LEFTSens && !RIGHTSens) { // Check if both sensors are detecting the line below it.
+    robot.MoveForward(); // Go forward.
+  } else if (LEFTSens) {                                 
+    robot.TurnLeft(200); // Turn left.
+  } else if (RIGHTSens) { // Read the second sensor value.
+    robot.TurnRight(200); // Turn right.
   }
-
 }

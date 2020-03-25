@@ -4,7 +4,7 @@
  * When sending the color configuration to the robot you need to send it in
  * RGB (RED, GREEN, BLUE) format. You set the color of each LED by sending
  * three numbers coresponding to the three basic colors.
-*/
+ */
 
 #include <Skribot.h>
 
