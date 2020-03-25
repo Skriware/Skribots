@@ -1,4 +1,3 @@
-#include <Skribot.h>
 /*
  * In this example we present the most basic algorithm for line followe with one sensor only. Robot will search for the line by turning Right if it sees the line and turning left if it don't.
  * 
@@ -10,23 +9,27 @@
  * IMPORTANT!!!
  * Timmings for turns are set for example values, when building own robot you should do some tests to set good working turning times.
  */
-Skribot robot;
+
+#include <Skribot.h>
+
+Skribot robot; // Define our hero.
                         
 void setup() {
-  robot.AddLineSensor("L1");         //Adding line sensor on slot L1 of Skriware EDU shield
-  robot.AddDCRotor("LEFT");        //adding rotors for movement
+  robot.AddLineSensor("L1"); // Add the line sensor at slot L1 of the Skriware EDU shield.
+
+  // Add the rotors for movement.
+  robot.AddDCRotor("LEFT");  
   robot.AddDCRotor("RIGHT");
-  robot.SetSpeed(250);
+
+  robot.SetSpeed(250); // Set the maximum speed.
 }
 
 void loop() {
-  if(robot.ReadLineSensor("L1")){           	//Chcecking if sensor is detecting the line below it. It returns 1( there is a line below) or 0 (there is no line);
-    
-    robot.TurnLeft(200);                		// Turning Left
-                      
-  }else{
-    
-    robot.TurnRight(200);               		//Turning Right  
+  // Check if the sensor is detecting the line below it.
+  // ReadLineSensor returns 1 (there is a line below) or 0 (there is no line).
+  if (robot.ReadLineSensor("L1")) {
+    robot.TurnLeft(200);  // Turn left
+  } else {
+    robot.TurnRight(200); // Turn right  
   }
-
 }
