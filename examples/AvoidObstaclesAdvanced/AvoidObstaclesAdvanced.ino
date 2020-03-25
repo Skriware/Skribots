@@ -37,7 +37,7 @@ void setup() {
 
   robot.SetSpeed(250); // Set the maximum speed.
 
-  // Add distance sensors at slots D1 and D2 on Skriware EDU shield.
+  // Add distance sensors at slots D1 and D2 on the Skriware EDU shield.
   robot.AddDistSensor("D1");
   robot.AddDistSensor("D2");
 }
