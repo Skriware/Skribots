@@ -1,6 +1,6 @@
 #include "Skribot.h"
 #define DEBUG_MODE_H
-//#define SMART_ROTOR
+#define SMART_ROTOR
 #ifdef DEBUG_MODE_H
   #define DEBUG_PRINT(msg) Serial.println(msg)
 #else

@@ -94,11 +94,6 @@ void SmartRotor::moveByPulses(int pulses)
     pulseTarget = pulseCount + pulses;
     movesToTarget = true;
   }
-  else
-  {
-    movesToTarget = false;
-    stop();
-  }
 }
 
 void SmartRotor::setDirection(int direction)
