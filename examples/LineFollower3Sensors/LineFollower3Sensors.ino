@@ -40,7 +40,7 @@ void setup() {
   robot.AddDCRotor("LEFT");
   robot.AddDCRotor("RIGHT");
 
-  robot.SetSpeed(250);
+  robot.SetSpeed(100);
 }
 
 void loop() {
