@@ -204,7 +204,6 @@
     void Scale_Left_Rotors(byte scale);
     void Scale_Right_Rotors(byte scale);
 
-    void SetSpeed_Raw(int speed);  
     void SetSpeed(int speed);                                                                    //functions for movements
 
     int ReadDistSensor(String id, int max = 150);
@@ -214,8 +213,6 @@
                                                                                                 //distance sensor readout
     int ReadLineSensor(String name);
     int ReadLineSensor(int id);
-    int ReadLineSensorData(int id);
-    int ReadLineSensorData(String id);
                                                                                               // line sensor readout
     bool ConfigureBoardEEPROM();
     bool Check_Board_Version();
@@ -258,14 +255,6 @@
     void BLE_Flush_Line();
     void sendNameInfo();
     bool ProgramENDRepotred();
-    
-    #ifdef ESP_H
-    void SendMessage(int info);
-    void SendMessage(char *info);
-
-    void SendMessageLine(int info);
-    void SendMessageLine(char *info);
-    #endif
     int BaterryCheck();
 
     void EnterConfigMode();
