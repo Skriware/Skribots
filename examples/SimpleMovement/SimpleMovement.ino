@@ -22,7 +22,7 @@ void setup() {
   robot.AddDCRotor("LEFT");          
   robot.AddDCRotor("RIGHT");
 
-  robot.SetSpeed(250); // Set the maximum speed.
+  robot.SetSpeed(100); // Set the maximum speed.
 }
 
 void loop() {

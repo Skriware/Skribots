@@ -26,7 +26,7 @@ void setup() {
   robot.AddDCRotor("LEFT");          
   robot.AddDCRotor("RIGHT");
 
-  robot.SetSpeed(250); // Set the maximum speed.
+  robot.SetSpeed(100); // Set the maximum speed.
   
   // Add LEDs
   robot.AddLED("LED1"); 
@@ -46,14 +46,14 @@ void loop() {
     // If no obastacle is in range,
     // go continuously forward and set the green color for the led.
     robot.TurnLEDOn(0,255,0);
-    robot.SetSpeed(255);
+    robot.SetSpeed(100);
     robot.MoveForward();
   } else if (distance < 50 && distance > 20) {
     // If an obastacle is in range,
     // go forward but be careful
     // (slow down, and display blue color on both leds).
     robot.TurnLEDOn(0,0,255); 
-    robot.SetSpeed(200);
+    robot.SetSpeed(80);
     robot.MoveForward();
   } else if (distance < 20) {
     // If an obastacle is too close,
