@@ -119,7 +119,7 @@ void Skribot::CloseClaw(byte id){
   int Skribot::ReadLineSensorData(int id){
      for(int zz = 0; zz < NLineSensors ; zz++){
                     if(LineSensors[zz]->GetID() == id){
-                      return(LineSensors[zz]->ReadSensorRaw());
+                      return(LineSensors[zz]->ReadSensorScaled());
                       break;
                     }
       }
@@ -129,7 +129,7 @@ void Skribot::CloseClaw(byte id){
     int Skribot::ReadLineSensorData(String name){ 
     for(int zz = 0; zz < NLineSensors ; zz++){
                     if(LineSensors[zz]->GetName() == name){
-                      return(LineSensors[zz]->ReadSensorRaw());
+                      return(LineSensors[zz]->ReadSensorScaled());
                       break;
                     }
       }
