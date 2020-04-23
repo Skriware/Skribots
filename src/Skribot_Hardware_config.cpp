@@ -38,7 +38,6 @@ void Skribot::AddDCRotor(int SpeedPin,int DirectionPin, String Side){
     NLightSensors++;
   }
 
-
   void Skribot::AddLineSensor(int pinL,int id){
     LineSensor *lsensor = new LineSensor(pinL,id);
     LineSensors[NLineSensors] =  lsensor;

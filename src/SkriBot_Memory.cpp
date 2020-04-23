@@ -55,6 +55,12 @@ bool Skribot::Check_Board_Version(){
   }
 
   bool Skribot::ConfigureBoardEEPROM(){
+       if(!EEPROM.begin(64)){
+          #ifdef DEBUG_MODE
+          Serial.println("EEPROM init fail, aborting EEPROM check.");
+          #endif
+          return(false);
+       }
        delay(10);                                              //EEPROM delay in order to avoid EEPROM ERRORS
        byte userChange = EEPROM.read(EEPROM_SETTINGS_OVERRIDED_ADDR);
        delay(10);
