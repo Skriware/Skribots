@@ -61,7 +61,7 @@ bool Skribot::Check_Board_Version(){
        if(EEPROM_EMPTY(userChange)){
          #ifdef DEBUG_MODE
           Serial.println("No user Settings in EEPROM Configuration");
-          #endif
+        #endif
           user_config = false;
         return(false);                                                                         //No user change done aborting the process;
        }else if(userChange == 1){

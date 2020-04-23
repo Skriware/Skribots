@@ -27,6 +27,9 @@ void Skribot::AddDCRotor(int SpeedPin,int DirectionPin, String Side){
     LineSensor *lsensor = new LineSensor(pinL,Name);
     LineSensors[NLineSensors] =  lsensor;
     NLineSensors++;
+    #ifdef ESP_H
+      ConfigureBoardEEPROM(); //function for Line sensor Callibration in Arduino IDE
+    #endif
   }
 
   void Skribot::AddLightSensor(int pinL,int id){
@@ -41,7 +44,6 @@ void Skribot::AddDCRotor(int SpeedPin,int DirectionPin, String Side){
     LineSensors[NLineSensors] =  lsensor;
     NLineSensors++;
   }
-
 
 #ifndef _VARIANT_BBC_MICROBIT_
       

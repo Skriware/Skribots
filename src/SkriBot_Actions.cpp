@@ -403,12 +403,12 @@ void Skribot::CloseClaw(byte id){
     }
     void Skribot::SetSpeed_Raw(int s){ 
       for(int kk = 0; kk < NLeftDCRotors ; kk++){
-                    LeftDCRotors[kk]->SetSpeed(DCSpeed);
+                    LeftDCRotors[kk]->SetSpeed(s);
                     
                   }
           
       for(int jj = 0; jj < NRightDCRotors ; jj++){
-                    RightDCRotors[jj]->SetSpeed(DCSpeed);
+                    RightDCRotors[jj]->SetSpeed(s);
                     
             }
     }
