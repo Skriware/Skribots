@@ -44,6 +44,10 @@ CloseClaw	KEYWORD2
 OpenClaw	KEYWORD2
 Pick_Up	KEYWORD2
 Put_Down	KEYWORD2
+Set_Line_Sensor_Logic_Border KEYWORD2
+SendMessage	KEYWORD2
+SendMessageLine	KEYWORD2
+ReadLineSensorData	KEYWORD2
 
 
 #######################################

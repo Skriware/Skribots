@@ -157,18 +157,6 @@ void Skribot::CloseClaw(byte id){
       return(0);
   }
 
-    void Skribot::Set_Line_Sensor_Logic_Border(int L1_border,int L2_border,int L3_border){
-      for(int zz = 0; zz < NLineSensors ; zz++){
-                    if(LineSensors[zz]->GetSensorPin() == LINE_PIN_1 && L1_border != 0){
-                      LineSensors[zz]->SetLogicBorder(L1_border);
-                    }else if(LineSensors[zz]->GetSensorPin() == LINE_PIN_2 && L2_border != 0){
-                      LineSensors[zz]->SetLogicBorder(L2_border);
-                    }else if(LineSensors[zz]->GetSensorPin() == LINE_PIN_3 && L3_border != 0){
-                      LineSensors[zz]->SetLogicBorder(L3_border);
-                    }
-      }
-    }
-
     void Skribot::Invert_Left_Rotors(bool inv){
        for(int kk = 0; kk < NLeftDCRotors ; kk++){
                     LeftDCRotors[kk]->invert_rotor(inv);

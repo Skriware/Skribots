@@ -211,7 +211,7 @@
     int ReadDistSensor(int id, int max = 150);
 
     void Set_Line_Sensor_Logic_Border(int L1_border,int L2_border,int L3_border);
-                                                                                                //distance sensor readout
+    void Set_Line_Sensor_Logic_Border(String id,int line,int noline);                                                                                            //distance sensor readout
     int ReadLineSensor(String name);
     int ReadLineSensor(int id);
     int ReadLineSensorData(int id);

@@ -48,5 +48,42 @@
       }
     }
 
+  void Skribot::Set_Line_Sensor_Logic_Border(int L1_border,int L2_border,int L3_border){
+      for(int zz = 0; zz < NLineSensors ; zz++){
+                    if(LineSensors[zz]->GetSensorPin() == LINE_PIN_1 && L1_border != 0){
+                      LineSensors[zz]->SetLogicBorder(L1_border);
+                    }else if(LineSensors[zz]->GetSensorPin() == LINE_PIN_2 && L2_border != 0){
+                      LineSensors[zz]->SetLogicBorder(L2_border);
+                    }else if(LineSensors[zz]->GetSensorPin() == LINE_PIN_3 && L3_border != 0){
+                      LineSensors[zz]->SetLogicBorder(L3_border);
+                    }
+      }
+    }
 
 
+  void Skribot::Set_Line_Sensor_Logic_Border(String id, int line, int noline){
+    if(!EEPROM.begin(64)){
+          #ifdef DEBUG_MODE
+          Serial.println("EEPROM init fail, aborting calibration");
+          #endif
+          return;
+       }
+                        int lb = noline +abs(line-noline)/2;
+                        if(id == "L1")Write_EEPROM_INT(EEPROM_L1_BORDER_ADDR,lb);
+                        if(id == "L2")Write_EEPROM_INT(EEPROM_L2_BORDER_ADDR,lb);
+                        if(id == "L3")Write_EEPROM_INT(EEPROM_L3_BORDER_ADDR,lb);
+                        #ifdef ESP_H 
+                        EEPROM.commit(); 
+                        #endif
+                        delay(100);
+                        if(!user_config){
+                          EEPROM.write(EEPROM_SETTINGS_OVERRIDED_ADDR,1);
+                          user_config = true;
+                          #ifdef ESP_H 
+                          EEPROM.commit(); 
+                          #endif
+                    
+                        }
+  Serial.print(id);
+  Serial.println(" calibrated!");
+}
