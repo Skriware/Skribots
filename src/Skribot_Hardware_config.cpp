@@ -231,6 +231,7 @@ void Skribot::Configure_Connections(String predef){
           AddDistSensor(EDU_ECHO_PIN_2,EDU_TRIG_PIN_2,2);
           #ifndef _VARIANT_BBC_MICROBIT_
           AddClaw(EDU_CLAW_PIN1,EDU_CLAW_PIN2);
+          Claws[0]->SetPositions(BV_0_up,BV_0_down,BV_0_open,BV_0_close);
           #if DISABLED(DEBUG_MODE)
           AddLED(EDU_LED_DATA_PIN_1,1);
           AddLED(EDU_LED_DATA_PIN,0);
@@ -282,11 +283,13 @@ void Skribot::Configure_Connections(String predef){
           switch (Board_type){
           case 1:
             AddClaw(SKRIBRAIN_SERVO_PIN_1,SKRIBRAIN_SERVO_PIN_2);
+            Claws[0]->SetPositions(BV_1_up,BV_1_down,BV_1_open,BV_1_close);
             status = new StatusLED(SKRIBRAIN_STATUS_LED_PIN,SKRIBRAIN_SERVO_PIN_3,1);
           break;
           case 2:
             AddClaw(SKRIBRAIN_SERVO_PIN_1,SKRIBRAIN_SERVO_PIN_3);
             status = new StatusLED(SKRIBRAIN_STATUS_LED_PIN,SKRIBRAIN_SERVO_PIN_2,2);
+            Claws[0]->SetPositions(BV_1_up,BV_1_down,BV_1_open,BV_1_close);
           break;
           default:
           break;
