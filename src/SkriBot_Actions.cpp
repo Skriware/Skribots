@@ -299,7 +299,7 @@ void Skribot::CloseClaw(byte id){
     }
   }
 
-  void Skribot::Set_Motor_Movment(byte motor_id, byte dir, byte speed,byte time){
+  void Skribot::Set_Motor_Movment(byte motor_id, byte dir, byte speed,int time){
 
           switch(motor_id){
            

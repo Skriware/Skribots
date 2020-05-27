@@ -197,7 +197,7 @@
     void MoveForward(int ms = -1);
     void MoveBack(int ms = -1);
     void RawRotorMove(int left,int right);
-    void Set_Motor_Movment(byte motor_id, byte dir, byte speed,byte time = -1);
+    void Set_Motor_Movment(byte motor_id, byte dir, byte speed,int time = -1);
     void Stop();   
     void Invert_Left_Rotors(bool inv = true);
     void Invert_Right_Rotors(bool inv = true);
