@@ -7,9 +7,20 @@
   #define DEBUG_PRINT(msg)
 #endif
 
+#define CASE_MATRIX 'M'
+#define CASE_BUTTON 'P'
+#define CASE_SROTOR 'R'
+#define CASE_ROTOR  'Q'
+#define CASE_DISTANCE 'D'
+#define CASE_CLAW 'C'
+#define CASE_LINE 'L'
+#define CASE_LED  'W'
+#define CASE_BUZZER 'B'
+
+
 void Skribot::AddHardware(char *tag){
   switch(tag[0]){
-    case 'M':
+    case CASE_MATRIX:
       DEBUG_PRINT("MATRIX");
       switch(tag[1]){
         case '1':
@@ -22,7 +33,7 @@ void Skribot::AddHardware(char *tag){
         break;
       }
     break;
-    case 'P':
+    case CASE_BUTTON:
       DEBUG_PRINT("BUTTON");
       switch(tag[1]){
         case '1':
@@ -47,7 +58,7 @@ void Skribot::AddHardware(char *tag){
         break;	
       }
     break;
-    case 'R':
+    case CASE_SROTOR:
     #ifdef SMART_ROTOR
       DEBUG_PRINT("MOTOR");
       DEBUG_PRINT(tag[1]);
@@ -85,9 +96,11 @@ void Skribot::AddHardware(char *tag){
         DEBUG_PRINT("creating smart rotor system");
         smartRotor = new SmartRotorSystem(leftSmartRotor, rightSmartRotor);
         smartRotor->begin();
-      } else {
-      }
-    #else
+      } 
+    #endif
+      break;
+
+      case(CASE_ROTOR):
         switch(tag[1]){
           case '1':
               AddDCRotor(SKRIBRAIN_MOTOR_L_DIR2_PIN,SKRIBRAIN_MOTOR_L_DIR1_PIN,"Left");
@@ -98,9 +111,8 @@ void Skribot::AddHardware(char *tag){
           default:
           break;
           }
-    #endif
       break;
-    case 'D':
+    case CASE_DISTANCE:
       DEBUG_PRINT("DISTANCE");
       switch(tag[1]){
         case '1':
@@ -113,7 +125,7 @@ void Skribot::AddHardware(char *tag){
         break;
         }
     break;
-    case 'B':
+    case CASE_BUZZER:
       DEBUG_PRINT("BUZZER");
       switch(tag[1]){
         case '1':
@@ -135,25 +147,35 @@ void Skribot::AddHardware(char *tag){
         break;	
       }
     break;
-    case 'C':
+    case CASE_CLAW:
       switch(tag[1]){
         case '0':
           AddClaw();
         break;
       }
     break;
-    case 'L':
+    case CASE_LINE:
     switch(tag[1]){
       case '1':
-        AddLineSensor("L1");
+        AddLineSensor(LINE_PIN_1, 1);
       break;
       case '2':
-        AddLineSensor("L2");
+        AddLineSensor(LINE_PIN_2, 2);
       break;
       case '3':
-        AddLineSensor("L3");
+        AddLineSensor(LINE_PIN_3, 3);
       break;
     }
+    break;
+    case CASE_LED:
+      switch(tag[1]){
+        case '1':
+          AddLED(SKRIBRAIN_LED_PIN_2,1);
+        break;
+        case '2':
+          AddLED(SKRIBRAIN_LED_PIN_1,0);
+        break;
+      }
     break;
   }
 }
@@ -167,8 +189,6 @@ void Skribot::ClearHardware(){
     if (RightDCRotors[tt] !=NULL)delete RightDCRotors[tt];
     if (LineSensors[tt] !=NULL)delete LineSensors[tt];
   }
-
-
   if (smartRotor != nullptr)
   {
     DEBUG_PRINT("deleting smart rotor system");
