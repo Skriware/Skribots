@@ -13,12 +13,14 @@ Claw::Claw(int Claw_Pin,int Arm_Pin,byte _id){
 	#else
 	claw_servo  = new Servo();
 	claw_servo->attach(Claw_Pin);
-	Open();
 	arm_servo  = new Servo();
 	arm_servo->attach(Arm_Pin);
-	Put_Down();
 	#endif
 	id = _id;
+	up_v = BV_2_up;
+	down_v = BV_2_down;
+	close_v = BV_2_close;
+	open_v = BV_2_open;
 }
 
 
@@ -33,35 +35,41 @@ void Claw::SetAngle(int claw_angle,int arm_angle){
 }
 	void Claw::Close(){	
 		#ifndef ESP_H 
-		claw_servo->write(120);
+		claw_servo->write(close_v);
 		#else
-		PWM_Write(claw_pin,70);
+		PWM_Write(claw_pin,close_v);
 		#endif
 
 	}
 	void Claw::Open(){
 		#ifndef ESP_H 
-		claw_servo->write(170);
+		claw_servo->write(open_v);
 		#else
-		PWM_Write(claw_pin,120);
+		PWM_Write(claw_pin,open_v);
 		#endif
 	}
 	void Claw::Pick_Up(){
-		
 		#ifndef ESP_H 
-		arm_servo->write(50);
+		arm_servo->write(up_v);
 		#else
-		PWM_Write(arm_pin,120);
+		PWM_Write(arm_pin,up_v);
 		#endif
 	}
 	void Claw::Put_Down(){
 		
 		#ifndef ESP_H 
-		arm_servo->write(10);
+		arm_servo->write(down_v);
 		#else
-		PWM_Write(arm_pin,70);
+		PWM_Write(arm_pin,down_v);
 		#endif
 	}
+
+void Claw::SetPositions(byte _up_v,byte _down_v,byte _open_v,byte _close_v){
+	up_v   = _up_v;
+	down_v = _down_v;
+	close_v = _close_v;
+	open_v = _open_v;
+}
 
 byte Claw::GetID(){
 	return(id);

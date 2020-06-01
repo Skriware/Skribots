@@ -14,6 +14,7 @@
     LineSensor(int InputPin,String name);
     LineSensor(int InputPin,int id);;
     int ReadSensorRaw();
+    int ReadSensorScaled();
     int ReadSensor();
     void SetLogicBorder(int lb=0);
     String GetName();

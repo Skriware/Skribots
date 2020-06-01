@@ -16,7 +16,7 @@ public:
 	StatusLED(byte R_pin,byte G_pin,byte B_pin,byte Battery_pin);
 	void TurnOn(color _color);
 	#else
-	StatusLED(byte LED_pin,byte Battery_pin);
+	StatusLED(byte LED_pin,byte Battery_pin,byte Board_V);
 	void TurnOn(color _color,byte nLED=1);
 	#endif
 	int CheckBateryStatus();
@@ -29,9 +29,11 @@ private:
 		byte B_pin;	
 	#else
 		RobotLED *status = NULL;
+		byte Board_V;	
 	#endif
 	byte Battery_pin;
 	color Current_color;
+	
 };
 
 #endif

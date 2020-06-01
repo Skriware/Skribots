@@ -56,6 +56,10 @@ int LineSensor::ReadSensorRaw(){
     return(analogRead(sensorPin));
 }
 
+int  LineSensor::ReadSensorScaled(){
+    return(100*analogRead(sensorPin)/4095);
+}
+
 int LineSensor::GetID(){
     return(id);
 }

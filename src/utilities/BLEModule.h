@@ -20,7 +20,7 @@
 {
 public:
 	BLEModule(moduleType type);
-	char BLE_read();                                                        
+	char BLE_read();       ;                                                 
     void BLE_write(char *msg);
     bool BLE_checkConnection();
     int  BLE_dataAvailable();
@@ -47,7 +47,7 @@ private:
 #ifdef ESP_H
 void incrementRXbuffIterator_beg();
 void incrementRXbuffIterator_end();
-byte substractBufforIterators();
+int substractBufforIterators();
 
 
 class MyServerCallbacks: public BLEServerCallbacks {

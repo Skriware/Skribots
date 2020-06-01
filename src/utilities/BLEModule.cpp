@@ -313,7 +313,7 @@ bool BLEModule::BLE_checkConnection(){
     	}
     }
 
-    byte substractBufforIterators(){
+    int substractBufforIterators(){
     	if(BLEModule::RXBLE_buffer_iterator_end < BLEModule::RXBLE_buffer_iterator_beg){
     		return(BLEModule::RXBLE_buffer_iterator_beg - BLEModule::RXBLE_buffer_iterator_end);
     	}else if(BLEModule::RXBLE_buffer_iterator_beg < BLEModule::RXBLE_buffer_iterator_end){
