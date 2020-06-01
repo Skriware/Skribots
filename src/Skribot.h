@@ -142,6 +142,8 @@
 #define SKRIBOT_MINI_SHILELD_IR_OUT 9
 #endif
 
+#define LEFT 0
+#define RIGHT 1
 
 
   class Skribot
@@ -179,9 +181,7 @@
     void AddLineSensor(String SHIELD_SLOT);
     void AddDCRotor(String SHIELD_SLOT);
     void AddClaw();                                               //functions for elements adding when using Skriware shields
-    
-    void Configure_Connections(String predef="");
-
+    void Set_Line_Sensor_Logic_Border(String id, int line, int noline);
     void wait_And_Check_BLE_Connection(int ms,int interval);
 
     void Move(char Direction,int ms);
@@ -192,23 +192,30 @@
     void MoveForward(int ms = -1);
     void MoveBack(int ms = -1);
     void RawRotorMove(int left,int right);
+    void Set_Motor_Movment(byte motor_id, byte dir, byte speed,int time = -1);
     void Stop();   
     void Invert_Left_Rotors(bool inv = true);
     void Invert_Right_Rotors(bool inv = true);
     void Scale_Left_Rotors(byte scale);
     void Scale_Right_Rotors(byte scale);
 
+    void SetSpeed_Raw(int speed);  
     void SetSpeed(int speed);                                                                    //functions for movements
 
     int ReadDistSensor(String id, int max = 150);
     int ReadDistSensor(int id, int max = 150);
 
     void Set_Line_Sensor_Logic_Border(int L1_border,int L2_border,int L3_border);
+    void Configure_Connections(String predef="");
+
                                                                                                 //distance sensor readout
     int ReadLineSensor(String name);
     int ReadLineSensor(int id);
+    int ReadLineSensorData(int id);
+    int ReadLineSensorData(String id);
                                                                                               // line sensor readout
-    void ConfigureBoardEEPROM();
+    bool ConfigureBoardEEPROM();
+    bool Check_Board_Version();
     int  Read_EEPROM_INT(byte addr);
     void Write_EEPROM_INT(byte addr,int val);
 
@@ -222,7 +229,8 @@
     void TurnLEDOn(int R,int G, int B,String name,byte N_LED =1);
     void TurnLEDOff(String name,byte N_LED =1); 
     void TurnLEDOn(int R,int G, int B,int _id = -69,byte N_LED = 1);
-    void TurnLEDOff(int _id = -69,byte N_LED = 1);                                                            // LED functions
+    void TurnLEDOff(int _id = -69,byte N_LED = 1);
+    void SetLEDColor(int color_id);                                                            // LED functions
 
     int  LightSensor_Raw(int id);
     bool LightSensor_Dark(int id);
@@ -243,8 +251,20 @@
     void BLE_reset();
     void BLE_Set_Module(moduleType type);
     void BLE_Flush();
+    void BLE_Flush_Line();
     void sendNameInfo();
     bool ProgramENDRepotred();
+    #ifdef ESP_H
+    void SendMessage(int info);
+    void SendMessage(char *info);
+
+    void SendMessageLine(int info);
+    void SendMessageLine(char *info);
+    #endif
+
+    void CONBRK();
+    void IgnoreCONBRK();
+    
     int BaterryCheck();
     byte ReadBattery();
 
@@ -270,7 +290,8 @@
        claw_closed,
        config_mode,
        user_config,
-       Remote_block_used;
+       Remote_block_used,
+       ignore_connection_break;
   long claw_closed_time;
   moduleType BLE_MODULE_TYPE;
   StatusLED *status;
