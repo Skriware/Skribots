@@ -183,7 +183,8 @@
     void AddClaw();                                               //functions for elements adding when using Skriware shields
     void Set_Line_Sensor_Logic_Border(String id, int line, int noline);
     void wait_And_Check_BLE_Connection(int ms,int interval);
-
+    void Calibrate_sensors_no_Line();
+    void Calibrate_sensors_Line();
     void Move(char Direction,int ms);
     void FaceLeft(int ms = -1);
     void FaceRight(int ms = -1);

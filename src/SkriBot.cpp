@@ -103,3 +103,26 @@ Skribot::Skribot(String predef){
 byte Skribot::ReadBattery(){
   return(status->ReadBatteryState());
 }
+
+    void Skribot::Calibrate_sensors_no_Line(){
+                   for(int zz = 0; zz < NLineSensors ; zz++){
+                      TurnLEDOn(255,255,255);
+                      LineSensors[zz]->No_Line_Readout();
+                      TurnLEDOn(0,0,0);
+                      delay(100);
+                      if(Block::robot->LineSensors[zz]->GetSensorPin() == LINE_PIN_1)Block::robot->Write_EEPROM_INT(EEPROM_L1_BORDER_ADDR,Block::robot->LineSensors[zz]->GetLogicBorder());
+                      if(Block::robot->LineSensors[zz]->GetSensorPin() == LINE_PIN_2)Block::robot->Write_EEPROM_INT(EEPROM_L2_BORDER_ADDR,Block::robot->LineSensors[zz]->GetLogicBorder());
+                      if(Block::robot->LineSensors[zz]->GetSensorPin() == LINE_PIN_3)Block::robot->Write_EEPROM_INT(EEPROM_L3_BORDER_ADDR,Block::robot->LineSensors[zz]->GetLogicBorder());
+                    }
+    }
+    void Skribot::Calibrate_sensors_Line(){
+                    for(int zz = 0; zz < NLineSensors ; zz++){
+                      TurnLEDOn(255,255,255);
+                      LineSensors[zz]->Line_Readout();
+                      TurnLEDOn(0,0,0);
+                      delay(100);
+                      if(Block::robot->LineSensors[zz]->GetSensorPin() == LINE_PIN_1)Block::robot->Write_EEPROM_INT(EEPROM_L1_BORDER_ADDR,Block::robot->LineSensors[zz]->GetLogicBorder());
+                      if(Block::robot->LineSensors[zz]->GetSensorPin() == LINE_PIN_2)Block::robot->Write_EEPROM_INT(EEPROM_L2_BORDER_ADDR,Block::robot->LineSensors[zz]->GetLogicBorder());
+                      if(Block::robot->LineSensors[zz]->GetSensorPin() == LINE_PIN_3)Block::robot->Write_EEPROM_INT(EEPROM_L3_BORDER_ADDR,Block::robot->LineSensors[zz]->GetLogicBorder());
+                    }
+    }
