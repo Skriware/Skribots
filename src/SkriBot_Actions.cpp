@@ -188,11 +188,13 @@ void Skribot::CloseClaw(byte id){
         case 'B':
                   for(int zz = 0; zz < NRightDCRotors ; zz++){
                     RightDCRotors[zz]->SetDirection(0);
+                    RightDCRotors[zz]->SetSpeed(DCSpeed);
                     RightDCRotors[zz]->Move();
                   }
 
                   for(int kk = 0; kk < NLeftDCRotors ; kk++){
                     LeftDCRotors[kk]->SetDirection(0);
+                    LeftDCRotors[kk]->SetSpeed(DCSpeed);
                     LeftDCRotors[kk]->Move();
                   }
         break;
@@ -201,11 +203,13 @@ void Skribot::CloseClaw(byte id){
                   
                   for(int zz = 0; zz < NRightDCRotors ; zz++){
                     RightDCRotors[zz]->SetDirection(1);
+                    RightDCRotors[zz]->SetSpeed(DCSpeed);
                     RightDCRotors[zz]->Move();
                   }
 
                   for(int kk = 0; kk < NLeftDCRotors ; kk++){
                     LeftDCRotors[kk]->SetDirection(1);
+                    LeftDCRotors[kk]->SetSpeed(DCSpeed);
                     LeftDCRotors[kk]->Move();
                   }
         break;
@@ -213,11 +217,13 @@ void Skribot::CloseClaw(byte id){
         case 'R':
                   for(int zz = 0; zz < NLeftDCRotors ; zz++){
                     LeftDCRotors[zz]->SetDirection(1);
+                    LeftDCRotors[zz]->SetSpeed(DCSpeed);
                     LeftDCRotors[zz]->Move();
                   }
           
                   for(int kk = 0; kk < NRightDCRotors ; kk++){
                     RightDCRotors[kk]->SetDirection(0);
+                    RightDCRotors[kk]->SetSpeed(DCSpeed);
                     RightDCRotors[kk]->Move();
                   }
          break;
@@ -225,11 +231,13 @@ void Skribot::CloseClaw(byte id){
          case 'L':
                   for(int zz = 0; zz < NLeftDCRotors ; zz++){
                     LeftDCRotors[zz]->SetDirection(0);
+                    LeftDCRotors[zz]->SetSpeed(DCSpeed);
                     LeftDCRotors[zz]->Move();
                   }
           
                   for(int kk = 0; kk < NRightDCRotors ; kk++){
                     RightDCRotors[kk]->SetDirection(1);
+                    RightDCRotors[kk]->SetSpeed(DCSpeed);
                     RightDCRotors[kk]->Move();
                   }
          break;
@@ -248,11 +256,13 @@ void Skribot::CloseClaw(byte id){
          case 'K' :
                   for(int kk = 0; kk < NLeftDCRotors ; kk++){
                     LeftDCRotors[kk]->SetDirection(1);
+                    LeftDCRotors[kk]->SetSpeed(0.25*DCSpeed);
                     LeftDCRotors[kk]->Move();
                   }
           
                   for(int kk = 0; kk < NRightDCRotors ; kk++){
                     RightDCRotors[kk]->SetDirection(1);
+                    RightDCRotors[kk]->SetSpeed(DCSpeed);
                     RightDCRotors[kk]->Move();
                   }
          break;
@@ -260,12 +270,13 @@ void Skribot::CloseClaw(byte id){
          case 'Z' :
                     for(int kk = 0; kk < NLeftDCRotors ; kk++){
                     LeftDCRotors[kk]->SetDirection(1);
+                    LeftDCRotors[kk]->SetSpeed(0.25*DCSpeed);
                     LeftDCRotors[kk]->Move();
                   }
           
                   for(int kk = 0; kk < NRightDCRotors ; kk++){
                     RightDCRotors[kk]->SetDirection(1);
-                    RightDCRotors[kk]->SetSpeed(0.25*DCSpeed);
+                    RightDCRotors[kk]->SetSpeed(DCSpeed);
                     RightDCRotors[kk]->Move();
                   }
          break;
@@ -273,12 +284,13 @@ void Skribot::CloseClaw(byte id){
          case 'M' :
                    for(int kk = 0; kk < NLeftDCRotors ; kk++){
                     LeftDCRotors[kk]->SetDirection(1);
-                    LeftDCRotors[kk]->SetSpeed(0.25*DCSpeed);
+                    LeftDCRotors[kk]->SetSpeed(DCSpeed);
                     LeftDCRotors[kk]->Move();
                   }
           
                   for(int kk = 0; kk < NRightDCRotors ; kk++){
                     RightDCRotors[kk]->SetDirection(1);
+                    RightDCRotors[kk]->SetSpeed(0.25*DCSpeed);
                     RightDCRotors[kk]->Move();
                   }
          break;
@@ -388,6 +400,7 @@ void Skribot::CloseClaw(byte id){
     void Skribot::SetSpeed(int s){
       if(s >100)s = 100;
       SetSpeed_Raw(s/2+90);
+      DCSpeed = s/2+90;
     }
     void Skribot::SetSpeed_Raw(int s){ 
       for(int kk = 0; kk < NLeftDCRotors ; kk++){
