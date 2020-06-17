@@ -75,13 +75,15 @@ Skribot::Skribot(String predef){
 
 
   void Skribot::Set_Line_Sensor_Logic_Border(String id, int line, int noline){
+    int unscaledline = line/100*4095;
+    int unscaledNoline = noline/100*4095;
     if(!EEPROM.begin(64)){
           #ifdef DEBUG_MODE
           Serial.println("EEPROM init fail, aborting calibration");
           #endif
           return;
        }
-                        int lb = noline +abs(line-noline)/2;
+                        int lb = noline +abs(unscaledline-unscaledNoline)/2;
                         if(id == "L1")Write_EEPROM_INT(EEPROM_L1_BORDER_ADDR,lb);
                         if(id == "L2")Write_EEPROM_INT(EEPROM_L2_BORDER_ADDR,lb);
                         if(id == "L3")Write_EEPROM_INT(EEPROM_L3_BORDER_ADDR,lb);

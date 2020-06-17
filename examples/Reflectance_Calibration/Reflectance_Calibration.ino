@@ -10,7 +10,7 @@ void setup() {
 
 void loop() {
 robot.SendMessage("L1:");
-robot.SendMessageLine(robot.ReadLineSensorData("L1")); // reading a raw data from Line sensor and sending it to the computer every 200 ms.
+robot.SendMessage(robot.ReadLineSensorData("L1")); // reading a raw data from Line sensor and sending it to the computer every 200 ms.
 robot.SendMessage("L2:");
 robot.SendMessage(robot.ReadLineSensorData("L2")); 
 robot.SendMessage("L3:");
