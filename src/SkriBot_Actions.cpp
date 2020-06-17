@@ -157,31 +157,6 @@ void Skribot::CloseClaw(byte id){
       return(0);
   }
 
-    void Skribot::Invert_Left_Rotors(bool inv){
-       for(int kk = 0; kk < NLeftDCRotors ; kk++){
-                    LeftDCRotors[kk]->invert_rotor(inv);
-                  }
-    }
-    
-    void Skribot::Invert_Right_Rotors(bool inv){
-       for(int zz = 0; zz < NRightDCRotors ; zz++){
-                    RightDCRotors[zz]->invert_rotor(inv);
-                  }
-    }
-
-  
-     void Skribot::Scale_Left_Rotors(byte scale){
-       for(int kk = 0; kk < NLeftDCRotors ; kk++){
-                    LeftDCRotors[kk]->scale_speed(scale);
-                  }
-    }
-    
-    void Skribot::Scale_Right_Rotors(byte scale){
-       for(int zz = 0; zz < NRightDCRotors ; zz++){
-                    RightDCRotors[zz]->scale_speed(scale);
-                  }
-    }
-
   void Skribot::Move(char Dir,int ms){
       if (NLeftDCRotors  > 0 && NRightDCRotors  >0){
          switch(Dir){

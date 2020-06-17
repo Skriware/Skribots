@@ -145,6 +145,11 @@
 #define LEFT 0
 #define RIGHT 1
 
+#define EEPROM_EMPTY_ESP32 255
+#define EEPROM_EMPTY_ARDUINO 0
+
+#define CALIB_MOTORS 0
+#define CALIB_LINE_SENSORS 1
 
   class Skribot
  {
@@ -219,6 +224,7 @@
     bool Check_Board_Version();
     int  Read_EEPROM_INT(byte addr);
     void Write_EEPROM_INT(byte addr,int val);
+    void Save_Calibration_Data(byte data_id);
 
 
 
@@ -299,6 +305,15 @@
   SPIHandler *SPIcomm[2];
   I2CHandler *I2Ccomm[2];
   byte Board_type = 0;
+
+//calibration parameters:
+byte left_invert = 0;
+byte right_invert = 0;
+byte left_scale = 1;
+byte right_scale = 1;
+int L1_b = 1900;
+int L2_b = 1900;
+int L3_b = 1900;
 
   #ifndef _VARIANT_BBC_MICROBIT_
   RobotLED *LEDs[5] = {NULL};

@@ -5,9 +5,17 @@ void Skribot::AddDCRotor(int SpeedPin,int DirectionPin, String Side){
      if(Side == "Left"){
       LeftDCRotors[NLeftDCRotors] = dcrotor;
       NLeftDCRotors++;
+      if(user_config && !EEPROM_EMPTY(left_invert) && !EEPROM_EMPTY(left_scale)){
+        Invert_Left_Rotors(left_invert);
+        Scale_Left_Rotors(left_scale);
+      }
      }else if(Side == "Right"){
       RightDCRotors[NRightDCRotors] = dcrotor;
       NRightDCRotors++;
+      if(user_config && !EEPROM_EMPTY(right_invert) && !EEPROM_EMPTY(right_scale)){
+        Invert_Right_Rotors(right_invert);
+        Scale_Left_Rotors(right_scale);
+      }
      }
   }
 
@@ -27,21 +35,21 @@ void Skribot::AddDCRotor(int SpeedPin,int DirectionPin, String Side){
     LineSensor *lsensor = new LineSensor(pinL,Name);
     LineSensors[NLineSensors] =  lsensor;
     NLineSensors++;
-    #ifdef ESP_H
-      ConfigureBoardEEPROM(); //function for Line sensor Callibration in Arduino IDE
-    #endif
+    Set_Line_Sensor_Logic_Border(L1_b,L2_b,L3_b);
   }
 
   void Skribot::AddLightSensor(int pinL,int id){
     LightSensor *lsensor = new LightSensor(pinL,id);
     LightSensors[NLightSensors] =  lsensor;
     NLightSensors++;
+     Set_Line_Sensor_Logic_Border(L1_b,L2_b,L3_b);
   }
 
   void Skribot::AddLineSensor(int pinL,int id){
     LineSensor *lsensor = new LineSensor(pinL,id);
     LineSensors[NLineSensors] =  lsensor;
     NLineSensors++;
+    Set_Line_Sensor_Logic_Border(L1_b,L2_b,L3_b);
   }
 
 #ifndef _VARIANT_BBC_MICROBIT_

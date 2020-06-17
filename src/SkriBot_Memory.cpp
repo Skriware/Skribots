@@ -1,7 +1,6 @@
 #include "Skribot.h"
 
-#define EEPROM_EMPTY_ESP32 255
-#define EEPROM_EMPTY_ARDUINO 0
+
 
 bool Skribot::EEPROM_EMPTY(int val){
     return(val == EEPROM_EMPTY_ESP32 || val == EEPROM_EMPTY_ARDUINO);
@@ -73,26 +72,21 @@ bool Skribot::Check_Board_Version(){
        }else if(userChange == 1){
        user_config = true;
        delay(10);                                              //EEPROM delay in order to avoid EEPROM ERRORS
-       byte left_invert = EEPROM.read(EEPROM_LEFT_INVERT_ADDR);
+       left_invert = EEPROM.read(EEPROM_LEFT_INVERT_ADDR);
        delay(10);                                              //EEPROM delay in order to avoid EEPROM ERRORS
-       byte right_invert = EEPROM.read(EEPROM_RIGHT_INVERT_ADDR);
+       right_invert = EEPROM.read(EEPROM_RIGHT_INVERT_ADDR);
        delay(10);                                              //EEPROM delay in order to avoid EEPROM ERRORS
-       byte left_scale = EEPROM.read(EEPROM_LEFT_SCALE_ADDR);
+       left_scale = EEPROM.read(EEPROM_LEFT_SCALE_ADDR);
        delay(10); 
-       byte right_scale = EEPROM.read(EEPROM_RIGHT_SCALE_ADDR);
+       right_scale = EEPROM.read(EEPROM_RIGHT_SCALE_ADDR);
        delay(10);                                             //EEPROM delay in order to avoid EEPROM ERRORS
-       int L1_b = Read_EEPROM_INT(EEPROM_L1_BORDER_ADDR);
+       L1_b = Read_EEPROM_INT(EEPROM_L1_BORDER_ADDR);
        delay(10);                                              //EEPROM delay in order to avoid EEPROM ERRORS
-       int L2_b = Read_EEPROM_INT(EEPROM_L2_BORDER_ADDR);
+       L2_b = Read_EEPROM_INT(EEPROM_L2_BORDER_ADDR);
        delay(10);                                             //EEPROM delay in order to avoid EEPROM ERRORS
-       int L3_b = Read_EEPROM_INT(EEPROM_L3_BORDER_ADDR);
+       L3_b = Read_EEPROM_INT(EEPROM_L3_BORDER_ADDR);
        delay(10);
 
-       Set_Line_Sensor_Logic_Border(L1_b,L2_b,L3_b);
-       if(!EEPROM_EMPTY(right_invert))Invert_Right_Rotors(right_invert);
-       if(!EEPROM_EMPTY(left_invert))Invert_Left_Rotors(left_invert);
-       if(!EEPROM_EMPTY(left_scale))Scale_Left_Rotors(left_scale);
-       if(!EEPROM_EMPTY(right_scale))Scale_Right_Rotors(right_scale);
 
       #ifdef DEBUG_MODE
       Serial.println("User Corrections:");
@@ -143,3 +137,52 @@ bool Skribot::Check_Board_Version(){
       }
     return(b3);
   }
+
+
+    void Skribot::Invert_Left_Rotors(bool inv){
+       for(int kk = 0; kk < NLeftDCRotors ; kk++){
+                    LeftDCRotors[kk]->invert_rotor(inv);
+                  }
+    }
+    
+    void Skribot::Invert_Right_Rotors(bool inv){
+       for(int zz = 0; zz < NRightDCRotors ; zz++){
+                    RightDCRotors[zz]->invert_rotor(inv);
+                  }
+    }
+
+  
+     void Skribot::Scale_Left_Rotors(byte scale){
+       for(int kk = 0; kk < NLeftDCRotors ; kk++){
+                    LeftDCRotors[kk]->scale_speed(scale);
+                  }
+    }
+    
+    void Skribot::Scale_Right_Rotors(byte scale){
+       for(int zz = 0; zz < NRightDCRotors ; zz++){
+                    RightDCRotors[zz]->scale_speed(scale);
+                  }
+    }
+
+    void Skribot::Save_Calibration_Data(byte data_id){
+      switch(data_id){
+        case CALIB_MOTORS:
+          EEPROM.write(EEPROM_LEFT_INVERT_ADDR,left_invert);
+          EEPROM.write(EEPROM_RIGHT_INVERT_ADDR,right_invert);
+          EEPROM.write(EEPROM_LEFT_SCALE_ADDR,left_scale);
+          EEPROM.write(EEPROM_RIGHT_SCALE_ADDR,right_scale);
+        break;
+        case CALIB_LINE_SENSORS:
+          Write_EEPROM_INT(EEPROM_L1_BORDER_ADDR,L1_b);
+          Write_EEPROM_INT(EEPROM_L2_BORDER_ADDR,L2_b);
+          Write_EEPROM_INT(EEPROM_L3_BORDER_ADDR,L3_b);
+        break;
+      }
+      if(user_config){
+          EEPROM.write(EEPROM_SETTINGS_OVERRIDED_ADDR,1);
+          user_config = true;
+          #ifdef ESP_H 
+          EEPROM.commit(); 
+          #endif
+        }
+    }
