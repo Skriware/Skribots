@@ -230,6 +230,7 @@ void Skribot::AddDCRotor(int SpeedPin,int DirectionPin, String Side){
 
 
 void Skribot::Configure_Connections(String predef){
+     Check_Board_Version();
     #ifndef ESP_H
     if(predef == "EDU_SHIELD"){
           AddDCRotor(EDU_ROTOR_SPEED_PIN_L,EDU_ROTOR_DIR_PIN_L,"Left");          //adding rotors for movement
@@ -277,7 +278,6 @@ void Skribot::Configure_Connections(String predef){
     }
     #else
     if(predef == "SKRIBRAIN"){
-          Check_Board_Version();
           AddDCRotor(SKRIBRAIN_MOTOR_L_DIR2_PIN,SKRIBRAIN_MOTOR_L_DIR1_PIN,"Left");
           AddDCRotor(SKRIBRAIN_MOTOR_R_DIR2_PIN,SKRIBRAIN_MOTOR_R_DIR1_PIN,"Right");
           AddLED(SKRIBRAIN_LED_PIN_2,1);
@@ -319,6 +319,8 @@ void Skribot::Configure_Connections(String predef){
           Add_Mono_LED_matrix(SPI_PORT_2);
         }else if(predef = "RAW_SKRIBRAIN"){
         BLE_Set_Module(ESP32_BLE); 
+        Serial.println("Board type:");
+        Serial.println(Board_type);
         switch (Board_type){
           case 1:
             status = new StatusLED(SKRIBRAIN_STATUS_LED_PIN,SKRIBRAIN_SERVO_PIN_3,1);

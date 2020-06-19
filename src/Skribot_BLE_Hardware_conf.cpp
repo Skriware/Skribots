@@ -60,7 +60,7 @@ void Skribot::AddHardware(char *tag){
     break;
     case CASE_SROTOR:
     #ifdef SMART_ROTOR
-      DEBUG_PRINT("MOTOR");
+      DEBUG_PRINT("SMOTOR");
       DEBUG_PRINT(tag[1]);
       switch(tag[1])
       {
@@ -101,6 +101,7 @@ void Skribot::AddHardware(char *tag){
       break;
 
       case(CASE_ROTOR):
+      DEBUG_PRINT("ROTOR");
         switch(tag[1]){
           case '1':
               AddDCRotor(SKRIBRAIN_MOTOR_L_DIR2_PIN,SKRIBRAIN_MOTOR_L_DIR1_PIN,"Left");
@@ -148,6 +149,7 @@ void Skribot::AddHardware(char *tag){
       }
     break;
     case CASE_CLAW:
+    DEBUG_PRINT("CLAW");
       switch(tag[1]){
         case '0':
           AddClaw();
@@ -155,6 +157,7 @@ void Skribot::AddHardware(char *tag){
       }
     break;
     case CASE_LINE:
+    DEBUG_PRINT("LINE");
     switch(tag[1]){
       case '1':
         AddLineSensor(LINE_PIN_1, 1);
@@ -168,6 +171,7 @@ void Skribot::AddHardware(char *tag){
     }
     break;
     case CASE_LED:
+    DEBUG_PRINT("LED");
       switch(tag[1]){
         case '1':
           AddLED(SKRIBRAIN_LED_PIN_2,1);

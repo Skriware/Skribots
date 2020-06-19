@@ -5,6 +5,9 @@
 
 
 Skribot::Skribot(String predef){
+  #ifdef DEBUG_MODE
+  Serial.begin(115200);
+  #endif
   NDistSensors    = 0;
   NLEDs           = 0;
   NLineSensors    = 0;
@@ -37,9 +40,6 @@ Skribot::Skribot(String predef){
     Buzzers[rr]=NULL;
   }
   Configure_Connections(predef);
-  #ifdef DEBUG_MODE
-  Serial.begin(115200);
-  #endif
 }
 
   int Skribot::BaterryCheck(){
