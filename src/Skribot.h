@@ -282,7 +282,7 @@
     void ClearHardware();
  // private:
   DistSensor *DistSensors[2] = {NULL};
-  LineSensor *LineSensors[2] = {NULL};
+  LineSensor *LineSensors[3] = {NULL};
   Rotor *LeftDCRotors[2] = {NULL};
   Rotor *RightDCRotors[2] = {NULL};
   LightSensor *LightSensors[5] = {NULL};

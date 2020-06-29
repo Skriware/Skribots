@@ -320,6 +320,10 @@ void Skribot::CloseClaw(byte id){
       }
   }
   void Skribot::RawRotorMove(int left, int right){
+     Serial.print("L:");
+     Serial.print(left);
+     Serial.print("R:");
+     Serial.println(right);
       byte leftDir,leftSpeed,rightDir,rightSpeed;
       
       if(left > 250){

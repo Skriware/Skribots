@@ -149,9 +149,9 @@ void Skribot::AddHardware(char *tag){
       }
     break;
     case CASE_CLAW:
-    DEBUG_PRINT("CLAW");
       switch(tag[1]){
         case '0':
+          DEBUG_PRINT("CLAW");
           AddClaw();
         break;
       }
@@ -167,6 +167,7 @@ void Skribot::AddHardware(char *tag){
       break;
       case '3':
         AddLineSensor(LINE_PIN_3, 3);
+        DEBUG_PRINT("LINE 333333");
       break;
     }
     break;

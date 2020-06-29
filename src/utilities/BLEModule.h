@@ -69,7 +69,7 @@ class MyCallbacks: public BLECharacteristicCallbacks {
           if(substractBufforIterators() < 1)break;
           ascii = rxValue[i];
           //Serial.print("get:");
-          //Serial.println(ascii);
+          //Serial.print(ascii);
           BLEModule::RXBLE_buffer[BLEModule::RXBLE_buffer_iterator_end] = ascii;
           incrementRXbuffIterator_end();
         }

@@ -4,7 +4,6 @@
 
 Claw::Claw(int Claw_Pin,int Arm_Pin,byte _id){
 	
-	
 	#ifdef ESP_H
 	SetNewPWMChannel(Claw_Pin);
 	SetNewPWMChannel(Arm_Pin);
@@ -17,10 +16,10 @@ Claw::Claw(int Claw_Pin,int Arm_Pin,byte _id){
 	arm_servo->attach(Arm_Pin);
 	#endif
 	id = _id;
-	up_v = BV_2_up;
-	down_v = BV_2_down;
-	close_v = BV_2_close;
-	open_v = BV_2_open;
+	up_v = BV_1_up;
+	down_v = BV_1_down;
+	close_v = BV_1_close;
+	open_v = BV_1_open;
 }
 
 

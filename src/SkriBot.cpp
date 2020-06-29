@@ -5,9 +5,9 @@
 
 
 Skribot::Skribot(String predef){
-  #ifdef DEBUG_MODE
+  //#ifdef DEBUG_MODE
   Serial.begin(115200);
-  #endif
+  //#endif
   NDistSensors    = 0;
   NLEDs           = 0;
   NLineSensors    = 0;
@@ -22,6 +22,7 @@ Skribot::Skribot(String predef){
   program_End_Reported = false;
   connection_Break_Reported = false;
   stausLEDused = false;
+  ignore_connection_break = false;
   high_power_usage = false;
   claw_closed = false;
   claw_closed_time = true;

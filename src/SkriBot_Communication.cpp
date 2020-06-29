@@ -47,7 +47,7 @@ void Skribot::IgnoreCONBRK(){
   #ifdef _VARIANT_BBC_MICROBIT_
     BTLESerial.println(msg);
   #else 
-    Serial.println("Sending!");
+    //Serial.println("Sending!");
     BTmodule->BLE_write(msg);
   #endif
   }
