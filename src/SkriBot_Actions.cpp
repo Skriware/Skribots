@@ -191,20 +191,6 @@ void Skribot::CloseClaw(byte id){
 
         case 'R':
                   for(int zz = 0; zz < NLeftDCRotors ; zz++){
-                    LeftDCRotors[zz]->SetDirection(1);
-                    LeftDCRotors[zz]->SetSpeed(DCSpeed);
-                    LeftDCRotors[zz]->Move();
-                  }
-          
-                  for(int kk = 0; kk < NRightDCRotors ; kk++){
-                    RightDCRotors[kk]->SetDirection(0);
-                    RightDCRotors[kk]->SetSpeed(DCSpeed);
-                    RightDCRotors[kk]->Move();
-                  }
-         break;
-
-         case 'L':
-                  for(int zz = 0; zz < NLeftDCRotors ; zz++){
                     LeftDCRotors[zz]->SetDirection(0);
                     LeftDCRotors[zz]->SetSpeed(DCSpeed);
                     LeftDCRotors[zz]->Move();
@@ -212,6 +198,20 @@ void Skribot::CloseClaw(byte id){
           
                   for(int kk = 0; kk < NRightDCRotors ; kk++){
                     RightDCRotors[kk]->SetDirection(1);
+                    RightDCRotors[kk]->SetSpeed(DCSpeed);
+                    RightDCRotors[kk]->Move();
+                  }
+         break;
+
+         case 'L':
+                  for(int zz = 0; zz < NLeftDCRotors ; zz++){
+                    LeftDCRotors[zz]->SetDirection(1);
+                    LeftDCRotors[zz]->SetSpeed(DCSpeed);
+                    LeftDCRotors[zz]->Move();
+                  }
+          
+                  for(int kk = 0; kk < NRightDCRotors ; kk++){
+                    RightDCRotors[kk]->SetDirection(0);
                     RightDCRotors[kk]->SetSpeed(DCSpeed);
                     RightDCRotors[kk]->Move();
                   }

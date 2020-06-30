@@ -24,6 +24,7 @@ Skribot::Skribot(String predef){
   stausLEDused = false;
   ignore_connection_break = false;
   high_power_usage = false;
+  eeprom_version_loaded = false;
   claw_closed = false;
   claw_closed_time = true;
   config_mode = false;

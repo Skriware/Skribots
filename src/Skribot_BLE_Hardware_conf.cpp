@@ -1,5 +1,5 @@
 #include "Skribot.h"
-#define DEBUG_MODE_H
+//#define DEBUG_MODE_H
 #define SMART_ROTOR
 #ifdef DEBUG_MODE_H
   #define DEBUG_PRINT(msg) Serial.println(msg)
@@ -167,7 +167,6 @@ void Skribot::AddHardware(char *tag){
       break;
       case '3':
         AddLineSensor(LINE_PIN_3, 3);
-        DEBUG_PRINT("LINE 333333");
       break;
     }
     break;
@@ -193,6 +192,8 @@ void Skribot::ClearHardware(){
     if (LeftDCRotors[tt] !=NULL)delete LeftDCRotors[tt];
     if (RightDCRotors[tt] !=NULL)delete RightDCRotors[tt];
     if (LineSensors[tt] !=NULL)delete LineSensors[tt];
+    if (Claws[tt] != NULL)delete Claws[tt];
+    if (LEDs[tt] != NULL)delete LEDs[tt];
   }
   if (smartRotor != nullptr)
   {
@@ -226,6 +227,8 @@ void Skribot::ClearHardware(){
       LeftDCRotors[tt]=NULL;
       RightDCRotors[tt]=NULL;
       LineSensors[tt]=NULL;
+      Claws[tt] = NULL;
+      LEDs[tt] =NULL;
     }
     for(byte rr = 0;rr<5;rr++){
       Buzzers[rr]=NULL;
@@ -234,6 +237,8 @@ void Skribot::ClearHardware(){
   NLeftDCRotors = 0;
   NRightDCRotors = 0;
   NLineSensors = 0;
+  NClaws = 0;
+  NLEDs = 0;
   clearPWM();
 
   for (int i = 0; i < 2; i++)

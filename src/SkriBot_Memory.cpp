@@ -7,6 +7,7 @@ bool Skribot::EEPROM_EMPTY(int val){
   }
 
 bool Skribot::Check_Board_Version(){
+      if(eeprom_version_loaded)return(true);
       #ifdef DEBUG_MODE
           Serial.println("Checking EEPROM...");
       #endif
@@ -48,7 +49,7 @@ bool Skribot::Check_Board_Version(){
         #endif
       #endif
          
-          
+        eeprom_version_loaded = true;
         return(true);
       }
   }

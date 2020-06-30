@@ -298,7 +298,8 @@
        config_mode,
        user_config,
        Remote_block_used,
-       ignore_connection_break;
+       ignore_connection_break,
+       eeprom_version_loaded;
   long claw_closed_time;
   moduleType BLE_MODULE_TYPE;
   StatusLED *status;
