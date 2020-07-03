@@ -48,7 +48,11 @@ Set_Line_Sensor_Logic_Border KEYWORD2
 SendMessage	KEYWORD2
 SendMessageLine	KEYWORD2
 ReadLineSensorData	KEYWORD2
-
+Move_Motor_Forward	KEYWORD2
+Move_Motor_Back	KEYWORD2
+Set_Line_Sensor_Logic_Border	KEYWORD2
+SendMessage	KEYWORD2
+SendMessageLine	KEYWORD2
 
 #######################################
 # Constants (LITERAL1)

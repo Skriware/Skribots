@@ -344,6 +344,16 @@ void Skribot::CloseClaw(byte id){
             high_power_usage=false;
       }
   }
+
+  void Skribot::Move_Motor_Forward(byte motor_id,byte speed,int time){
+        Set_Motor_Movment(motor_id,1,speed,time);
+  }
+
+
+  void Skribot::Move_Motor_Back(byte motor_id,byte speed,int time){
+        Set_Motor_Movment(motor_id,0,speed,time);
+  }
+
   void Skribot::RawRotorMove(int left, int right){
       byte leftDir,leftSpeed,rightDir,rightSpeed;
       
