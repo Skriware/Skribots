@@ -10,6 +10,7 @@
 #define EEPROM_FLAG_ADDR 59
 
 bool BLEModule::deviceConnected = false;
+bool BLEModule::recivingData = false;
 char BLEModule::RXBLE_buffer[BLERXBUFFER_SIZE];
 int BLEModule::RXBLE_buffer_iterator_end = 1;
 int BLEModule::RXBLE_buffer_iterator_beg = 0;
@@ -51,6 +52,12 @@ switch(_type){
   }
   
 void BLEModule::BLE_write(char *msg){
+	while(recivingData){
+		Serial.println("Waiting...");
+		delay(100);
+	};
+	Serial.print("Sending:");
+	Serial.print(msg);
 	#ifdef ESP_H
 		std::string _tmp = std::string(msg);
 	#endif
@@ -99,6 +106,10 @@ bool BLEModule::BLE_checkConnection(){
   }
 
  int BLEModule::BLE_dataAvailable(){
+    		while(recivingData){
+    			Serial.println("Waiting...");
+				delay(100);
+    		};
     		int dataAvalible;
     switch(_type){
 		case HM_10:

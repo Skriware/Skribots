@@ -154,14 +154,14 @@ bool Skribot::Check_Board_Version(){
 
   
      void Skribot::Scale_Left_Rotors(byte scale){
-       for(int kk = 0; kk < NLeftDCRotors ; kk++){
-                    LeftDCRotors[kk]->scale_speed(scale);
+       for(int kkk = 0; kkk < NLeftDCRotors ; kkk++){
+                    LeftDCRotors[kkk]->scale_speed(scale);
                   }
     }
     
     void Skribot::Scale_Right_Rotors(byte scale){
-       for(int zz = 0; zz < NRightDCRotors ; zz++){
-                    RightDCRotors[zz]->scale_speed(scale);
+       for(int zzz = 0; zzz < NRightDCRotors ; zzz++){
+                    RightDCRotors[zzz]->scale_speed(scale);
                   }
     }
 
@@ -179,7 +179,7 @@ bool Skribot::Check_Board_Version(){
           Write_EEPROM_INT(EEPROM_L3_BORDER_ADDR,L3_b);
         break;
       }
-      if(user_config){
+      if(!user_config){
           EEPROM.write(EEPROM_SETTINGS_OVERRIDED_ADDR,1);
           user_config = true;
           #ifdef ESP_H 

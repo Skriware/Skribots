@@ -1,7 +1,7 @@
 #ifndef SKRIBOT_H
 #define SKRIBOT_H
 
-#define DEBUG_MODE
+//#define DEBUG_MODE
 //#define DEBUG_MODE_1
 
 

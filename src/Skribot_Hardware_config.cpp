@@ -14,7 +14,7 @@ void Skribot::AddDCRotor(int SpeedPin,int DirectionPin, String Side){
       NRightDCRotors++;
       if(user_config && !EEPROM_EMPTY(right_invert) && !EEPROM_EMPTY(right_scale)){
         Invert_Right_Rotors(right_invert);
-        Scale_Left_Rotors(right_scale);
+        Scale_Right_Rotors(right_scale);
       }
      }
   }
