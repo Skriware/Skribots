@@ -62,7 +62,8 @@ class MyServerCallbacks: public BLEServerCallbacks {
 
 class MyCallbacks: public BLECharacteristicCallbacks {
     void onWrite(BLECharacteristic *pCharacteristic) {
-      Serial.println("New message!");
+      Serial.println("*********************");
+      Serial.println("New message package:");
       BLEModule::recivingData = true;
       char ascii;
       std::string rxValue = pCharacteristic->getValue();
@@ -70,14 +71,14 @@ class MyCallbacks: public BLECharacteristicCallbacks {
         for (int i = 0; i < rxValue.length(); i++){
           if(substractBufforIterators() < 1)break;
           ascii = rxValue[i];
-          //Serial.print("get:");
           Serial.print(ascii);
           BLEModule::RXBLE_buffer[BLEModule::RXBLE_buffer_iterator_end] = ascii;
           incrementRXbuffIterator_end();
         }
       }
       BLEModule::recivingData = false;
-      Serial.println("End message!");
+      Serial.println("End of message package.");
+      Serial.println("*********************");
       
     }
 };

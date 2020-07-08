@@ -52,12 +52,13 @@ switch(_type){
   }
   
 void BLEModule::BLE_write(char *msg){
+	Serial.print("Sending:");
+	Serial.println(msg);
 	while(recivingData){
-		Serial.println("Waiting...");
+		Serial.println("Waiting for data transfer to end.");
 		delay(100);
 	};
-	Serial.print("Sending:");
-	Serial.print(msg);
+	Serial.println("Sent");
 	#ifdef ESP_H
 		std::string _tmp = std::string(msg);
 	#endif
@@ -107,7 +108,7 @@ bool BLEModule::BLE_checkConnection(){
 
  int BLEModule::BLE_dataAvailable(){
     		while(recivingData){
-    			Serial.println("Waiting...");
+    			Serial.println("Waiting for data transfer to end");
 				delay(100);
     		};
     		int dataAvalible;
