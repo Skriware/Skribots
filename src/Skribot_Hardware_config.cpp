@@ -5,16 +5,16 @@ void Skribot::AddDCRotor(int SpeedPin,int DirectionPin, String Side){
      if(Side == "Left"){
       LeftDCRotors[NLeftDCRotors] = dcrotor;
       NLeftDCRotors++;
-      if(user_config && !EEPROM_EMPTY(left_invert) && !EEPROM_EMPTY(left_scale)){
-        Invert_Left_Rotors(left_invert);
-        Scale_Left_Rotors(left_scale);
+      if(user_config){
+        if(!EEPROM_EMPTY(left_invert))Invert_Left_Rotors(left_invert);
+        if(!EEPROM_EMPTY(left_scale))Scale_Left_Rotors(left_scale);
       }
      }else if(Side == "Right"){
       RightDCRotors[NRightDCRotors] = dcrotor;
       NRightDCRotors++;
-      if(user_config && !EEPROM_EMPTY(right_invert) && !EEPROM_EMPTY(right_scale)){
-        Invert_Right_Rotors(right_invert);
-        Scale_Right_Rotors(right_scale);
+      if(user_config){
+        if(!EEPROM_EMPTY(right_invert))Invert_Right_Rotors(right_invert);
+        if(!EEPROM_EMPTY(right_scale))Scale_Right_Rotors(right_scale);
       }
      }
   }
@@ -330,6 +330,7 @@ void Skribot::Configure_Connections(String predef){
           default:
           break;
         }
+        stausLEDused = true;
       }
     #endif
    SetSpeed(100);

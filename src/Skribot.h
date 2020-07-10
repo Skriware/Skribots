@@ -1,7 +1,7 @@
 #ifndef SKRIBOT_H
 #define SKRIBOT_H
 
-//#define DEBUG_MODE
+#define DEBUG_MODE
 //#define DEBUG_MODE_1
 
 
@@ -81,6 +81,7 @@
 #else
 
 #define BOARD_VERSION 1
+#define FORCE_BOARD_VERSION_2
 
 #define SKRIBRAIN_MOTOR_L_DIR1_PIN 12 
 #define SKRIBRAIN_MOTOR_L_DIR2_PIN 21

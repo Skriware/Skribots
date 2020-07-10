@@ -31,12 +31,6 @@ bool Skribot::Check_Board_Version(){
           #endif
         return(false);
       }else{
-        #ifdef DEBUG_MODE
-        Serial.print("BOARD VERSION:");
-        Serial.println(Board_type);
-        #endif
-        
-      #ifdef FORCE_BOARD_VERSION
         #ifdef FORCE_BOARD_VERSION_1
           Board_type = 1;
         #endif
@@ -47,7 +41,10 @@ bool Skribot::Check_Board_Version(){
         #ifdef ESP_H 
           EEPROM.commit(); 
         #endif
-      #endif
+        #ifdef DEBUG_MODE
+        Serial.print("BOARD VERSION:");
+        Serial.println(Board_type);
+        #endif
          
         eeprom_version_loaded = true;
         return(true);
@@ -172,11 +169,15 @@ bool Skribot::Check_Board_Version(){
           EEPROM.write(EEPROM_RIGHT_INVERT_ADDR,right_invert);
           EEPROM.write(EEPROM_LEFT_SCALE_ADDR,left_scale);
           EEPROM.write(EEPROM_RIGHT_SCALE_ADDR,right_scale);
+          Serial.println("Saving Motor calibration!");
+          EEPROM.commit(); 
         break;
         case CALIB_LINE_SENSORS:
           Write_EEPROM_INT(EEPROM_L1_BORDER_ADDR,L1_b);
           Write_EEPROM_INT(EEPROM_L2_BORDER_ADDR,L2_b);
           Write_EEPROM_INT(EEPROM_L3_BORDER_ADDR,L3_b);
+          Serial.println("Saving Line calibration!");
+          EEPROM.commit(); 
         break;
       }
       if(!user_config){

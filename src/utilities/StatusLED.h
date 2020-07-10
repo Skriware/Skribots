@@ -4,8 +4,8 @@
 #ifdef ESP_H
 #include "RobotLED.h"
 #endif
-#define FULL_BateryLevel 10.5//8.6
-#define USED_BateryLevel 10.0//8.2
+#define FULL_BateryLevel 11.5//8.6
+#define USED_BateryLevel 11.0//8.2
 
 
 enum color {RED = 0,GREEN = 1,BLUE = 2,YELLOW = 3,WHITE = 4,PURPLE = 5,OFF = 6};
@@ -29,7 +29,8 @@ private:
 		byte B_pin;	
 	#else
 		RobotLED *status = NULL;
-		byte Board_V;	
+		byte Board_V;
+		float Current_voltage = 0.0;	
 	#endif
 	byte Battery_pin;
 	color Current_color;

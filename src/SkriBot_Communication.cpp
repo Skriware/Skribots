@@ -121,7 +121,7 @@ if(claw_closed && (millis() - claw_closed_time > 180000)){
             if(program_End_Reported || connection_Break_Reported)break;
           
       }
-      if(stausLEDused)BaterryCheck();
+      if(stausLEDused)status->ReadBatteryState();
       delay(interval);
     } 
     #ifdef DEBUG_MODE
