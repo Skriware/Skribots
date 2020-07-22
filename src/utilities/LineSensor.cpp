@@ -19,7 +19,7 @@ LineSensor::LineSensor(int PinL, int _id){
 
 int LineSensor::ReadSensor(){
   int readout = analogRead(sensorPin);
-    if(readout > logicBorder){
+    if(readout < logicBorder){
       return(1);
     }else{
       return(0);
