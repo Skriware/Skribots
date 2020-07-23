@@ -81,7 +81,8 @@
 #else
 
 #define BOARD_VERSION 1
-#define FORCE_BOARD_VERSION_2
+//#define FORCE_BOARD_VERSION_1
+//#define FORCE_BOARD_VERSION_2
 
 #define SKRIBRAIN_MOTOR_L_DIR1_PIN 12 
 #define SKRIBRAIN_MOTOR_L_DIR2_PIN 21
@@ -303,7 +304,7 @@
        Remote_block_used,
        ignore_connection_break,
        eeprom_version_loaded;
-  long claw_closed_time;
+  long claw_closed_time,hardware_checksum;
   moduleType BLE_MODULE_TYPE;
   StatusLED *status;
   SPIHandler *SPIcomm[2];

@@ -149,7 +149,7 @@ int StatusLED::CheckBateryStatus(){
 	}
 }
 byte StatusLED::ReadBatteryState(){
-	byte read = (byte)Current_voltage/12.6*100;
+	byte read = (byte)(Current_voltage-9.0)/3.6*100;
 	#ifdef RANDOM_BATTERY_READ
 	read = millis()%100;
 	#endif
