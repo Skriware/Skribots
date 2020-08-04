@@ -96,8 +96,7 @@ if(_color != Current_color){
 }
 #endif
 int StatusLED::CheckBateryStatus(){
-	Serial.println("BV:");
-	Serial.println(Board_V);
+
 	#ifdef ESP_H
 	float Voltage;
 	byte yy = 0;
@@ -109,50 +108,36 @@ int StatusLED::CheckBateryStatus(){
 	}
 	
 	if(yy > 95){
-		Voltage = 12.0;
+		Current_voltage = 12.0;
 	}else{
-		Voltage = 0.0;
+		Current_voltage = 0.0;
 	}
 	}else if(Board_V == 2){
 	float mult = 0.004;
-	Serial.println(Battery_pin);
 	Voltage = 0.004*analogRead(4);
 	Serial.print("Batt:");
 	Serial.print(Voltage);
 	Serial.print("V");
 	Current_voltage = Voltage;
 	}
-	if(Voltage > FULL_BateryLevel){
-		TurnOn(GREEN);
-		return(0);	
-	}else if(Voltage > USED_BateryLevel){
-		TurnOn(YELLOW);
-		return(1);
-	}else{
-		TurnOn(RED);
-		return(2);
-	}
-	
 	#else
 	float mult = 0.005*3;
-	float Voltage = (float)analogRead(Battery_pin)*mult;
+	Current_voltage = (float)analogRead(Battery_pin)*mult;
 	#endif
-	if(Voltage > FULL_BateryLevel){
-		TurnOn(GREEN);
-		return(0);	
-	}else if(Voltage > USED_BateryLevel){
-		TurnOn(YELLOW);
-		return(1);
-	}else{
-		TurnOn(RED);
-		return(2);
-	}
+	ReadBatteryState();
 }
 byte StatusLED::ReadBatteryState(){
-	byte read = (byte)(Current_voltage-9.0)/3.6*100;
+	byte read = (byte)((Current_voltage-9.5)/3.1*100);
 	#ifdef RANDOM_BATTERY_READ
 	read = millis()%100;
 	#endif
+	if(read > 50){
+		TurnOn(GREEN);
+	}else if(read > 20){
+		TurnOn(YELLOW);
+	}else{
+		TurnOn(RED);
+	}
 	return(read);
 }
 void StatusLED::BLINK_OK(){
